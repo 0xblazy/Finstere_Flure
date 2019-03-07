@@ -1,2 +1,2 @@
 # Finstere_Flure
-Projet Java S4 
+Projet L2 Sciences Co

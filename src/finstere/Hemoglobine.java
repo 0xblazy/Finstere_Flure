@@ -9,11 +9,11 @@ package finstere;
  *
  * @author nK_BlaZy
  */
-public class Sang extends Pion {
-    /* Type de flaque de sang (carré, linéaire v/h) */
+public class Hemoglobine extends Pion {
+    /* Type de flaque d'hémoglobine (carré, linéaire v/h) */
     private String type;
     
-    public Sang(int _x, int _y, String _type) {
+    public Hemoglobine(int _x, int _y, String _type) {
         super(_x, _y);
         this.type = _type;
     }

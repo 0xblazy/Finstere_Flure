@@ -7,7 +7,7 @@ package finstere;
 
 /**
  *
- * @author nK_BlaZy
+ * @author nKBlaZy
  */
 public class Finstere {
 

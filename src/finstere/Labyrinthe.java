@@ -7,14 +7,13 @@ package finstere;
 
 /**
  *
- * @author nKBlaZy
+ * @author nicoi
  */
-abstract class Pion {
-    /* Coordonnées d'un pion */
-    protected int x,y;
+public class Labyrinthe {
+    /* Tableau à 2 dimensions représentant le labyrinthe */
+    private Case[][] labyrinthe;
     
-    public Pion(int _x, int _y) {
-        this.x = _x;
-        this.y = _y;
+    public void initLaby() {
+        this.labyrinthe = new Case[11][16];
     }
 }

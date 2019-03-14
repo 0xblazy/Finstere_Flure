@@ -7,10 +7,9 @@ package finstere;
 
 /**
  *
- * @author nK_BlaZy
+ * @author nKBlaZy
  */
 public class Mur extends Pion {
-    
     public Mur(int _x, int _y) {
         super(_x, _y);
     } 

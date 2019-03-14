@@ -7,7 +7,7 @@ package finstere;
 
 /**
  *
- * @author nK_BlaZy
+ * @author nKBlaZy
  */
 public class Hemoglobine extends Pion {
     /* Type de flaque d'hémoglobine (carré, linéaire v/h) */

@@ -7,7 +7,7 @@ package finstere;
 
 /**
  *
- * @author nK_BlaZy
+ * @author nKBlaZy
  */
 public class Personnage extends Pion {
     /* Points de mouvement face clair/foncé */

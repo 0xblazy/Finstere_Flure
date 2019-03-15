@@ -10,7 +10,9 @@ package finstere;
  * @author nKBlaZy
  */
 public class Finstere {
-
+    /* Constantes des directions */
+    public final static int HAUT = 1, BAS = 2, GAUCHE = 3, DROITE = 4;
+    
     /**
      * @param args the command line arguments
      */

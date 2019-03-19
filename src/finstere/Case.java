@@ -17,13 +17,14 @@ public class Case {
     private int x,y;
     /* Vrai si la case est en bordure */
     private boolean bordure;
-    /* Vrai si il s'agit d'une case qui ne fait pas partie de labyrinthe */
+    /* Vrai si il s'agit d'une case qui ne fait pas partie du labyrinthe */
     private boolean blocked;
     /* Coordonnées des cases où sera téléporté le monstre 
      * Integer => Finstere.HAUT .BAS...
      */
     private Map<Integer, int[]> tp;
     
+    /* Constructeur principal */
     public Case(int _x, int _y, boolean _bordure, Map<Integer, int[]> _tp, boolean _blocked) {
         this.x = _x;
         this.y = _y;
@@ -32,14 +33,17 @@ public class Case {
         this.blocked = _blocked;
     }
     
+    /* Constructeur pour une bordure */
     public Case(int _x, int _y, Map<Integer, int[]> _tp) {
         this(_x, _y, true, _tp, false);
     }
     
+    /* Constructeur pour une case normale */
     public Case(int _x, int _y) {
         this(_x, _y, false, new HashMap<>(), false);
     }
     
+    /* Constructeur d'une case qui ne fait pas partie du labyrinthe */
     public Case(int _x, int _y, boolean _blocked) {
         this(_x, _y, false, new HashMap<>(), _blocked);
     }

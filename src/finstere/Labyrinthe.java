@@ -16,6 +16,7 @@ public class Labyrinthe {
     /* Tableau à 2 dimensions représentant le labyrinthe */
     private Case[][] labyrinthe;
     
+    /* Génère le labyrinthe */
     public void initLaby() {
         this.labyrinthe = new Case[11][16];
         for (int j = 0 ; j < this.labyrinthe.length ; j++) {

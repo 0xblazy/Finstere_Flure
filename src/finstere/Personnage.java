@@ -17,8 +17,9 @@ public class Personnage extends Pion {
     /* Vrai si le pion personnage est tourné face clair */
     private boolean faceClair;
     
-    public Personnage(int _pmC, int _pmF, String _couleur) {
-        super(-1, -1);
+    /* Constructeur */
+    public Personnage(int _pmC, int _pmF, String _couleur, Labyrinthe _labyrinthe) {
+        super(-1, -1, _labyrinthe);
         this.pmC = _pmC;
         this.pmF = _pmF;
         this.couleur = _couleur;

@@ -16,13 +16,13 @@ public class Case {
     /* Coordonnées de la Case */
     private final int x,y;
     /* Vrai si la case est en bordure */
-    private boolean bordure;
+    private final boolean bordure;
     /* Vrai si il s'agit d'une case qui ne fait pas partie du labyrinthe */
-    private boolean blocked;
+    private final boolean blocked;
     /* Coordonnées des cases où sera téléporté le monstre 
-     * Integer => Finstere.HAUT .BAS...
+     * Integer => Finstere.HAUT .BAS ...
      */
-    private Map<Integer, int[]> tp;
+    private final Map<Integer, int[]> tp;
     /* Vrai si un mur, une plaque d'hémoglobine, un personnage ou le monstre est
      * sur la case
      */
@@ -59,6 +59,17 @@ public class Case {
     @Override
     public String toString() {
         String s = "Case (" + this.x + "," + this.y + ")";
+
+        if (this.mur) {
+            s += " [MUR]";
+        } else if (this.hemoglobine) {
+            s += " [HÉMOGLOBINE]";
+        } else if (this.personnage) {
+            s += " [PERSONNAGE]";
+        } else if (this.monstre) {
+            s += " [MONSTRE]";
+        }
+        
         if (this.blocked) {
             s += " [BLOCKED]";
         } else if (this.bordure) {
@@ -67,16 +78,24 @@ public class Case {
                 s += entry.getKey() + " => (" + entry.getValue()[0] + "," 
                         + entry.getValue()[1] + ") ";
             }
-        } else if (this.mur) {
-            s += "[MUR]";
-        } else if (this.hemoglobine) {
-            s += "[HÉMOGLOBINE]";
-        } else if (this.personnage) {
-            s += "[PERSONNAGE]";
-        } else if (this.monstre) {
-            s += "[MONSTRE]";
-        }
+        } 
         
         return s;
+    }
+
+    public void setMur(boolean _mur) {
+        this.mur = _mur;
+    }
+
+    public void setHemoglobine(boolean _hemoglobine) {
+        this.hemoglobine = _hemoglobine;
+    }
+
+    public void setPersonnage(boolean _personnage) {
+        this.personnage = _personnage;
+    }
+
+    public void setMonstre(boolean _monstre) {
+        this.monstre = _monstre;
     }
 }

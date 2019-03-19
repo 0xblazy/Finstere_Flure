@@ -179,4 +179,20 @@ public class Labyrinthe {
         
         return s;
     }
+    
+    public void setMur(int _x, int _y, boolean _mur) {
+        this.labyrinthe[_y][_x].setMur(_mur);
+    }
+
+    public void setHemoglobine(int _x, int _y, boolean _hemoglobine) {
+        this.labyrinthe[_y][_x].setHemoglobine(_hemoglobine);
+    }
+
+    public void setPersonnage(int _x, int _y, boolean _personnage) {
+         this.labyrinthe[_y][_x].setPersonnage(_personnage);
+    }
+
+    public void setMonstre(int _x, int _y, boolean _monstre) {
+         this.labyrinthe[_y][_x].setMonstre(_monstre);
+    }
 }

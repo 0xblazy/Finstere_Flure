@@ -7,15 +7,15 @@ package finstere;
 
 /**
  *
- * @author S15
+ * @author TomWyso
  */
 public class Monstre extends Pion {
+    /* Direction du Monstre (Finstere.HAUT .BAS ...) */
     private int direction;
     
-    /*Création de Monstre qui hérite de Pion*/
-    public Monstre() {
-        super(0, 0);
+    /* Constructeur */
+    public Monstre(Labyrinthe _labyrinthe) {
+        super(0, 0, _labyrinthe);
         this.direction = Finstere.DROITE;
     }
-    
 }

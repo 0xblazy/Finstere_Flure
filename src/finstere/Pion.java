@@ -12,9 +12,13 @@ package finstere;
 abstract class Pion {
     /* Coordonnées d'un pion */
     protected int x,y;
+    /* Labyrinthe sur lequel est le pion */
+    protected Labyrinthe labyrinthe;
     
-    public Pion(int _x, int _y) {
+    /* Constructeur */
+    public Pion(int _x, int _y, Labyrinthe _labyrinthe) {
         this.x = _x;
         this.y = _y;
+        this.labyrinthe = _labyrinthe;
     }
 }

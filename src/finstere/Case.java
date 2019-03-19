@@ -50,9 +50,11 @@ public class Case {
         if (this.blocked) {
             s += " [BLOCKED]";
         } else if (this.bordure) {
-            s += " [BORDURE] :";
-        } else {
-            s += " :";
+            s += " [BORDURE] : ";
+            for (Map.Entry<Integer, int[]> entry : tp.entrySet()) {
+                s += entry.getKey() + " => (" + entry.getValue()[0] + "," 
+                        + entry.getValue()[1] + ") ";
+            }
         }
         
         return s;

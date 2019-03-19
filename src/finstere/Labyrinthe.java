@@ -165,4 +165,17 @@ public class Labyrinthe {
             }
         }
     }
+    
+    @Override
+    public String toString() {
+        String s = "";
+        
+        for (int j = 0 ; j < this.labyrinthe.length ; j++) {
+            for (int i = 0 ; i < this.labyrinthe[0].length ; i++) {
+                s += this.labyrinthe[j][i] + "\n";
+            }
+        }
+        
+        return s;
+    }
 }

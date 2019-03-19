@@ -17,7 +17,9 @@ public class Finstere {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        Labyrinthe labyrinthe = new Labyrinthe();
+        labyrinthe.initLaby();
+        System.out.println(labyrinthe);
     }
     
 }

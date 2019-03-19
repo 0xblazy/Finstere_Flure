@@ -11,9 +11,9 @@ package finstere;
  */
 public class Personnage extends Pion {
     /* Points de mouvement face clair/foncé */
-    private int pmC, pmF;
+    private final int pmC, pmF;
     /* Couleur du personnage (blue, brown, gray, green, purple, red, yellow) */
-    private String couleur;
+    private final String couleur;
     /* Vrai si le pion personnage est tourné face clair */
     private boolean faceClair;
     

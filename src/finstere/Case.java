@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class Case {
     /* Coordonnées de la Case */
-    private int x,y;
+    private final int x,y;
     /* Vrai si la case est en bordure */
     private boolean bordure;
     /* Vrai si il s'agit d'une case qui ne fait pas partie du labyrinthe */
@@ -23,6 +23,10 @@ public class Case {
      * Integer => Finstere.HAUT .BAS...
      */
     private Map<Integer, int[]> tp;
+    /* Vrai si un mur, une plaque d'hémoglobine, un personnage ou le monstre est
+     * sur la case
+     */
+    private boolean mur, hemoglobine, personnage, monstre;
     
     /* Constructeur principal */
     public Case(int _x, int _y, boolean _bordure, Map<Integer, int[]> _tp, boolean _blocked) {
@@ -31,6 +35,10 @@ public class Case {
         this.bordure = _bordure;
         this.tp = _tp;
         this.blocked = _blocked;
+        this.mur = false;
+        this.hemoglobine = false;
+        this.personnage = false;
+        this.monstre = false;
     }
     
     /* Constructeur pour une bordure */
@@ -59,6 +67,14 @@ public class Case {
                 s += entry.getKey() + " => (" + entry.getValue()[0] + "," 
                         + entry.getValue()[1] + ") ";
             }
+        } else if (this.mur) {
+            s += "[MUR]";
+        } else if (this.hemoglobine) {
+            s += "[HÉMOGLOBINE]";
+        } else if (this.personnage) {
+            s += "[PERSONNAGE]";
+        } else if (this.monstre) {
+            s += "[MONSTRE]";
         }
         
         return s;

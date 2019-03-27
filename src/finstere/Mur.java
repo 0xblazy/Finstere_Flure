@@ -11,7 +11,7 @@ package finstere;
  */
 public class Mur extends Pion {
     /* Constructeur */
-    public Mur(int _x, int _y, Labyrinthe _labyrinthe) {
-        super(_x, _y, _labyrinthe);
+    public Mur(int _x, int _y, Partie _partie) {
+        super(_x, _y, _partie);
     } 
 }

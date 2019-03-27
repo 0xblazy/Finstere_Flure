@@ -14,8 +14,8 @@ public class Hemoglobine extends Pion {
     private String type;
     
     /* Constructeur */
-    public Hemoglobine(int _x, int _y, String _type, Labyrinthe _labyrinthe) {
-        super(_x, _y, _labyrinthe);
+    public Hemoglobine(int _x, int _y, String _type, Partie _partie) {
+        super(_x, _y, _partie);
         this.type = _type;
     }
 }

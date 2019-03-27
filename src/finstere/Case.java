@@ -27,14 +27,17 @@ public class Case {
      * sur la case
      */
     private boolean mur, hemoglobine, personnage, monstre;
+    /* Partie de la Case */
+    private Partie partie;
     
     /* Constructeur principal */
-    public Case(int _x, int _y, boolean _bordure, Map<Integer, int[]> _tp, boolean _blocked) {
+    public Case(int _x, int _y, boolean _bordure, Map<Integer, int[]> _tp, boolean _blocked, Partie _partie) {
         this.x = _x;
         this.y = _y;
         this.bordure = _bordure;
         this.tp = _tp;
         this.blocked = _blocked;
+        this.partie = _partie;
         this.mur = false;
         this.hemoglobine = false;
         this.personnage = false;
@@ -42,23 +45,23 @@ public class Case {
     }
     
     /* Constructeur pour une bordure */
-    public Case(int _x, int _y, Map<Integer, int[]> _tp) {
-        this(_x, _y, true, _tp, false);
+    public Case(int _x, int _y, Map<Integer, int[]> _tp, Partie _partie) {
+        this(_x, _y, true, _tp, false, _partie);
     }
     
     /* Constructeur pour une case normale */
-    public Case(int _x, int _y) {
-        this(_x, _y, false, new HashMap<>(), false);
+    public Case(int _x, int _y, Partie _partie) {
+        this(_x, _y, false, new HashMap<>(), false, _partie);
     }
     
     /* Constructeur d'une case qui ne fait pas partie du labyrinthe */
-    public Case(int _x, int _y, boolean _blocked) {
-        this(_x, _y, false, new HashMap<>(), _blocked);
+    public Case(int _x, int _y, boolean _blocked, Partie _partie) {
+        this(_x, _y, false, new HashMap<>(), _blocked, _partie);
     }
     
     @Override
     public String toString() {
-        String s = "Case (" + this.x + "," + this.y + ")";
+        /*String s = "Case (" + this.x + "," + this.y + ")";
 
         if (this.mur) {
             s += " [MUR]";
@@ -80,9 +83,23 @@ public class Case {
             }
         } 
         
-        return s;
+        return s;*/
+        if (this.blocked) {
+            return "###";
+        } else if (this.personnage) {
+            return " P ";
+        } else if (this.monstre) {
+            return " M ";
+        } else if (this.mur) {
+            return " W ";
+        } else if (this.hemoglobine) {
+            return " H ";
+        } else {
+            return "   ";
+        }
     }
 
+    /* Setters pour définir si un élément est sur la Case */
     public void setMur(boolean _mur) {
         this.mur = _mur;
     }

@@ -14,8 +14,8 @@ public class Monstre extends Pion {
     private int direction;
     
     /* Constructeur */
-    public Monstre(Labyrinthe _labyrinthe) {
-        super(0, 0, _labyrinthe);
+    public Monstre(Partie _partie) {
+        super(0, 0, _partie);
         this.direction = Finstere.DROITE;
     }
 }

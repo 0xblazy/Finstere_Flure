@@ -18,14 +18,20 @@ public class Finstere {
     public final static String CARRE = "tachesang_carree",
             LINEVERT = "tachesang_lineaireH",
             LINEHORI = "tachesang_lineaireV";
+    /* Constantes pour les couleurs des personnages */
+    public final static String[] COULEURS = {"blue", "brown", "gray", "green",
+        "purple", "red", "yellow"};
     
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        System.out.println("==== FINSTERE FLURE ====");
+        
         Partie partie = new Partie();
         partie.initPartie();
         partie.afficherLaby();
+        partie.afficherJoueurs();
     }
     
 }

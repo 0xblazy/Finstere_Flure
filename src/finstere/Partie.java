@@ -24,6 +24,8 @@ public class Partie {
     private List<Mur> murs;
     /* Joueurs de la partie */
     private Joueur[] joueurs;
+    /* Personnages de tous les Joueur */
+    private Personnage[][] personnages;
     /* Nombre de vrais joueurs */
     private int nbJoueurs;
     
@@ -32,6 +34,7 @@ public class Partie {
         this.labyrinthe = new Labyrinthe(this);
         this.murs = new ArrayList<>();
         this.joueurs = new Joueur[2];
+        this.personnages = new Personnage[2][4];
     }
     
     /* Initialisation de la Partie (création des Joueur) */
@@ -69,7 +72,13 @@ public class Partie {
                     couleur = sc.nextInt();
                 }
             }
-            this.joueurs[i] = new Joueur(nom, this, Finstere.COULEURS[couleur - 1]);
+            
+            this.personnages[i][0] = new Personnage(1, 6, Finstere.COULEURS[couleur - 1], this);
+            this.personnages[i][1] = new Personnage(3, 4, Finstere.COULEURS[couleur - 1], this);
+            this.personnages[i][2] = new Personnage(4, 3, Finstere.COULEURS[couleur - 1], this);
+            this.personnages[i][3] = new Personnage(5, 2, Finstere.COULEURS[couleur - 1], this);
+            
+            this.joueurs[i] = new Joueur(nom, this, Finstere.COULEURS[couleur - 1], this.personnages[i]);
         }
         this.genLaby();
     }
@@ -119,6 +128,19 @@ public class Partie {
         this.labyrinthe.setMonstre(0, 0, true);
     }
     
+    /* Retourne le Personnage aux coordonnées _x, _y sous la forme d'une chaine */
+    public String personnageAt(int _x, int _y) {
+        for (int j = 0 ; j < this.personnages.length ; j++) {
+            for (int i = 0 ; i < this.personnages[0].length ; i++) {
+                if (this.personnages[j][i].getX() == _x 
+                        && this.personnages[j][i].getY() == _y) {
+                    return this.personnages[j][i].shortString();
+                }
+            }
+        }
+        return "    ";
+    }
+    
     public void afficherLaby() {
         System.out.println(this.labyrinthe);
     }
@@ -127,5 +149,15 @@ public class Partie {
         for (Joueur joueur : this.joueurs) {
             System.out.println(joueur);
         }
+    }
+    
+    /* Getters */
+    public Labyrinthe getLabyrinthe() {
+        return labyrinthe;
+    }
+    
+    
+    public void test() {
+        this.personnages[0][0].deplacer(15, 10);
     }
 }

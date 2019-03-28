@@ -32,6 +32,8 @@ public class Finstere {
         partie.initPartie();
         partie.afficherLaby();
         partie.afficherJoueurs();
+        partie.test();
+        partie.afficherLaby();
     }
     
 }

@@ -20,15 +20,11 @@ public class Joueur {
     private String couleur;
     
     /* Constructeur */
-    public Joueur(String _name, Partie _partie, String _couleur) {
+    public Joueur(String _name, Partie _partie, String _couleur, Personnage[] _personnages) {
         this.name = _name;
         this.partie = _partie;
         this.couleur = _couleur;
-        this.personnages = new Personnage[4];
-        this.personnages[0] = new Personnage(1, 6, this.couleur, this.partie);
-        this.personnages[1] = new Personnage(3, 4, this.couleur, this.partie);
-        this.personnages[2] = new Personnage(4, 3, this.couleur, this.partie);
-        this.personnages[3] = new Personnage(5, 2, this.couleur, this.partie);
+        this.personnages = _personnages;
     }
     
     @Override

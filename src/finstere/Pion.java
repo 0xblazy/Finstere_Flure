@@ -21,4 +21,14 @@ abstract class Pion {
         this.y = _y;
         this.partie = _partie;
     }
+    
+    /* Getters */
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+    
 }

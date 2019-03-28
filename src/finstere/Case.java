@@ -85,17 +85,17 @@ public class Case {
         
         return s;*/
         if (this.blocked) {
-            return "###";
+            return "####";
         } else if (this.personnage) {
-            return " P ";
+            return this.partie.personnageAt(this.x, this.y);
         } else if (this.monstre) {
-            return " M ";
+            return " Mo ";
         } else if (this.mur) {
-            return " W ";
+            return " Mu ";
         } else if (this.hemoglobine) {
-            return " H ";
+            return " He ";
         } else {
-            return "   ";
+            return "    ";
         }
     }
 

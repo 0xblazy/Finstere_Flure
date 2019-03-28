@@ -35,6 +35,47 @@ public class Personnage extends Pion {
         this.classement = 0;
     }
     
+    /* Retourne le Personnage sous la forme d'une chaine de 4 caractères */
+    public String shortString() {
+        String s = "";
+        
+        if (this.couleur.equals(Finstere.COULEURS[0])) {
+            s += "B";
+        } else if (this.couleur.equals(Finstere.COULEURS[1])) {
+            s += "M";
+        } else if (this.couleur.equals(Finstere.COULEURS[2])) {
+            s += "G";
+        } else if (this.couleur.equals(Finstere.COULEURS[3])) {
+            s += "V";
+        } else if (this.couleur.equals(Finstere.COULEURS[4])) {
+            s += "P";
+        } else if (this.couleur.equals(Finstere.COULEURS[5])) {
+            s += "R";
+        } else if (this.couleur.equals(Finstere.COULEURS[6])) {
+            s += "J";
+        }
+        
+        s += this.pmC + "" + this.pmF;
+        
+        if (this.faceClair) {
+            s += "C";
+        } else {
+            s += "F";
+        }
+        
+        return s;
+    }
+    
+    /* Déplace un Personnage aux coordonnées _x, _y */
+    public void deplacer(int _x, int _y) {
+        if (super.x > -1 && super.y > -1) {
+            super.partie.getLabyrinthe().setPersonnage(super.x, super.y, false);
+        }
+        super.x = _x;
+        super.y = _y;
+        super.partie.getLabyrinthe().setPersonnage(_x, _y, true);
+    }
+    
     @Override
     public String toString() {
         String s = "Personnage ";

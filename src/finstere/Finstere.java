@@ -33,7 +33,6 @@ public class Finstere {
         partie.afficherLaby();
         partie.afficherJoueurs();
         partie.test();
-        partie.afficherLaby();
     }
     
 }

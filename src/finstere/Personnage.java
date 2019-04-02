@@ -5,13 +5,18 @@
  */
 package finstere;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
  * @author nKBlaZy
  */
 public class Personnage extends Pion {
-    /* Points de mouvement face clair/foncé */
+    /* Points de mouvement face clair/foncé et pour le tour */
     private final int pmC, pmF;
+    private int pm;
     /* Couleur du Personnage (blue, brown, gray, green, purple, red, yellow) */
     private final String couleur;
     /* Vrai si le Personnage est tourné face clair */
@@ -25,9 +30,10 @@ public class Personnage extends Pion {
     
     /* Constructeur */
     public Personnage(int _pmC, int _pmF, String _couleur, Partie _partie) {
-        super(-1, -1, _partie);
+        super(16, 10, _partie);
         this.pmC = _pmC;
         this.pmF = _pmF;
+        this.pm = _pmC;
         this.couleur = _couleur;
         this.faceClair = true;
         this.rip = false;
@@ -55,25 +61,71 @@ public class Personnage extends Pion {
             s += "J";
         }
         
-        s += this.pmC + "" + this.pmF;
-        
         if (this.faceClair) {
-            s += "C";
+            s += this.pmC + "C";
         } else {
-            s += "F";
+            s += this.pmF + "F";
         }
         
         return s;
     }
     
-    /* Déplace un Personnage aux coordonnées _x, _y */
+    /* Déplace le Personnage aux coordonnées _x, _y */
     public void deplacer(int _x, int _y) {
-        if (super.x > -1 && super.y > -1) {
+        if (super.x < 16 && super.y <= 10) {
             super.partie.getLabyrinthe().setPersonnage(super.x, super.y, false);
         }
+        this.pm -= (Math.abs(super.x - _x) + Math.abs(super.y - _y));
         super.x = _x;
         super.y = _y;
         super.partie.getLabyrinthe().setPersonnage(_x, _y, true);
+        this.faceClair = !this.faceClair;
+    }
+    
+    /* Retourne la liste des actions que peut faire le Personnage */
+    public Map<Integer,Action> getActions() {
+        HashMap<Integer,Action> actions = new HashMap<>();
+        ArrayList<int[]> cases = this.casesPossibles();
+        int key = 1;
+        for (int[] c : cases) {
+            if (super.partie.getLabyrinthe().isLibre(c[0], c[1])) {
+                actions.put(key, new Action(
+                        "Se Déplacer en (" + c[0] + "," + c[1] + ")", 
+                        this.getClass(), "deplacer", 
+                        new Object[] {c[0], c[1]}));
+                key++;
+            }
+        }
+        
+        return actions;
+    }
+    
+    /* Retourne les coordonnées des Case sur lequel le Personnage peut 
+     * possiblement aller
+     */
+    private ArrayList<int[]> casesPossibles() {
+        ArrayList<int[]> cases = new ArrayList<>();
+        
+        for (int j = -this.pm ; j <= this.pm ; j++) {
+            for (int i = -this.pm ; i <= this.pm ; i++) {
+                if (Math.abs(i) + Math.abs(j) <= this.pm 
+                        && super.x + i < 16 && super.x + i > -1 
+                        && super.y + j < 11 && super.y + j > -1) {
+                    cases.add(new int[] {super.x + i, super.y + j});
+                }
+            }
+        }        
+        
+        return cases;
+    }
+    
+    /*  */
+    public void nouveauTour() {
+        if (this.faceClair) {
+            this.pm = this.pmC;
+        } else {
+            this.pm = this.pmF;
+        }
     }
     
     @Override

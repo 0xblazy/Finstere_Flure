@@ -209,4 +209,31 @@ public class Labyrinthe {
     public void setMonstre(int _x, int _y, boolean _monstre) {
          this.labyrinthe[_y][_x].setMonstre(_monstre);
     }
+    
+    /* Getters pour la Case (x,y) */
+    public boolean isBlocked(int _x, int _y) {
+        return this.labyrinthe[_y][_x].isBlocked();
+    }
+    
+    public boolean isHemoglobine(int _x, int _y) {
+        return this.labyrinthe[_y][_x].isHemoglobine();
+    }
+    
+    public boolean isMonstre(int _x, int _y) {
+        return this.labyrinthe[_y][_x].isMonstre();
+    }
+    
+    public boolean isMur(int _x, int _y) {
+        return this.labyrinthe[_y][_x].isMur();
+    }
+    
+    public boolean isPersonnage(int _x, int _y) {
+        return this.labyrinthe[_y][_x].isPersonnage();
+    }
+    
+    public boolean isLibre(int _x, int _y) {
+        return !this.isBlocked(_x, _y) && !this.isHemoglobine(_x, _y) 
+                && !this.isMonstre(_x, _y) && !this.isMur(_x, _y);
+                
+    }
 }

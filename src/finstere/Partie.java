@@ -7,6 +7,7 @@ package finstere;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -141,10 +142,12 @@ public class Partie {
         return "    ";
     }
     
+    /* Affiche le Labyrinthe */
     public void afficherLaby() {
         System.out.println(this.labyrinthe);
     }
     
+    /* Affiche la liste des Joueur avec leurs Personnage */
     public void afficherJoueurs() {
         for (Joueur joueur : this.joueurs) {
             System.out.println(joueur);
@@ -153,11 +156,13 @@ public class Partie {
     
     /* Getters */
     public Labyrinthe getLabyrinthe() {
-        return labyrinthe;
+        return this.labyrinthe;
     }
     
     
     public void test() {
-        this.personnages[0][0].deplacer(15, 10);
+        for(Map.Entry<Integer,Action> entry : this.personnages[0][1].getActions().entrySet()) {
+            System.out.println(entry.getKey() + " => " + entry.getValue().getAction());
+        }
     }
 }

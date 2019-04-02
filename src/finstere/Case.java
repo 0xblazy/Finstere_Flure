@@ -85,21 +85,21 @@ public class Case {
         
         return s;*/
         if (this.blocked) {
-            return "####";
+            return "###";
         } else if (this.personnage) {
             return this.partie.personnageAt(this.x, this.y);
         } else if (this.monstre) {
-            return " Mo ";
+            return " M ";
         } else if (this.mur) {
-            return " Mu ";
+            return " W ";
         } else if (this.hemoglobine) {
-            return " He ";
+            return " H ";
         } else {
-            return "    ";
+            return "   ";
         }
     }
 
-    /* Setters pour définir si un élément est sur la Case */
+    /* Setters */
     public void setMur(boolean _mur) {
         this.mur = _mur;
     }
@@ -114,5 +114,26 @@ public class Case {
 
     public void setMonstre(boolean _monstre) {
         this.monstre = _monstre;
+    }
+    
+    /* Getters */
+    public boolean isBlocked() {
+        return this.blocked;
+    }
+
+    public boolean isHemoglobine() {
+        return this.hemoglobine;
+    }
+
+    public boolean isMonstre() {
+        return this.monstre;
+    }
+
+    public boolean isMur() {
+        return this.mur;
+    }
+
+    public boolean isPersonnage() {
+        return personnage;
     }
 }

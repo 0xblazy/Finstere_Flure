@@ -89,7 +89,7 @@ public class Case {
         } else if (this.personnage) {
             return this.partie.personnageAt(this.x, this.y);
         } else if (this.monstre) {
-            return " M ";
+            return "" + this.partie.getMonstre();
         } else if (this.mur) {
             return " W ";
         } else if (this.hemoglobine) {

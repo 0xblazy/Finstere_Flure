@@ -18,4 +18,19 @@ public class Monstre extends Pion {
         super(0, 0, _partie);
         this.direction = Finstere.DROITE;
     }
+    
+    @Override
+    public String toString() {
+        if (this.direction == Finstere.HAUT) {
+            return "M/\\";
+        } else if (this.direction == Finstere.BAS) {
+            return "M\\/";
+        } else if (this.direction == Finstere.GAUCHE) {
+            return "<<M";
+        } else if (this.direction == Finstere.DROITE) {
+            return "M>>";
+        }
+        
+        return " M ";
+    }
 }

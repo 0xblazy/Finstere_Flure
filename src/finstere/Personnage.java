@@ -82,7 +82,7 @@ public class Personnage extends Pion {
         this.faceClair = !this.faceClair;
     }
     
-    /* Retourne la liste des actions que peut faire le Personnage */
+    /* Retourne la liste des Action que peut faire le Personnage */
     public Map<Integer,Action> getActions() {
         HashMap<Integer,Action> actions = new HashMap<>();
         ArrayList<int[]> cases = this.casesPossibles();
@@ -96,7 +96,6 @@ public class Personnage extends Pion {
                 key++;
             }
         }
-        
         return actions;
     }
     
@@ -119,8 +118,10 @@ public class Personnage extends Pion {
         return cases;
     }
     
-    /*  */
-    public void nouveauTour() {
+    /* Appeler en fin de tour pour redonner les pm au Personnage pour le tour 
+     * suivant
+     */
+    public void finTour() {
         if (this.faceClair) {
             this.pm = this.pmC;
         } else {
@@ -148,16 +149,18 @@ public class Personnage extends Pion {
             s += "Jaune";
         }
         
-        s += " " + this.pmC + "," + this.pmF + " ";
-        
-        if (faceClair) {
-            s += "Face claire ";
+        if (this.faceClair) {
+            s += " " + this.pmC + " Face claire ";
         } else {
-            s += "Face foncée ";
+            s += " " + this.pmF + " Face foncée ";
         }
         
-        s += "(" + super.x + "," + super.y + ")";
-               
+        if (super.x < 16 && super.y < 11) {
+            s += "(" + super.x + "," + super.y + ")";
+        } else {
+            s += "(Non joué)";
+        }
+           
         return s;
     }
 }

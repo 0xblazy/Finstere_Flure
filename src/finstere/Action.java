@@ -28,6 +28,8 @@ public class Action {
         for (int i = 0 ; i < _param.length ; i++) {
             if (_param[i].getClass().equals(Integer.class)) {
                 types[i] = int.class;
+            } else {
+                types[i] = _param[i].getClass();
             }
         }
         try {

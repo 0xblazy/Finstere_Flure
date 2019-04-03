@@ -29,6 +29,8 @@ public class Partie {
     private Personnage[][] personnages;
     /* Nombre de vrais joueurs */
     private int nbJoueurs;
+    /* Index du Joueur commencant le tour */
+    private int premierJoueur;
     
     /* Constructeur */
     public Partie() {
@@ -36,6 +38,7 @@ public class Partie {
         this.murs = new ArrayList<>();
         this.joueurs = new Joueur[2];
         this.personnages = new Personnage[2][4];
+        this.premierJoueur = 0;
     }
     
     /* Initialisation de la Partie (création des Joueur) */
@@ -129,6 +132,26 @@ public class Partie {
         this.labyrinthe.setMonstre(0, 0, true);
     }
     
+    /* Boucle de jeu */
+    public void jouer() {
+        int nbTour = 1;
+        int personnagesRestant = 8;
+        
+        while (nbTour < 17 && personnagesRestant > 0) {
+            for (int i = 0 ; i < this.joueurs.length ; i++) {
+                if (nbTour < 9) {
+                    System.out.println("== MANCHE 1 - TOUR " + nbTour + " ==\n" );
+                } else {
+                    System.out.println("== MANCHE 2 - TOUR " + (nbTour - 8) + " ==\n" );
+                }
+                this.afficherLaby();
+                System.out.println("\n" + this.joueurs[i]);
+            }
+            
+            nbTour++;
+        }
+    }
+    
     /* Retourne le Personnage aux coordonnées _x, _y sous la forme d'une chaine */
     public String personnageAt(int _x, int _y) {
         for (int j = 0 ; j < this.personnages.length ; j++) {
@@ -139,7 +162,7 @@ public class Partie {
                 }
             }
         }
-        return "    ";
+        return "   ";
     }
     
     /* Affiche le Labyrinthe */
@@ -157,6 +180,10 @@ public class Partie {
     /* Getters */
     public Labyrinthe getLabyrinthe() {
         return this.labyrinthe;
+    }
+
+    public Monstre getMonstre() {
+        return this.monstre;
     }
     
     

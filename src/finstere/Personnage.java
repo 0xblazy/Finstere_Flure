@@ -21,6 +21,8 @@ public class Personnage extends Pion {
     private final String couleur;
     /* Vrai si le Personnage est tourné face clair */
     private boolean faceClair;
+    /* Vrai si le Personnage a été joué durant le tour */
+    private boolean joue;
     /* Vrai si le Personnage est mort */
     private boolean rip;
     /* Vrai si le Personnage est sorti du Labyrinthe */
@@ -36,6 +38,7 @@ public class Personnage extends Pion {
         this.pm = _pmC;
         this.couleur = _couleur;
         this.faceClair = true;
+        this.joue = false;
         this.rip = false;
         this.exit = false;
         this.classement = 0;
@@ -71,7 +74,7 @@ public class Personnage extends Pion {
     }
     
     /* Déplace le Personnage aux coordonnées _x, _y */
-    public void deplacer(int _x, int _y) {
+    public boolean deplacer(int _x, int _y) {
         if (super.x < 16 && super.y <= 10) {
             super.partie.getLabyrinthe().setPersonnage(super.x, super.y, false);
         }
@@ -79,7 +82,14 @@ public class Personnage extends Pion {
         super.x = _x;
         super.y = _y;
         super.partie.getLabyrinthe().setPersonnage(_x, _y, true);
+        return true;
+    }
+    
+    /* Termine l'action d'un Personnage */
+    public boolean finAction() {
         this.faceClair = !this.faceClair;
+        this.joue = true;
+        return false;
     }
     
     /* Retourne la liste des Action que peut faire le Personnage */
@@ -96,6 +106,8 @@ public class Personnage extends Pion {
                 key++;
             }
         }
+        actions.put(key, new Action("Terminer les Actions", this.getClass(),
+                "finAction", new Object[] {}));
         return actions;
     }
     
@@ -118,15 +130,17 @@ public class Personnage extends Pion {
         return cases;
     }
     
-    /* Appeler en fin de tour pour redonner les pm au Personnage pour le tour 
-     * suivant
+    /* Appeler en fin de tour pour retourner le Personnage si il n'a pas été 
+     * joué et redonner les pm à celui-ci pour le tour suivant
      */
     public void finTour() {
+        if (!this.joue) this.faceClair = !this.faceClair;
         if (this.faceClair) {
             this.pm = this.pmC;
         } else {
             this.pm = this.pmF;
         }
+        this.joue = false;
     }
     
     @Override
@@ -158,9 +172,23 @@ public class Personnage extends Pion {
         if (super.x < 16 && super.y < 11) {
             s += "(" + super.x + "," + super.y + ")";
         } else {
-            s += "(Non joué)";
+            s += "(Extérieur)";
         }
            
         return s;
     }
+    
+    /* Getters */
+    public boolean isJoue() {
+        return this.joue;
+    }
+
+    public boolean isRip() {
+        return this.rip;
+    }
+
+    public boolean isExit() {
+        return this.exit;
+    }
+    
 }

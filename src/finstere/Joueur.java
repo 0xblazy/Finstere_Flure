@@ -5,15 +5,20 @@
  */
 package finstere;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
  * @author nKBlaZy
  */
 public class Joueur {
-    /* Nom du joueur */
+    /* Nom du Joueur */
     private String name;
-    /* Personnages du joueur */
+    /* Personnage du Joueur */
     private Personnage[] personnages;
+    /* Nombre de Personnage restant */
+    private int nbRestant;
     /* Partie dans laquelle joue le Joueur */
     private Partie partie;
     /* Couleur des Personnage du Joueur */
@@ -25,6 +30,20 @@ public class Joueur {
         this.partie = _partie;
         this.couleur = _couleur;
         this.personnages = _personnages;
+        this.nbRestant = 4;
+    }
+    
+    /* Retour la liste de Personnages encore jouables */
+    public Map<Integer,String> persoJouables() {
+        HashMap<Integer,String> perso = new HashMap<>();
+        
+        for (int i = 0 ; i < this.personnages.length ; i++) {
+            if (!this.personnages[i].isJoue() && !this.personnages[i].isRip() 
+                    && !this.personnages[i].isExit()) perso.put(i + 1, "" 
+                            + this.personnages[i]);
+        }
+        
+        return perso;
     }
     
     @Override
@@ -38,4 +57,10 @@ public class Joueur {
         
         return s;
     }
+    
+    /* Getters */
+    public int getNbRestant() {
+        return this.nbRestant;
+    }
+    
 }

@@ -74,11 +74,11 @@ public class Personnage extends Pion {
     }
     
     /* Déplace le Personnage aux coordonnées _x, _y */
-    public boolean deplacer(int _x, int _y) {
+    public boolean deplacer(int _x, int _y, int _pm) {
         if (super.x < 16 && super.y <= 10) {
             super.partie.getLabyrinthe().setPersonnage(super.x, super.y, false);
         }
-        this.pm -= (Math.abs(super.x - _x) + Math.abs(super.y - _y));
+        this.pm -= _pm;
         super.x = _x;
         super.y = _y;
         super.partie.getLabyrinthe().setPersonnage(_x, _y, true);
@@ -99,15 +99,56 @@ public class Personnage extends Pion {
         int key = 1;
         for (int[] c : cases) {
             if (super.partie.getLabyrinthe().isLibre(c[0], c[1])) {
-                actions.put(key, new Action(
+                
+                int pmA = Math.abs(c[0] - super.x) + Math.abs(c[1] - super.y);
+                
+                /* Défini la direction où vérifier la présence d'obstacle */
+                int dir = Finstere.HAUT;
+                int diff = Math.abs(c[1] - super.y);
+                if (c[1] < super.y && Math.abs(c[1] - super.y) >= diff) {
+                    diff = Math.abs(c[1] - super.y);
+                    dir = Finstere.BAS;
+                }
+                if (c[0] > super.x && Math.abs(c[0] - super.x) >= diff) {
+                    diff = Math.abs(c[0] - super.x);
+                    dir = Finstere.GAUCHE;
+                }
+                if (c[0] < super.x && Math.abs(c[0] - super.x) >= diff) {
+                    diff = Math.abs(c[0] - super.x);
+                    dir = Finstere.DROITE;
+                }
+                
+                if (super.partie.getLabyrinthe().obstacleAdj(c[0], c[1], dir)) {
+                    if (c[0] == super.x || c[1] == super.y) {
+                        if (pmA + 2 <= this.pm) {
+                            actions.put(key, new Action(
+                                "Se Déplacer en (" + c[0] + "," + c[1] + ")", 
+                                this.getClass(), "deplacer", 
+                                new Object[] {c[0], c[1], pmA + 2}));
+                            key++;
+                        }
+                    } else {
+                        actions.put(key, new Action(
+                            "Se Déplacer en (" + c[0] + "," + c[1] + ")", 
+                            this.getClass(), "deplacer", 
+                            new Object[] {c[0], c[1], pmA}));
+                        key++;
+                    }
+                } else {
+                    actions.put(key, new Action(
                         "Se Déplacer en (" + c[0] + "," + c[1] + ")", 
                         this.getClass(), "deplacer", 
-                        new Object[] {c[0], c[1]}));
-                key++;
+                        new Object[] {c[0], c[1], pmA}));
+                    key++;
+                }
             }
         }
-        actions.put(key, new Action("Terminer les Actions", this.getClass(),
+        
+        if (super.x < 16) {
+            actions.put(key, new Action("Terminer les Actions", this.getClass(),
                 "finAction", new Object[] {}));
+        }
+        
         return actions;
     }
     
@@ -169,7 +210,7 @@ public class Personnage extends Pion {
             s += " " + this.pmF + " Face foncée ";
         }
         
-        if (super.x < 16 && super.y < 11) {
+        if (super.x < 16) {
             s += "(" + super.x + "," + super.y + ")";
         } else {
             s += "(Extérieur)";

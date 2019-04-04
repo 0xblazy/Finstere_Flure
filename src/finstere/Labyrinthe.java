@@ -193,6 +193,26 @@ public class Labyrinthe {
         return s;
     }
     
+    /* Vérifie si la Case adjacente à la Case (x,y) dans une direction donnée 
+     * est un Mur, une flaque d'Hemoglobine ou non
+     */
+    public boolean obstacleAdj(int _x, int _y, int _dir) {
+        if (_dir == Finstere.HAUT && _y > 0) {
+            return this.labyrinthe[_y - 1][_x].isMur() ||
+                    this.labyrinthe[_y - 1][_x].isHemoglobine();
+        } else if (_dir == Finstere.BAS && _y < 10) {
+            return this.labyrinthe[_y + 1][_x].isMur() ||
+                    this.labyrinthe[_y + 1][_x].isHemoglobine();
+        } else if (_dir == Finstere.GAUCHE && _x > 0) {
+            return this.labyrinthe[_y][_x - 1].isMur() ||
+                    this.labyrinthe[_y][_x - 1].isHemoglobine();
+        } else if (_dir == Finstere.DROITE && _x < 15) {
+            return this.labyrinthe[_y][_x + 1].isMur() ||
+                    this.labyrinthe[_y ][_x + 1].isHemoglobine();
+        }
+        return false;
+    }
+    
     /* Setters pour définir si un élément est sur la Case (x,y) */
     public void setMur(int _x, int _y, boolean _mur) {
         this.labyrinthe[_y][_x].setMur(_mur);

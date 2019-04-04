@@ -99,46 +99,9 @@ public class Personnage extends Pion {
         int key = 1;
         for (int[] c : cases) {
             if (super.partie.getLabyrinthe().isLibre(c[0], c[1])) {
-                
-                int pmA = Math.abs(c[0] - super.x) + Math.abs(c[1] - super.y);
-                
-                /* Défini la direction où vérifier la présence d'obstacle */
-                int dir = Finstere.HAUT;
-                int diff = Math.abs(c[1] - super.y);
-                if (c[1] < super.y && Math.abs(c[1] - super.y) >= diff) {
-                    diff = Math.abs(c[1] - super.y);
-                    dir = Finstere.BAS;
-                }
-                if (c[0] > super.x && Math.abs(c[0] - super.x) >= diff) {
-                    diff = Math.abs(c[0] - super.x);
-                    dir = Finstere.GAUCHE;
-                }
-                if (c[0] < super.x && Math.abs(c[0] - super.x) >= diff) {
-                    diff = Math.abs(c[0] - super.x);
-                    dir = Finstere.DROITE;
-                }
-                
-                if (super.partie.getLabyrinthe().obstacleAdj(c[0], c[1], dir)) {
-                    if (c[0] == super.x || c[1] == super.y) {
-                        if (pmA + 2 <= this.pm) {
-                            actions.put(key, new Action(
-                                "Se Déplacer en (" + c[0] + "," + c[1] + ")", 
-                                this.getClass(), "deplacer", 
-                                new Object[] {c[0], c[1], pmA + 2}));
-                            key++;
-                        }
-                    } else {
-                        actions.put(key, new Action(
-                            "Se Déplacer en (" + c[0] + "," + c[1] + ")", 
-                            this.getClass(), "deplacer", 
-                            new Object[] {c[0], c[1], pmA}));
-                        key++;
-                    }
-                } else {
-                    actions.put(key, new Action(
-                        "Se Déplacer en (" + c[0] + "," + c[1] + ")", 
-                        this.getClass(), "deplacer", 
-                        new Object[] {c[0], c[1], pmA}));
+                Action action = this.actionDeplacer(c[0], c[1]);
+                if (action != null) {
+                    actions.put(key, action);
                     key++;
                 }
             }
@@ -169,6 +132,44 @@ public class Personnage extends Pion {
         }        
         
         return cases;
+    }
+    
+    /* Génère l'Action deplacer en fonction des contraintes du Labyrinthe */
+    private Action actionDeplacer(int _x, int _y) {
+        int pmA = Math.abs(_x - super.x) + Math.abs(_y - super.y);
+                
+        /* Défini la direction où vérifier la présence d'obstacle */
+        int dir = Finstere.HAUT;
+        int diff = Math.abs(_y - super.y);
+        if (_y < super.y && Math.abs(_y - super.y) >= diff) {
+            diff = Math.abs(_y - super.y);
+            dir = Finstere.BAS;
+        }
+        if (_x > super.x && Math.abs(_x - super.x) >= diff) {
+            diff = Math.abs(_x - super.x);
+            dir = Finstere.GAUCHE;
+        }
+        if (_x < super.x && Math.abs(_x - super.x) >= diff) {
+            diff = Math.abs(_x - super.x);
+            dir = Finstere.DROITE;
+        }
+                
+        if (super.partie.getLabyrinthe().obstacleAdj(_x, _y, dir)) {
+            if (_x == super.x || _y == super.y) {
+                if (pmA + 2 <= this.pm) {
+                    return new Action("Se Déplacer en (" + _x + "," + _y + ")", 
+                        this.getClass(), "deplacer", new Object[] {_x, _y, pmA + 2});
+                } else {
+                    return null;
+                }
+            } else {
+                 return new Action("Se Déplacer en (" + _x + "," + _y + ")", 
+                    this.getClass(), "deplacer", new Object[] {_x, _y, pmA});
+            }
+        } else {
+            return new Action("Se Déplacer en (" + _x + "," + _y + ")", 
+                this.getClass(), "deplacer", new Object[] {_x, _y, pmA});
+        }
     }
     
     /* Appeler en fin de tour pour retourner le Personnage si il n'a pas été 

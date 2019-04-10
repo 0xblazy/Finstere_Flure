@@ -96,6 +96,18 @@ public class Personnage extends Pion {
         return false;
     }
     
+    /* Fait sortir le Personnage du Labyrinthe */
+    public boolean sortir() {
+        this.pm--;
+        super.partie.getLabyrinthe().setPersonnage(super.x, super.y, false);
+        super.x = -1;
+        this.exit = true;
+        this.classement = this.partie.getClassement();
+        this.partie.setClassement();
+        this.joue = true;
+        return false;
+    }
+    
     /* Retourne la liste des Action que peut faire le Personnage */
     public Map<Integer,Action> getActions() {
         HashMap<Integer,Action> actions = new HashMap<>();
@@ -115,6 +127,13 @@ public class Personnage extends Pion {
                     key++;
                 }
             }
+        }
+        
+        /* Si le Personnage a encore des pm et qu'il est au niveau de la sortie */
+        if (super.x == 0 && super.y == 0 && this.pm > 0) {
+            actions.put(key, new Action("Sortir du Labyrinthe", this.getClass(),
+                "sortir", new Object[] {}));
+            key++;
         }
         
         /* Si le Personnage est déjà sur le Labyrinthe, on ajoute une Action 
@@ -237,10 +256,18 @@ public class Personnage extends Pion {
         }
         
         /* Ajout des coordonnées du Personnage à la chaîne */
-        if (super.x < 16) {
-            s += "(" + super.x + "," + super.y + ")";
-        } else {
+        if (super.x == 16) {
             s += "(Extérieur)";
+        } else if (super.x == -1) {
+            s += "(Sortie ";
+            if (this.classement == 1) {
+                s += "1er";
+            } else {
+                s += this.classement + "ème";
+            }
+            s += ")";
+        } else {
+            s += "(" + super.x + "," + super.y + ")";
         }
            
         return s;

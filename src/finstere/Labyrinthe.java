@@ -176,25 +176,6 @@ public class Labyrinthe {
         }
     }
     
-    /* Retourne le Labyrinthe sous forme d'une chaîne de caractère */
-    @Override
-    public String toString() {
-        String s = "";
-        
-        for (int j = 0 ; j < this.labyrinthe.length ; j++) {
-            for (int i = 0 ; i < this.labyrinthe[0].length ; i++) {
-                s += "|" + this.labyrinthe[j][i];
-            }
-            if ( j < this.labyrinthe.length - 1) {
-                s += "|\n";
-            } else {
-                s += "|";
-            }
-        }
-        
-        return s;
-    }
-    
     /* Vérifie si la Case adjacente à la Case (x,y) dans une direction donnée 
      * est un Mur, une flaque d'Hemoglobine ou non
      */
@@ -217,6 +198,25 @@ public class Labyrinthe {
                     this.labyrinthe[_y][_x + 1].isMonstre();
         }
         return false;
+    }
+    
+    /* Retourne le Labyrinthe sous forme d'une chaîne de caractère */
+    @Override
+    public String toString() {
+        String s = "";
+        
+        for (int j = 0 ; j < this.labyrinthe.length ; j++) {
+            for (int i = 0 ; i < this.labyrinthe[0].length ; i++) {
+                s += "|" + this.labyrinthe[j][i];
+            }
+            if ( j < this.labyrinthe.length - 1) {
+                s += "|\n";
+            } else {
+                s += "|";
+            }
+        }
+        
+        return s;
     }
     
     /* Setters pour définir si un élément est sur la Case (_x,_y) */

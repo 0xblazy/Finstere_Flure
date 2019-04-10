@@ -34,6 +34,8 @@ public class Partie {
     private int premierJoueur;
     /* Scanner pour la saisi dans la console */
     private Scanner sc;
+    /* Compteur pour le classement des Personnages */
+    private int classement;
 
     /* Constructeur */
     public Partie() {
@@ -43,6 +45,7 @@ public class Partie {
         this.personnages = new Personnage[2][4];
         this.premierJoueur = 0;
         this.sc = new Scanner(System.in);
+        this.classement = 1;
     }
 
     /* Initialisation de la Partie (création des Joueur) */
@@ -307,4 +310,14 @@ public class Partie {
     public Monstre getMonstre() {
         return this.monstre;
     }
+
+    public int getClassement() {
+        return this.classement;
+    }
+
+    /* Setters */
+    public void setClassement() {
+        this.classement++;
+    }
+    
 }

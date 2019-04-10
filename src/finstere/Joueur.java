@@ -37,7 +37,10 @@ public class Joueur {
     public Map<Integer,String> persoJouables() {
         HashMap<Integer,String> perso = new HashMap<>();
         
+        /* Pour chaque Personnage du Joueur */
         for (int i = 0 ; i < this.personnages.length ; i++) {
+            
+            /* Si le Personnage n'est pas joué, pas mort, pas sorti */
             if (!this.personnages[i].isJoue() && !this.personnages[i].isRip() 
                     && !this.personnages[i].isExit()) perso.put(i + 1, "" 
                             + this.personnages[i]);
@@ -46,10 +49,13 @@ public class Joueur {
         return perso;
     }
     
+    /* Retourne le Joueur sous forme d'une chaîne de caractère */
     @Override
     public String toString() {
+        /* Ajout du nom à la chaîne */
         String s = this.name + " :\n";
         
+        /* Ajout des Personnage du Joueur à la chaîne */
         for (int i = 0 ; i < this.personnages.length ; i++) {
             s += "  " + personnages[i];
             if (i < this.personnages.length - 1) s += "\n";

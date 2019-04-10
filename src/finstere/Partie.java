@@ -5,13 +5,10 @@
  */
 package finstere;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -31,7 +28,7 @@ public class Partie {
     private Joueur[] joueurs;
     /* Personnages de tous les Joueur */
     private Personnage[][] personnages;
-    /* Nombre de vrais joueurs */
+    /* Nombre de vrais Joueur */
     private int nbJoueurs;
     /* Index du Joueur commencant le tour */
     private int premierJoueur;
@@ -52,6 +49,7 @@ public class Partie {
     public void initPartie() {
         System.out.println("=== NOUVELLE PARTIE ===");
 
+        /* Choix du nombre de Joueur humain */
         System.out.print("Nombre de joueurs humain (1 ou 2) : ");
         this.nbJoueurs = this.scannerInt();
         while (this.nbJoueurs > 2 || this.nbJoueurs < 1) {
@@ -60,6 +58,7 @@ public class Partie {
             this.nbJoueurs = this.scannerInt();
         }
 
+        /* Création des Joueur */
         int couleurPremier = 0;
         for (int i = 0; i < this.nbJoueurs; i++) {
             System.out.println("Joueur " + (i + 1) + " : ");
@@ -96,21 +95,25 @@ public class Partie {
     /* Génère le Labyrinthe et dispose les Pion dessus */
     private void genLaby() {
         System.out.println("\n...Génération du plateau de Jeu...\n");
-        // Génération du Labyrinthe
+        
+        /* Génération du Labyrinthe */
         this.labyrinthe.initLaby();
-        // Ajout de la flaque carrée
+        
+        /* Ajout de la flaque carrée */
         this.hemoCarree = new Hemoglobine(8, 2, Finstere.CARRE, this);
         this.labyrinthe.setHemoglobine(8, 2, true);
         this.labyrinthe.setHemoglobine(9, 2, true);
         this.labyrinthe.setHemoglobine(8, 3, true);
         this.labyrinthe.setHemoglobine(9, 3, true);
-        // Ajout de la flaque linéaire horizontale
+        
+        /* Ajout de la flaque linéaire horizontale */
         this.hemoLine = new Hemoglobine(4, 8, Finstere.LINEHORI, this);
         this.labyrinthe.setHemoglobine(4, 8, true);
         this.labyrinthe.setHemoglobine(5, 8, true);
         this.labyrinthe.setHemoglobine(6, 8, true);
         this.labyrinthe.setHemoglobine(7, 8, true);
-        // Ajout des murs
+        
+        /* Ajout des murs */
         this.murs.add(new Mur(2, 2, this));
         this.labyrinthe.setMur(2, 2, true);
         this.murs.add(new Mur(12, 3, this));
@@ -133,7 +136,8 @@ public class Partie {
         this.labyrinthe.setMur(5, 9, true);
         this.murs.add(new Mur(8, 9, this));
         this.labyrinthe.setMur(8, 9, true);
-        //Ajout du monstre
+        
+        /* Ajout du monstre */
         this.monstre = new Monstre(this);
         this.labyrinthe.setMonstre(0, 0, true);
     }
@@ -302,11 +306,5 @@ public class Partie {
 
     public Monstre getMonstre() {
         return this.monstre;
-    }
-
-    public void test() {
-        for (Map.Entry<Integer, Action> entry : this.personnages[0][1].getActions().entrySet()) {
-            System.out.println(entry.getKey() + " => " + entry.getValue().getAction());
-        }
     }
 }

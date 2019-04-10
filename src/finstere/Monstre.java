@@ -19,6 +19,9 @@ public class Monstre extends Pion {
         this.direction = Finstere.DROITE;
     }
     
+    /* Retourne le Monstre sous la forme d'une chaîne de caractère indiquant sa 
+     * direction
+     */
     @Override
     public String toString() {
         if (this.direction == Finstere.HAUT) {

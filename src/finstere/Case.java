@@ -59,31 +59,11 @@ public class Case {
         this(_x, _y, false, new HashMap<>(), _blocked, _partie);
     }
     
+    /* Retourne la Case sous forme d'une chaîne de caractère en fonction de son 
+     * état
+     */
     @Override
     public String toString() {
-        /*String s = "Case (" + this.x + "," + this.y + ")";
-
-        if (this.mur) {
-            s += " [MUR]";
-        } else if (this.hemoglobine) {
-            s += " [HÉMOGLOBINE]";
-        } else if (this.personnage) {
-            s += " [PERSONNAGE]";
-        } else if (this.monstre) {
-            s += " [MONSTRE]";
-        }
-        
-        if (this.blocked) {
-            s += " [BLOCKED]";
-        } else if (this.bordure) {
-            s += " [BORDURE] : ";
-            for (Map.Entry<Integer, int[]> entry : tp.entrySet()) {
-                s += entry.getKey() + " => (" + entry.getValue()[0] + "," 
-                        + entry.getValue()[1] + ") ";
-            }
-        } 
-        
-        return s;*/
         if (this.blocked) {
             return "###";
         } else if (this.personnage) {

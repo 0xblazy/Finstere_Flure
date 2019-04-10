@@ -44,10 +44,11 @@ public class Personnage extends Pion {
         this.classement = 0;
     }
     
-    /* Retourne le Personnage sous la forme d'une chaine de 4 caractères */
+    /* Retourne le Personnage sous la forme d'une chaine de 3 caractères */
     public String shortString() {
         String s = "";
         
+        /* Ajoute l'intiale de la couleur à la chaîne (P = Violet) */
         if (this.couleur.equals(Finstere.COULEURS[0])) {
             s += "B";
         } else if (this.couleur.equals(Finstere.COULEURS[1])) {
@@ -64,6 +65,7 @@ public class Personnage extends Pion {
             s += "J";
         }
         
+        /* Ajoute les pm et la face du Personnage à la chaîne */
         if (this.faceClair) {
             s += this.pmC + "C";
         } else {
@@ -75,9 +77,11 @@ public class Personnage extends Pion {
     
     /* Déplace le Personnage aux coordonnées _x, _y */
     public boolean deplacer(int _x, int _y, int _pm) {
+        /* Si le Personnage est déjà sur le Labyrinthe */
         if (super.x < 16 && super.y <= 10) {
             super.partie.getLabyrinthe().setPersonnage(super.x, super.y, false);
         }
+        
         this.pm -= _pm;
         super.x = _x;
         super.y = _y;
@@ -97,9 +101,15 @@ public class Personnage extends Pion {
         HashMap<Integer,Action> actions = new HashMap<>();
         ArrayList<int[]> cases = this.casesPossibles();
         int key = 1;
+        
+        /* Pour chaque Case possible */
         for (int[] c : cases) {
+            
+            /* Si la Case est libre */
             if (super.partie.getLabyrinthe().isLibre(c[0], c[1])) {
                 Action action = this.actionDeplacer(c[0], c[1]);
+                
+                /* Si l'Action n'est pas null (est donc réalisable) */
                 if (action != null) {
                     actions.put(key, action);
                     key++;
@@ -107,6 +117,9 @@ public class Personnage extends Pion {
             }
         }
         
+        /* Si le Personnage est déjà sur le Labyrinthe, on ajoute une Action 
+         * pour terminer les Actions
+         */
         if (super.x < 16) {
             actions.put(key, new Action("Terminer les Actions", this.getClass(),
                 "finAction", new Object[] {}));
@@ -116,7 +129,7 @@ public class Personnage extends Pion {
     }
     
     /* Retourne les coordonnées des Case sur lequel le Personnage peut 
-     * possiblement aller
+     * possiblement aller (cercle de rayon pm)
      */
     private ArrayList<int[]> casesPossibles() {
         ArrayList<int[]> cases = new ArrayList<>();
@@ -134,7 +147,9 @@ public class Personnage extends Pion {
         return cases;
     }
     
-    /* Génère l'Action deplacer en fonction des contraintes du Labyrinthe */
+    /* Génère l'Action deplacer en fonction des contraintes du Labyrinthe
+     * Retourne null si l'Action n'est pas réalisable
+     */
     private Action actionDeplacer(int _x, int _y) {
         int pmA = Math.abs(_x - super.x) + Math.abs(_y - super.y);
                 
@@ -153,9 +168,16 @@ public class Personnage extends Pion {
             diff = Math.abs(_x - super.x);
             dir = Finstere.DROITE;
         }
-                
+        
+        /* Si il y a un obstacle entre le Personnage et la Case */
         if (super.partie.getLabyrinthe().obstacleAdj(_x, _y, dir)) {
+            
+            /* Si le Personnage est aligné verticalement ou horizontalement à la
+             * Case
+             */
             if (_x == super.x || _y == super.y) {
+                
+                /* Si le Personnage a assez de pm pour contourner l'obstacle */
                 if (pmA + 2 <= this.pm) {
                     return new Action("Se Déplacer en (" + _x + "," + _y + ")", 
                         this.getClass(), "deplacer", new Object[] {_x, _y, pmA + 2});
@@ -185,10 +207,12 @@ public class Personnage extends Pion {
         this.joue = false;
     }
     
+    /* Retourne le Personnage sous forme d'une chaîne de caractère */
     @Override
     public String toString() {
         String s = "Personnage ";
         
+        /* Ajout de la couleur à la chaîne */
         if (this.couleur.equals(Finstere.COULEURS[0])) {
             s += "Bleu";
         } else if (this.couleur.equals(Finstere.COULEURS[1])) {
@@ -205,12 +229,14 @@ public class Personnage extends Pion {
             s += "Jaune";
         }
         
+        /* Ajout des pm et de la face à la chaîne */
         if (this.faceClair) {
             s += " " + this.pmC + " Face claire ";
         } else {
             s += " " + this.pmF + " Face foncée ";
         }
         
+        /* Ajout des coordonnées du Personnage à la chaîne */
         if (super.x < 16) {
             s += "(" + super.x + "," + super.y + ")";
         } else {

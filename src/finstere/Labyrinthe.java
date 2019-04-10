@@ -26,6 +26,8 @@ public class Labyrinthe {
     /* Génère le labyrinthe */
     public void initLaby() {
         this.labyrinthe = new Case[11][16];
+        
+        /* Définition des Case de téléportation pour le Monstre */
         for (int j = 0 ; j < this.labyrinthe.length ; j++) {
             for (int i = 0 ; i < this.labyrinthe[0].length ; i++) {
                 Map<Integer, int[]> tp = new HashMap<>();
@@ -174,13 +176,13 @@ public class Labyrinthe {
         }
     }
     
+    /* Retourne le Labyrinthe sous forme d'une chaîne de caractère */
     @Override
     public String toString() {
         String s = "";
         
         for (int j = 0 ; j < this.labyrinthe.length ; j++) {
             for (int i = 0 ; i < this.labyrinthe[0].length ; i++) {
-                //s += this.labyrinthe[j][i] + "\n";
                 s += "|" + this.labyrinthe[j][i];
             }
             if ( j < this.labyrinthe.length - 1) {
@@ -199,21 +201,25 @@ public class Labyrinthe {
     public boolean obstacleAdj(int _x, int _y, int _dir) {
         if (_dir == Finstere.HAUT && _y > 0) {
             return this.labyrinthe[_y - 1][_x].isMur() ||
-                    this.labyrinthe[_y - 1][_x].isHemoglobine();
+                    this.labyrinthe[_y - 1][_x].isHemoglobine() ||
+                    this.labyrinthe[_y - 1][_x].isMonstre();
         } else if (_dir == Finstere.BAS && _y < 10) {
             return this.labyrinthe[_y + 1][_x].isMur() ||
-                    this.labyrinthe[_y + 1][_x].isHemoglobine();
+                    this.labyrinthe[_y + 1][_x].isHemoglobine() ||
+                    this.labyrinthe[_y + 1][_x].isMonstre();
         } else if (_dir == Finstere.GAUCHE && _x > 0) {
             return this.labyrinthe[_y][_x - 1].isMur() ||
-                    this.labyrinthe[_y][_x - 1].isHemoglobine();
+                    this.labyrinthe[_y][_x - 1].isHemoglobine() ||
+                    this.labyrinthe[_y][_x - 1].isMonstre();
         } else if (_dir == Finstere.DROITE && _x < 15) {
             return this.labyrinthe[_y][_x + 1].isMur() ||
-                    this.labyrinthe[_y ][_x + 1].isHemoglobine();
+                    this.labyrinthe[_y ][_x + 1].isHemoglobine() ||
+                    this.labyrinthe[_y][_x + 1].isMonstre();
         }
         return false;
     }
     
-    /* Setters pour définir si un élément est sur la Case (x,y) */
+    /* Setters pour définir si un élément est sur la Case (_x,_y) */
     public void setMur(int _x, int _y, boolean _mur) {
         this.labyrinthe[_y][_x].setMur(_mur);
     }
@@ -230,7 +236,7 @@ public class Labyrinthe {
          this.labyrinthe[_y][_x].setMonstre(_monstre);
     }
     
-    /* Getters pour la Case (x,y) */
+    /* Getters pour la Case (_x,_y) */
     public boolean isBlocked(int _x, int _y) {
         return this.labyrinthe[_y][_x].isBlocked();
     }

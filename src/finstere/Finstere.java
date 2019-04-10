@@ -31,7 +31,5 @@ public class Finstere {
         Partie partie = new Partie();
         partie.initPartie();
         partie.jouer();
-        partie.test();
-    }
-    
+    }  
 }

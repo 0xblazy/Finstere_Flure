@@ -36,6 +36,8 @@ public class Partie {
     private Scanner sc;
     /* Compteur pour le classement des Personnages */
     private int classement;
+    /* Paquet de Carte */
+    private Paquet paquet;
 
     /* Constructeur */
     public Partie() {
@@ -46,6 +48,7 @@ public class Partie {
         this.premierJoueur = 0;
         this.sc = new Scanner(System.in);
         this.classement = 1;
+        this.paquet = new Paquet();
     }
 
     /* Initialisation de la Partie (création des Joueur) */
@@ -156,6 +159,10 @@ public class Partie {
             if (nbTour == 1) {
                 maxJouer = 2;
             }
+            
+            if (nbTour == 1 || nbTour == 9) {
+                this.paquet.melanger();
+            }
 
             /* Boucle pour un tour */
             for (int nbJouer = 0; nbJouer < maxJouer; nbJouer++) {
@@ -173,6 +180,34 @@ public class Partie {
                     this.personnages[j][i].finTour();
                 }
             }
+            
+            /* Tour du Monstre */
+            System.out.println("Le Monstre se déplace...");
+            Carte carte = this.paquet.tirerCarte();
+            List<Personnage> morts = this.monstre.tour(carte);
+            
+            for (int indexJoueur = 0 ; indexJoueur < 2 ; indexJoueur++) {
+                for (int indexPerso = 0 ; indexPerso < 4 ; indexPerso++) {
+                    for (Personnage perso : morts) {
+                        if (this.personnages[indexJoueur][indexPerso].equals(perso)) {
+                            this.personnages[indexJoueur][indexPerso].tue(nbTour);
+                        }
+                    }
+                }
+            }
+            System.out.println("Carte tirée : " + carte);
+            if (morts.size() > 0) {
+                System.out.println("Morts :");
+                for (Personnage perso : morts) {
+                    System.out.println("   " + perso);
+                }
+            } else {
+                System.out.println("Aucun mort");
+            }
+            System.out.println("");
+            System.out.println("");
+            
+            
             nbTour++;
             this.premierJoueur = (this.premierJoueur + 1)%2;
         }
@@ -250,8 +285,8 @@ public class Partie {
                 } catch (Exception ex) {
                     System.out.println(ex);
                 }
-                System.out.println("");
                 if (continuer) {
+                    System.out.println("");
                     this.afficherLaby();
                 }
                 System.out.println("");
@@ -259,17 +294,17 @@ public class Partie {
         }
     }
 
-    /* Retourne le Personnage aux coordonnées _x, _y sous la forme d'une chaine */
-    public String personnageAt(int _x, int _y) {
+    /* Retourne le Personnage aux coordonnées _x, _y */
+    public Personnage personnageAt(int _x, int _y) {
         for (int j = 0; j < this.personnages.length; j++) {
             for (int i = 0; i < this.personnages[0].length; i++) {
                 if (this.personnages[j][i].getX() == _x
                         && this.personnages[j][i].getY() == _y) {
-                    return this.personnages[j][i].shortString();
+                    return this.personnages[j][i];
                 }
             }
         }
-        return "   ";
+        return null;
     }
 
     /* Affiche le Labyrinthe */
@@ -319,5 +354,4 @@ public class Partie {
     public void setClassement() {
         this.classement++;
     }
-    
 }

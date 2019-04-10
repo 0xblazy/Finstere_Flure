@@ -32,7 +32,7 @@ public class Personnage extends Pion {
     
     /* Constructeur */
     public Personnage(int _pmC, int _pmF, String _couleur, Partie _partie) {
-        super(16, 10, _partie);
+        super(Finstere.EXTERIEUR[0], Finstere.EXTERIEUR[1], _partie);
         this.pmC = _pmC;
         this.pmF = _pmF;
         this.pm = _pmC;
@@ -78,14 +78,14 @@ public class Personnage extends Pion {
     /* Déplace le Personnage aux coordonnées _x, _y */
     public boolean deplacer(int _x, int _y, int _pm) {
         /* Si le Personnage est déjà sur le Labyrinthe */
-        if (super.x < 16 && super.y <= 10) {
-            super.partie.getLabyrinthe().setPersonnage(super.x, super.y, false);
+        if (this.x < Finstere.EXTERIEUR[0] && this.y <= Finstere.EXTERIEUR[1]) {
+            this.partie.getLabyrinthe().setPersonnage(this.x, this.y, false);
         }
         
         this.pm -= _pm;
-        super.x = _x;
-        super.y = _y;
-        super.partie.getLabyrinthe().setPersonnage(_x, _y, true);
+        this.x = _x;
+        this.y = _y;
+        this.partie.getLabyrinthe().setPersonnage(_x, _y, true);
         return true;
     }
     
@@ -99,8 +99,9 @@ public class Personnage extends Pion {
     /* Fait sortir le Personnage du Labyrinthe */
     public boolean sortir() {
         this.pm--;
-        super.partie.getLabyrinthe().setPersonnage(super.x, super.y, false);
-        super.x = -1;
+        this.partie.getLabyrinthe().setPersonnage(this.x, this.y, false);
+        this.x = Finstere.SORTI[0];
+        this.y = Finstere.SORTI[1];
         this.exit = true;
         this.classement = this.partie.getClassement();
         this.partie.setClassement();
@@ -118,7 +119,7 @@ public class Personnage extends Pion {
         for (int[] c : cases) {
             
             /* Si la Case est libre */
-            if (super.partie.getLabyrinthe().isLibre(c[0], c[1])) {
+            if (this.partie.getLabyrinthe().isLibre(c[0], c[1])) {
                 Action action = this.actionDeplacer(c[0], c[1]);
                 
                 /* Si l'Action n'est pas null (est donc réalisable) */
@@ -130,7 +131,7 @@ public class Personnage extends Pion {
         }
         
         /* Si le Personnage a encore des pm et qu'il est au niveau de la sortie */
-        if (super.x == 0 && super.y == 0 && this.pm > 0) {
+        if (this.x == 0 && this.y == 0 && this.pm > 0) {
             actions.put(key, new Action("Sortir du Labyrinthe", this.getClass(),
                 "sortir", new Object[] {}));
             key++;
@@ -139,7 +140,7 @@ public class Personnage extends Pion {
         /* Si le Personnage est déjà sur le Labyrinthe, on ajoute une Action 
          * pour terminer les Actions
          */
-        if (super.x < 16) {
+        if (this.x < Finstere.EXTERIEUR[0] && this.y <= Finstere.EXTERIEUR[1]) {
             actions.put(key, new Action("Terminer les Actions", this.getClass(),
                 "finAction", new Object[] {}));
         }
@@ -156,9 +157,11 @@ public class Personnage extends Pion {
         for (int j = -this.pm ; j <= this.pm ; j++) {
             for (int i = -this.pm ; i <= this.pm ; i++) {
                 if (Math.abs(i) + Math.abs(j) <= this.pm 
-                        && super.x + i < 16 && super.x + i > -1 
-                        && super.y + j < 11 && super.y + j > -1) {
-                    cases.add(new int[] {super.x + i, super.y + j});
+                        && this.x + i < Finstere.EXTERIEUR[0] 
+                        && this.x + i > -1 
+                        && this.y + j <= Finstere.EXTERIEUR[1] 
+                        && this.y + j > -1) {
+                    cases.add(new int[] {this.x + i, this.y + j});
                 }
             }
         }        
@@ -170,31 +173,31 @@ public class Personnage extends Pion {
      * Retourne null si l'Action n'est pas réalisable
      */
     private Action actionDeplacer(int _x, int _y) {
-        int pmA = Math.abs(_x - super.x) + Math.abs(_y - super.y);
+        int pmA = Math.abs(_x - this.x) + Math.abs(_y - this.y);
                 
         /* Défini la direction où vérifier la présence d'obstacle */
         int dir = Finstere.HAUT;
-        int diff = Math.abs(_y - super.y);
-        if (_y < super.y && Math.abs(_y - super.y) >= diff) {
-            diff = Math.abs(_y - super.y);
+        int diff = Math.abs(_y - this.y);
+        if (_y < this.y && Math.abs(_y - this.y) >= diff) {
+            diff = Math.abs(_y - this.y);
             dir = Finstere.BAS;
         }
-        if (_x > super.x && Math.abs(_x - super.x) >= diff) {
-            diff = Math.abs(_x - super.x);
+        if (_x > this.x && Math.abs(_x - this.x) >= diff) {
+            diff = Math.abs(_x - this.x);
             dir = Finstere.GAUCHE;
         }
-        if (_x < super.x && Math.abs(_x - super.x) >= diff) {
-            diff = Math.abs(_x - super.x);
+        if (_x < this.x && Math.abs(_x - this.x) >= diff) {
+            diff = Math.abs(_x - this.x);
             dir = Finstere.DROITE;
         }
         
         /* Si il y a un obstacle entre le Personnage et la Case */
-        if (super.partie.getLabyrinthe().obstacleAdj(_x, _y, dir)) {
+        if (this.partie.getLabyrinthe().obstacleAdj(_x, _y, dir)) {
             
             /* Si le Personnage est aligné verticalement ou horizontalement à la
              * Case
              */
-            if (_x == super.x || _y == super.y) {
+            if (_x == this.x || _y == this.y) {
                 
                 /* Si le Personnage a assez de pm pour contourner l'obstacle */
                 if (pmA + 2 <= this.pm) {
@@ -213,7 +216,7 @@ public class Personnage extends Pion {
         }
     }
     
-    /* Appeler en fin de tour pour retourner le Personnage si il n'a pas été 
+    /* Appelée en fin de tour pour retourner le Personnage si il n'a pas été 
      * joué et redonner les pm à celui-ci pour le tour suivant
      */
     public void finTour() {
@@ -224,6 +227,20 @@ public class Personnage extends Pion {
             this.pm = this.pmF;
         }
         this.joue = false;
+    }
+    
+    /* Appelée lorsque le Personnage est tué par le Monstre */
+    public void tue(int _nbTour) {
+        if (_nbTour < 9) {
+            this.partie.getLabyrinthe().setPersonnage(this.x, this.y, false);
+            this.x = Finstere.EXTERIEUR[0];
+            this.y = Finstere.EXTERIEUR[1];
+        } else {
+            this.partie.getLabyrinthe().setPersonnage(this.x, this.y, false);
+            this.x = Finstere.MORT[0];
+            this.y = Finstere.MORT[1];
+            this.rip = true;
+        }
     }
     
     /* Retourne le Personnage sous forme d'une chaîne de caractère */
@@ -256,9 +273,9 @@ public class Personnage extends Pion {
         }
         
         /* Ajout des coordonnées du Personnage à la chaîne */
-        if (super.x == 16) {
+        if (this.x == Finstere.EXTERIEUR[0] && this.y == Finstere.EXTERIEUR[1]) {
             s += "(Extérieur)";
-        } else if (super.x == -1) {
+        } else if (this.x == Finstere.SORTI[0] && this.y == Finstere.SORTI[1]) {
             s += "(Sortie ";
             if (this.classement == 1) {
                 s += "1er";
@@ -266,11 +283,27 @@ public class Personnage extends Pion {
                 s += this.classement + "ème";
             }
             s += ")";
+        } else if (this.x == Finstere.MORT[0] && this.y == Finstere.MORT[1]) {
+            s += "(Mort)";
         } else {
-            s += "(" + super.x + "," + super.y + ")";
+            s += "(" + this.x + "," + this.y + ")";
         }
            
         return s;
+    }
+    
+    /* Retourne true si le Personnage passé en paramètre est le même que ce 
+     * Personnage
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Personnage) {
+            Personnage perso = (Personnage) obj;
+            return perso.couleur.equals(this.couleur) && perso.pmC == this.pmC 
+                    && perso.pmF == this.pmF;
+        } else {
+            return false;
+        }
     }
     
     /* Getters */

@@ -67,7 +67,12 @@ public class Case {
         if (this.blocked) {
             return "###";
         } else if (this.personnage) {
-            return this.partie.personnageAt(this.x, this.y);
+            Personnage perso = this.partie.personnageAt(this.x, this.y);
+            if (perso != null) {
+                return perso.shortString();
+            } else {
+                return "   ";
+            }
         } else if (this.monstre) {
             return "" + this.partie.getMonstre();
         } else if (this.mur) {
@@ -97,6 +102,10 @@ public class Case {
     }
     
     /* Getters */
+    public boolean isBordure() {
+        return this.bordure;
+    }
+    
     public boolean isBlocked() {
         return this.blocked;
     }
@@ -114,6 +123,10 @@ public class Case {
     }
 
     public boolean isPersonnage() {
-        return personnage;
+        return this.personnage;
+    }
+
+    public Map<Integer, int[]> getTp() {
+        return tp;
     }
 }

@@ -237,6 +237,10 @@ public class Labyrinthe {
     }
     
     /* Getters pour la Case (_x,_y) */
+    public Case getCase(int _x, int _y) {
+        return this.labyrinthe[_y][_x];
+    }
+    
     public boolean isBlocked(int _x, int _y) {
         return this.labyrinthe[_y][_x].isBlocked();
     }

@@ -89,7 +89,7 @@ public class Labyrinthe {
                     if (i == 0) {
                         tp.put(Finstere.GAUCHE, new int[]{15,6});
                         this.labyrinthe[j][i] = new Case(i, j, tp, this.partie);
-                    } else if (i == 14) {
+                    } else if (i == 15) {
                         tp.put(Finstere.HAUT, new int[]{0,6});
                         tp.put(Finstere.DROITE, new int[]{0,6});
                         this.labyrinthe[j][i] = new Case(i,j,tp, this.partie);
@@ -176,28 +176,51 @@ public class Labyrinthe {
         }
     }
     
-    /* Vérifie si la Case adjacente à la Case (x,y) dans une direction donnée 
-     * est un Mur, une flaque d'Hemoglobine ou non
+    /* Vérifie si il y a un obstacle entre la Case (_x,_y) et le Personnage en 
+     * (_xP,_yP)
      */
-    public boolean obstacleAdj(int _x, int _y, int _dir) {
-        if (_dir == Finstere.HAUT && _y > 0) {
-            return this.labyrinthe[_y - 1][_x].isMur() ||
-                    this.labyrinthe[_y - 1][_x].isHemoglobine() ||
-                    this.labyrinthe[_y - 1][_x].isMonstre();
-        } else if (_dir == Finstere.BAS && _y < 10) {
-            return this.labyrinthe[_y + 1][_x].isMur() ||
-                    this.labyrinthe[_y + 1][_x].isHemoglobine() ||
-                    this.labyrinthe[_y + 1][_x].isMonstre();
-        } else if (_dir == Finstere.GAUCHE && _x > 0) {
-            return this.labyrinthe[_y][_x - 1].isMur() ||
-                    this.labyrinthe[_y][_x - 1].isHemoglobine() ||
-                    this.labyrinthe[_y][_x - 1].isMonstre();
-        } else if (_dir == Finstere.DROITE && _x < 15) {
-            return this.labyrinthe[_y][_x + 1].isMur() ||
-                    this.labyrinthe[_y ][_x + 1].isHemoglobine() ||
-                    this.labyrinthe[_y][_x + 1].isMonstre();
+    public boolean obstacle(int _x, int _y, int _xP, int _yP) {
+        boolean obstacle = false;
+        
+        if (_x == _xP) {
+            if (_y < _yP) {
+                int j = _yP - 1;
+                while (!obstacle && j > _y) {
+                    obstacle = this.labyrinthe[j][_x].isHemoglobine() 
+                            || this.labyrinthe[j][_x].isMonstre() 
+                            || this.labyrinthe[j][_x].isMur();
+                    j--;
+                }
+            } else if (_y > _yP) {
+                int j = _yP + 1;
+                while (!obstacle && j < _y) {
+                    obstacle = this.labyrinthe[j][_x].isHemoglobine() 
+                            || this.labyrinthe[j][_x].isMonstre() 
+                            || this.labyrinthe[j][_x].isMur();
+                    j++;
+                }
+            }
+        } else if (_y == _yP) {
+            if (_x < _xP) {
+                int i = _xP - 1;
+                while (!obstacle && i > _x) {
+                    obstacle = this.labyrinthe[_y][i].isHemoglobine() 
+                            || this.labyrinthe[_y][i].isMonstre() 
+                            || this.labyrinthe[_y][i].isMur();
+                    i--;
+                }
+            } else if (_x > _xP) {
+                int i = _xP + 1;
+                while (!obstacle && i < _x) {
+                    obstacle = this.labyrinthe[_y][i].isHemoglobine() 
+                            || this.labyrinthe[_y][i].isMonstre() 
+                            || this.labyrinthe[_y][i].isMur();
+                    i++;
+                }
+            }
         }
-        return false;
+        
+        return obstacle;
     }
     
     /* Retourne le Labyrinthe sous forme d'une chaîne de caractère */

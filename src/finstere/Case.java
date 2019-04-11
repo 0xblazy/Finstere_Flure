@@ -127,6 +127,6 @@ public class Case {
     }
 
     public Map<Integer, int[]> getTp() {
-        return tp;
+        return this.tp;
     }
 }

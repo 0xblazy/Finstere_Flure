@@ -57,12 +57,17 @@ public class Joueur {
         
         /* Ajout des Personnage du Joueur à la chaîne */
         for (int i = 0 ; i < this.personnages.length ; i++) {
-            s += "  " + personnages[i];
+            s += "   " + personnages[i];
             if (i < this.personnages.length - 1) s += "\n";
         }
         
         return s;
     }
+    /* Setters */
+    public void setNbRestant() {
+        this.nbRestant--;
+    }
+    
     
     /* Getters */
     public int getNbRestant() {

@@ -184,6 +184,7 @@ public class Partie {
             /* Tour du Monstre */
             System.out.println("Le Monstre se déplace...");
             Carte carte = this.paquet.tirerCarte();
+            System.out.println("Carte tirée : " + carte);
             List<Personnage> morts = this.monstre.tour(carte);
             
             for (int indexJoueur = 0 ; indexJoueur < 2 ; indexJoueur++) {
@@ -191,11 +192,12 @@ public class Partie {
                     for (Personnage perso : morts) {
                         if (this.personnages[indexJoueur][indexPerso].equals(perso)) {
                             this.personnages[indexJoueur][indexPerso].tue(nbTour);
+                            if (nbTour >= 9)
+                                this.joueurs[indexJoueur].setNbRestant();
                         }
                     }
                 }
             }
-            System.out.println("Carte tirée : " + carte);
             if (morts.size() > 0) {
                 System.out.println("Morts :");
                 for (Personnage perso : morts) {
@@ -285,6 +287,9 @@ public class Partie {
                 } catch (Exception ex) {
                     System.out.println(ex);
                 }
+                if (this.personnages[_indexJoueur][indexPerso].isExit())
+                    this.joueurs[_indexJoueur].setNbRestant();
+                
                 if (continuer) {
                     System.out.println("");
                     this.afficherLaby();
@@ -305,6 +310,21 @@ public class Partie {
             }
         }
         return null;
+    }
+    
+    /* Retourne la liste des Personnage alignés avec les coordonnées (_x,_y) */
+    public List<Personnage> persoAlignes(int _x, int _y) {
+        ArrayList<Personnage> persos = new ArrayList<>();
+        
+        for (int indexJoueur = 0 ; indexJoueur < 2 ; indexJoueur++) {
+            for (int indexPerso = 0 ; indexPerso < 4 ; indexPerso++) {
+                if (this.personnages[indexJoueur][indexPerso].getX() == _x ||
+                        this.personnages[indexJoueur][indexPerso].getY()== _y)
+                    persos.add(this.personnages[indexJoueur][indexPerso]);
+            }
+        }
+        
+        return persos;
     }
 
     /* Affiche le Labyrinthe */

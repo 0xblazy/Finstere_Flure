@@ -11,7 +11,7 @@ package finstere;
  */
 public class Finstere {
     /* Constantes pour les directions */
-    public final static int HAUT = 1, BAS = 2, GAUCHE = 3, DROITE = 4;
+    public final static int HAUT = 1, BAS = -1, GAUCHE = 2, DROITE = -2;
     /* Constantes pour les types de flaques d'hemoglobine (nom de l'image sans
      * l'extension)
      */

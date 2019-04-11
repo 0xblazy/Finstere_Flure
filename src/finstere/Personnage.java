@@ -174,41 +174,16 @@ public class Personnage extends Pion {
      */
     private Action actionDeplacer(int _x, int _y) {
         int pmA = Math.abs(_x - this.x) + Math.abs(_y - this.y);
-                
-        /* Défini la direction où vérifier la présence d'obstacle */
-        int dir = Finstere.HAUT;
-        int diff = Math.abs(_y - this.y);
-        if (_y < this.y && Math.abs(_y - this.y) >= diff) {
-            diff = Math.abs(_y - this.y);
-            dir = Finstere.BAS;
-        }
-        if (_x > this.x && Math.abs(_x - this.x) >= diff) {
-            diff = Math.abs(_x - this.x);
-            dir = Finstere.GAUCHE;
-        }
-        if (_x < this.x && Math.abs(_x - this.x) >= diff) {
-            diff = Math.abs(_x - this.x);
-            dir = Finstere.DROITE;
-        }
         
-        /* Si il y a un obstacle entre le Personnage et la Case */
-        if (this.partie.getLabyrinthe().obstacleAdj(_x, _y, dir)) {
-            
-            /* Si le Personnage est aligné verticalement ou horizontalement à la
-             * Case
-             */
-            if (_x == this.x || _y == this.y) {
+        /* Si il y a un obstacle entre la Case et le Personnage */
+        if (this.partie.getLabyrinthe().obstacle(_x, _y, this.x, this.y)) {
                 
-                /* Si le Personnage a assez de pm pour contourner l'obstacle */
-                if (pmA + 2 <= this.pm) {
-                    return new Action("Se Déplacer en (" + _x + "," + _y + ")", 
-                        this.getClass(), "deplacer", new Object[] {_x, _y, pmA + 2});
-                } else {
-                    return null;
-                }
+            /* Si le Personnage a assez de pm pour contourner l'obstacle */
+            if (pmA + 2 <= this.pm) {
+                return new Action("Se Déplacer en (" + _x + "," + _y + ")", 
+                    this.getClass(), "deplacer", new Object[] {_x, _y, pmA + 2});
             } else {
-                 return new Action("Se Déplacer en (" + _x + "," + _y + ")", 
-                    this.getClass(), "deplacer", new Object[] {_x, _y, pmA});
+                return null;
             }
         } else {
             return new Action("Se Déplacer en (" + _x + "," + _y + ")", 

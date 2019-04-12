@@ -207,8 +207,7 @@ public class Personnage extends Pion {
         } else if (this.partie.getLabyrinthe().isPersonnage(_x, _y)) {
             boolean bloque = true;
             if (_y > 0) {
-                if (!this.partie.getLabyrinthe().isPersonnage(_x, _y - 1) 
-                        && !this.partie.getLabyrinthe().isMonstre(_x, _y - 1)
+                if (!this.partie.getLabyrinthe().isMonstre(_x, _y - 1)
                         && !this.partie.getLabyrinthe().isBlocked(_x, _y - 1)) {
                     if (this.partie.getLabyrinthe().isMur(_x, _y - 1)) {
                         if (this.partie.getMur(_x, _y - 1)
@@ -221,8 +220,7 @@ public class Personnage extends Pion {
                 }
             }
             if (_y < 10) {
-                if (!this.partie.getLabyrinthe().isPersonnage(_x, _y + 1) 
-                        && !this.partie.getLabyrinthe().isMonstre(_x, _y + 1)
+                if (!this.partie.getLabyrinthe().isMonstre(_x, _y + 1)
                         && !this.partie.getLabyrinthe().isBlocked(_x, _y + 1)) {
                     if (this.partie.getLabyrinthe().isMur(_x, _y + 1)) {
                         if (this.partie.getMur(_x, _y + 1)
@@ -235,8 +233,7 @@ public class Personnage extends Pion {
                 }
             }
             if (_x > 0) {
-                if (!this.partie.getLabyrinthe().isPersonnage(_x - 1, _y) 
-                        && !this.partie.getLabyrinthe().isMonstre(_x - 1, _y)
+                if (!this.partie.getLabyrinthe().isMonstre(_x - 1, _y)
                         && !this.partie.getLabyrinthe().isBlocked(_x - 1, _y)) {
                     if (this.partie.getLabyrinthe().isMur(_x - 1, _y)) {
                         if (this.partie.getMur(_x - 1, _y)
@@ -249,8 +246,7 @@ public class Personnage extends Pion {
                 }
             }
             if (_x < 15) {
-                if (!this.partie.getLabyrinthe().isPersonnage(_x + 1, _y) 
-                        && !this.partie.getLabyrinthe().isMonstre(_x + 1, _y)
+                if (!this.partie.getLabyrinthe().isMonstre(_x + 1, _y)
                         && !this.partie.getLabyrinthe().isBlocked(_x + 1, _y)) {
                     if (this.partie.getLabyrinthe().isMur(_x + 1, _y)) {
                         if (this.partie.getMur(_x + 1, _y)
@@ -414,6 +410,8 @@ public class Personnage extends Pion {
     public boolean isEnDessous() {
         return this.enDessous;
     }
-    
-    
+
+    public int getPm() {
+        return this.pm;
+    }
 }

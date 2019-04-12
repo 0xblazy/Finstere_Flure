@@ -273,7 +273,9 @@ public class Partie {
             /* Actions avec le Personnage */
             boolean continuer = true;
             while (continuer) {
-                System.out.println("Actions possibles");
+                System.out.println("Actions possibles (" 
+                        + this.personnages[_indexJoueur][indexPerso].getPm() 
+                        + " pm restants)");
                 Map<Integer, Action> actions = this.personnages[_indexJoueur][indexPerso].getActions();
                 for (Map.Entry<Integer, Action> entry : actions.entrySet()) {
                     System.out.println("   " + entry.getKey()

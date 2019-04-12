@@ -128,14 +128,14 @@ public class Personnage extends Pion {
     /* Retourne la liste des Action que peut faire le Personnage */
     public Map<Integer,Action> getActions() {
         HashMap<Integer,Action> actions = new HashMap<>();
-        ArrayList<int[]> cases = this.casesPossibles();
+        ArrayList<int[]> cases = this.casesPossibles(this.x, this.y, this.pm);
         int key = 1;
         
         /* Pour chaque Case possible */
         for (int[] c : cases) {
             
-            /* Si la Case est libre */
-            if (this.partie.getLabyrinthe().isLibre(c[0], c[1])) {
+            /* Si la Case est disponible */
+            if (this.partie.getLabyrinthe().isDisponible(c[0], c[1])) {
                 Action action = this.actionDeplacer(c[0], c[1]);
                 
                 /* Si l'Action n'est pas null (est donc réalisable) */
@@ -167,20 +167,20 @@ public class Personnage extends Pion {
     }
     
     /* Retourne les coordonnées des Case sur lequel le Personnage peut 
-     * possiblement aller (cercle de rayon pm)
+     * possiblement aller
      */
-    private ArrayList<int[]> casesPossibles() {
+    private ArrayList<int[]> casesPossibles(int _x, int _y, int _rayon) {
         ArrayList<int[]> cases = new ArrayList<>();
         
-        for (int j = -this.pm ; j <= this.pm ; j++) {
-            for (int i = -this.pm ; i <= this.pm ; i++) {
-                if (Math.abs(i) + Math.abs(j) <= this.pm 
-                        && this.x + i < Finstere.EXTERIEUR[0] 
-                        && this.x + i > -1 
-                        && this.y + j <= Finstere.EXTERIEUR[1] 
-                        && this.y + j > -1
+        for (int j = -_rayon ; j <= _rayon ; j++) {
+            for (int i = -_rayon ; i <= _rayon ; i++) {
+                if (Math.abs(i) + Math.abs(j) <= _rayon 
+                        && _x + i < Finstere.EXTERIEUR[0] 
+                        && _x + i > -1 
+                        && _y + j <= Finstere.EXTERIEUR[1] 
+                        && _y + j > -1
                         && !(j == 0 && i == 0)) {
-                    cases.add(new int[] {this.x + i, this.y + j});
+                    cases.add(new int[] {_x + i, _y + j});
                 }
             }
         }        
@@ -262,7 +262,7 @@ public class Personnage extends Pion {
                     }
                 }
             }
-            if (!bloque && pmA + 1 <= this.pm) {
+            if (!bloque && pmA + pmCaseLibre(_x, _y, this.pm - pmA) <= this.pm) {
                 return new Action("Se Déplacer en (" + _x + "," + _y + ")", 
                     this.getClass(), "deplacer", new Object[] {_x, _y, pmA});
             } else {
@@ -272,6 +272,40 @@ public class Personnage extends Pion {
             return new Action("Se Déplacer en (" + _x + "," + _y + ")", 
                 this.getClass(), "deplacer", new Object[] {_x, _y, pmA});
         }
+    }
+    
+    /* Retourne le coup en pm nécessaire pour aller sur une Case libre 
+     * (retourne 10 si il n'y a pas de Case libre dans le rayon donné)
+     */
+    private int pmCaseLibre(int _x, int _y, int _rayon) {
+        int coup = 10;
+        for (int[] c : this.casesPossibles(_x, _y, _rayon)) {
+            int pmNecessaires = Math.abs(_x - c[0]) + Math.abs(_y - c[1]);
+            int direction = Finstere.HAUT;
+            
+            int diffY = Math.abs(_y - c[1]);
+            int diffX = Math.abs(_x - c[0]);
+            if (diffY > diffX) {
+                if (_y > c[1]) {
+                    direction = Finstere.HAUT;
+                } else {
+                    direction = Finstere.BAS;
+                }
+            } else {
+                if (_x > c[0]) {
+                    direction = Finstere.GAUCHE;
+                } else {
+                    direction = Finstere.DROITE;
+                }
+            }
+            
+            if (this.partie.getLabyrinthe().isLibre(c[0], c[1], direction)
+                    && pmNecessaires < coup) {
+                coup = pmNecessaires;
+            }
+        }
+        
+        return coup;
     }
     
     /* Appelée en fin de tour pour retourner le Personnage si il n'a pas été 

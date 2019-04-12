@@ -284,8 +284,20 @@ public class Labyrinthe {
         return this.labyrinthe[_y][_x].isPersonnage();
     }
     
-    public boolean isLibre(int _x, int _y) {
+    public boolean isDisponible(int _x, int _y) {
         return !this.isBlocked(_x, _y) && !this.isHemoglobine(_x, _y) 
                 && !this.isMonstre(_x, _y) && !this.isMur(_x, _y);                
+    }
+    
+    public boolean isLibre(int _x, int _y, int _dir) {
+        boolean libre = !this.isBlocked(_x, _y) && !this.isMonstre(_x, _y) 
+                && !this.isPersonnage(_x, _y);
+        
+        Mur mur = this.partie.getMur(_x, _y);
+        if (mur != null && libre) {
+            libre = mur.poussable(_dir);
+        }
+        
+        return libre;
     }
 }

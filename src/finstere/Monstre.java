@@ -105,7 +105,7 @@ public class Monstre extends Pion {
             System.out.println("   Le Monstre se déplace en (" + this.x 
                     + "," + this.y +")");
         }
-        return this.partie.personnageAt(this.x, this.y);
+        return this.partie.getPersonnage(this.x, this.y);
     }
     
     /* Trouve la direction à donner au Monstre en fonction de la situation */

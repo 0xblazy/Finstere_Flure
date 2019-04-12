@@ -67,7 +67,7 @@ public class Case {
         if (this.blocked) {
             return "###";
         } else if (this.personnage) {
-            Personnage perso = this.partie.personnageAt(this.x, this.y);
+            Personnage perso = this.partie.getPersonnage(this.x, this.y);
             if (perso != null) {
                 return perso.shortString();
             } else {

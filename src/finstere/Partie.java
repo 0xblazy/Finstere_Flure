@@ -261,6 +261,12 @@ public class Partie {
                         + " en choisir un autre : ");
                 indexPerso = this.scannerInt();
             }
+            while (this.personnages[_indexJoueur][indexPerso-1].getActions()
+                    .size() == 0) {
+                System.out.print("Aucune action possible avec ce Personnage "
+                        + "pour le moment, veuillez en choisir un autre : ");
+                indexPerso = this.scannerInt();
+            }
             indexPerso--;
             System.out.println("");
 
@@ -297,20 +303,7 @@ public class Partie {
                 System.out.println("");
             }
         }
-    }
-
-    /* Retourne le Personnage aux coordonnées _x, _y */
-    public Personnage personnageAt(int _x, int _y) {
-        for (int j = 0; j < this.personnages.length; j++) {
-            for (int i = 0; i < this.personnages[0].length; i++) {
-                if (this.personnages[j][i].getX() == _x
-                        && this.personnages[j][i].getY() == _y) {
-                    return this.personnages[j][i];
-                }
-            }
-        }
-        return null;
-    }
+    }    
     
     /* Retourne la liste des Personnage alignés avec les coordonnées (_x,_y) */
     public List<Personnage> persoAlignes(int _x, int _y) {
@@ -358,6 +351,42 @@ public class Partie {
     }
 
     /* Getters */
+    public Personnage getPersonnage(int _x, int _y) {
+        for (int j = 0; j < this.personnages.length; j++) {
+            for (int i = 0; i < this.personnages[0].length; i++) {
+                if (this.personnages[j][i].getX() == _x
+                        && this.personnages[j][i].getY() == _y
+                        && !this.personnages[j][i].isEnDessous()) {
+                    return this.personnages[j][i];
+                }
+            }
+        }
+        return null;
+    }
+    
+    public Personnage getPersonnageEnDessous(int _x, int _y) {
+        for (int j = 0; j < this.personnages.length; j++) {
+            for (int i = 0; i < this.personnages[0].length; i++) {
+                if (this.personnages[j][i].getX() == _x
+                        && this.personnages[j][i].getY() == _y
+                        && this.personnages[j][i].isEnDessous()) {
+                    return this.personnages[j][i];
+                }
+            }
+        }
+        return null;
+    }
+    
+    public Mur getMur(int _x, int _y) {
+        for (int i = 0 ; i < this.murs.size() ; i++) {
+            if (this.murs.get(i).getX() == _x 
+                    && this.murs.get(i).getY() == _y) {
+                return this.murs.get(i);
+            }
+        }
+        return null;
+    }
+    
     public Labyrinthe getLabyrinthe() {
         return this.labyrinthe;
     }

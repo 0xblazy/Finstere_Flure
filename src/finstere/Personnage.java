@@ -29,6 +29,8 @@ public class Personnage extends Pion {
     private boolean exit;
     /* Classement du Personnage */
     private int classement;
+    /* Vrai si le Personnage est au dessus/en dessous d'un autre */
+    private boolean auDessus, enDessous;
     
     /* Constructeur */
     public Personnage(int _pmC, int _pmF, String _couleur, Partie _partie) {
@@ -42,6 +44,8 @@ public class Personnage extends Pion {
         this.rip = false;
         this.exit = false;
         this.classement = 0;
+        this.auDessus = false;
+        this.enDessous = false;
     }
     
     /* Retourne le Personnage sous la forme d'une chaine de 3 caractères */
@@ -79,7 +83,19 @@ public class Personnage extends Pion {
     public boolean deplacer(int _x, int _y, int _pm) {
         /* Si le Personnage est déjà sur le Labyrinthe */
         if (this.x < Finstere.EXTERIEUR[0] && this.y <= Finstere.EXTERIEUR[1]) {
-            this.partie.getLabyrinthe().setPersonnage(this.x, this.y, false);
+            if (this.auDessus) {
+                this.auDessus = false;
+                this.partie.getPersonnageEnDessous(this.x, this.y).enDessous = false;
+            } else {
+                this.partie.getLabyrinthe().setPersonnage(this.x, this.y, false);
+            }
+        }
+        
+        /* Si le Personnage se déplace sur une Case déjà occupée */
+        Personnage perso = this.partie.getPersonnage(_x, _y);
+        if (perso != null) {
+            perso.enDessous = true;
+            this.auDessus = true;
         }
         
         this.pm -= _pm;
@@ -98,7 +114,7 @@ public class Personnage extends Pion {
     
     /* Fait sortir le Personnage du Labyrinthe */
     public boolean sortir() {
-        this.pm--;
+        this.pm -= (this.x + this.y + 1);
         this.partie.getLabyrinthe().setPersonnage(this.x, this.y, false);
         this.x = Finstere.SORTI[0];
         this.y = Finstere.SORTI[1];
@@ -130,17 +146,19 @@ public class Personnage extends Pion {
             }
         }
         
-        /* Si le Personnage a encore des pm et qu'il est au niveau de la sortie */
-        if (this.x == 0 && this.y == 0 && this.pm > 0) {
+        /* Si le Personnage a suffisament de pm pour sortir */
+        if (this.x + this.y + 1 <= this.pm) {
             actions.put(key, new Action("Sortir du Labyrinthe", this.getClass(),
                 "sortir", new Object[] {}));
             key++;
         }
         
-        /* Si le Personnage est déjà sur le Labyrinthe, on ajoute une Action 
-         * pour terminer les Actions
+        /* Si le Personnage est déjà sur le Labyrinthe et qu'il n'est pas au 
+         * dessus d'un autre Personnage, on ajoute une Action pour terminer les
+         * Actions
          */
-        if (this.x < Finstere.EXTERIEUR[0] && this.y <= Finstere.EXTERIEUR[1]) {
+        if (this.x < Finstere.EXTERIEUR[0] && this.y <= Finstere.EXTERIEUR[1] 
+                && !this.auDessus) {
             actions.put(key, new Action("Terminer les Actions", this.getClass(),
                 "finAction", new Object[] {}));
         }
@@ -160,7 +178,8 @@ public class Personnage extends Pion {
                         && this.x + i < Finstere.EXTERIEUR[0] 
                         && this.x + i > -1 
                         && this.y + j <= Finstere.EXTERIEUR[1] 
-                        && this.y + j > -1) {
+                        && this.y + j > -1
+                        && !(j == 0 && i == 0)) {
                     cases.add(new int[] {this.x + i, this.y + j});
                 }
             }
@@ -182,6 +201,70 @@ public class Personnage extends Pion {
             if (pmA + 2 <= this.pm) {
                 return new Action("Se Déplacer en (" + _x + "," + _y + ")", 
                     this.getClass(), "deplacer", new Object[] {_x, _y, pmA + 2});
+            } else {
+                return null;
+            }
+        } else if (this.partie.getLabyrinthe().isPersonnage(_x, _y)) {
+            boolean bloque = true;
+            if (_y > 0) {
+                if (!this.partie.getLabyrinthe().isPersonnage(_x, _y - 1) 
+                        && !this.partie.getLabyrinthe().isMonstre(_x, _y - 1)
+                        && !this.partie.getLabyrinthe().isBlocked(_x, _y - 1)) {
+                    if (this.partie.getLabyrinthe().isMur(_x, _y - 1)) {
+                        if (this.partie.getMur(_x, _y - 1)
+                                .poussable(Finstere.HAUT)) {
+                            bloque = false;
+                        }
+                    } else {
+                        bloque = false;
+                    }
+                }
+            }
+            if (_y < 10) {
+                if (!this.partie.getLabyrinthe().isPersonnage(_x, _y + 1) 
+                        && !this.partie.getLabyrinthe().isMonstre(_x, _y + 1)
+                        && !this.partie.getLabyrinthe().isBlocked(_x, _y + 1)) {
+                    if (this.partie.getLabyrinthe().isMur(_x, _y + 1)) {
+                        if (this.partie.getMur(_x, _y + 1)
+                                .poussable(Finstere.BAS)) {
+                            bloque = false;
+                        }
+                    } else {
+                        bloque = false;
+                    }
+                }
+            }
+            if (_x > 0) {
+                if (!this.partie.getLabyrinthe().isPersonnage(_x - 1, _y) 
+                        && !this.partie.getLabyrinthe().isMonstre(_x - 1, _y)
+                        && !this.partie.getLabyrinthe().isBlocked(_x - 1, _y)) {
+                    if (this.partie.getLabyrinthe().isMur(_x - 1, _y)) {
+                        if (this.partie.getMur(_x - 1, _y)
+                                .poussable(Finstere.GAUCHE)) {
+                            bloque = false;
+                        }
+                    } else {
+                        bloque = false;
+                    }
+                }
+            }
+            if (_x < 15) {
+                if (!this.partie.getLabyrinthe().isPersonnage(_x + 1, _y) 
+                        && !this.partie.getLabyrinthe().isMonstre(_x + 1, _y)
+                        && !this.partie.getLabyrinthe().isBlocked(_x + 1, _y)) {
+                    if (this.partie.getLabyrinthe().isMur(_x + 1, _y)) {
+                        if (this.partie.getMur(_x + 1, _y)
+                                .poussable(Finstere.DROITE)) {
+                            bloque = false;
+                        }
+                    } else {
+                        bloque = false;
+                    }
+                }
+            }
+            if (!bloque && pmA + 1 <= this.pm) {
+                return new Action("Se Déplacer en (" + _x + "," + _y + ")", 
+                    this.getClass(), "deplacer", new Object[] {_x, _y, pmA});
             } else {
                 return null;
             }
@@ -293,5 +376,10 @@ public class Personnage extends Pion {
     public boolean isExit() {
         return this.exit;
     }
+
+    public boolean isEnDessous() {
+        return this.enDessous;
+    }
+    
     
 }

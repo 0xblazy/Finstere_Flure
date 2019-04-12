@@ -15,6 +15,25 @@ public class Mur extends Pion {
         super(_x, _y, _partie);
     }
     
+    /* Déplace le Mur dans la direction donnée */
+    public void pousser(int _dir) {
+        this.partie.getLabyrinthe().setMur(this.x, this.y, false);
+        if(_dir == Finstere.HAUT) {
+            this.y--;
+        } else if(_dir == Finstere.BAS) {
+            this.y++;
+        } else if(_dir == Finstere.GAUCHE) {
+            this.x--;
+        } else if(_dir == Finstere.DROITE) {
+            this.x++;
+        }
+        if ((this.x == 0 && this.y == 0) || (this.x == 15 && this.y == 10)) {
+            this.partie.supprimerMur(this);
+        } else {
+            this.partie.getLabyrinthe().setMur(this.x, this.y, true);
+        }
+    }
+    
     /* Retourne true si le Mur est poussable par un Personnage dans la direction
      * donnée
      */

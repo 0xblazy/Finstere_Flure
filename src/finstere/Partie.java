@@ -70,9 +70,9 @@ public class Partie {
             System.out.println("Joueur " + (i + 1) + " : ");
             System.out.print("Nom : ");
             String nom = this.sc.next();
-            System.out.print("Couleurs :\n  1 - Bleu\n  2 - Marron\n"
-                    + "  3 - Gris\n  4 - Vert\n  5 - Violet\n  6 - Rouge\n"
-                    + "  7 - Jaune\nChoix : ");
+            System.out.print("Couleurs\n   1 - Bleu\n   2 - Marron\n"
+                    + "   3 - Gris\n   4 - Vert\n   5 - Violet\n   6 - Rouge\n"
+                    + "   7 - Jaune\nChoix : ");
             int couleur = this.scannerInt();
             while (couleur < 1 || couleur > 7) {
                 System.out.print("Choix incorrecte, ressaisissez un nombre : ");
@@ -320,6 +320,11 @@ public class Partie {
         }
         
         return persos;
+    }
+    
+    /* Supprime le Mur passé en paramètre */
+    public void supprimerMur(Mur _mur) {
+        this.murs.remove(_mur);
     }
 
     /* Affiche le Labyrinthe */

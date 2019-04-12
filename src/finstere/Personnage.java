@@ -105,11 +105,23 @@ public class Personnage extends Pion {
         return true;
     }
     
-    /* Termine l'action d'un Personnage */
-    public boolean finAction() {
-        this.faceClair = !this.faceClair;
-        this.joue = true;
-        return false;
+    /* Pousse le Mur dans la direction donnée */
+    public boolean pousserMur(int _dir) {
+        if (_dir == Finstere.HAUT) {
+            this.partie.getMur(this.x, this.y - 1).pousser(_dir);
+            this.deplacer(this.x, this.y - 1, 1);
+        } else if (_dir == Finstere.BAS) {
+            this.partie.getMur(this.x, this.y + 1).pousser(_dir);
+            this.deplacer(this.x, this.y + 1, 1);
+        } else if (_dir == Finstere.GAUCHE) {
+            this.partie.getMur(this.x - 1, this.y).pousser(_dir);
+            this.deplacer(this.x - 1, this.y, 1);
+        } else if (_dir == Finstere.DROITE) {
+            this.partie.getMur(this.x + 1, this.y).pousser(_dir);
+            this.deplacer(this.x + 1, this.y, 1);
+        }
+        
+        return true;
     }
     
     /* Fait sortir le Personnage du Labyrinthe */
@@ -125,12 +137,20 @@ public class Personnage extends Pion {
         return false;
     }
     
+    /* Termine l'action d'un Personnage */
+    public boolean finAction() {
+        this.faceClair = !this.faceClair;
+        this.joue = true;
+        return false;
+    }
+    
     /* Retourne la liste des Action que peut faire le Personnage */
     public Map<Integer,Action> getActions() {
         HashMap<Integer,Action> actions = new HashMap<>();
         ArrayList<int[]> cases = this.casesPossibles(this.x, this.y, this.pm);
         int key = 1;
         
+        /* Déplacement */
         /* Pour chaque Case possible */
         for (int[] c : cases) {
             
@@ -142,6 +162,54 @@ public class Personnage extends Pion {
                 if (action != null) {
                     actions.put(key, action);
                     key++;
+                }
+            }
+        }
+        
+        /* Pousser un Mur */
+        if (this.pm > 0) {
+            if (this.y > 0) {
+                Mur mur = this.partie.getMur(this.x, this.y - 1);
+                if (mur != null) {
+                    if (mur.poussable(Finstere.HAUT)) {
+                        actions.put(key, new Action("Pousser le Mur vers le HAUT",
+                            this.getClass(), "pousserMur",
+                            new Object[] {Finstere.HAUT}));
+                        key++;
+                    }
+                }
+            }
+            if (this.y < 10) {
+                Mur mur = this.partie.getMur(this.x, this.y + 1);
+                if (mur != null) {
+                    if (mur.poussable(Finstere.BAS)) {
+                        actions.put(key, new Action("Pousser le Mur vers le BAS",
+                            this.getClass(), "pousserMur",
+                            new Object[] {Finstere.BAS}));
+                        key++;
+                    }
+                }
+            }
+            if (this.x > 0) {
+                Mur mur = this.partie.getMur(this.x - 1, this.y);
+                if (mur != null) {
+                    if (mur.poussable(Finstere.GAUCHE)) {
+                        actions.put(key, new Action("Pousser le Mur vers la GAUCHE",
+                            this.getClass(), "pousserMur",
+                            new Object[] {Finstere.GAUCHE}));
+                        key++;
+                    }
+                }
+            }
+            if (this.x < 15) {
+                Mur mur = this.partie.getMur(this.x + 1, this.y);
+                if (mur != null) {
+                    if (mur.poussable(Finstere.DROITE)) {
+                        actions.put(key, new Action("Pousser le Mur vers la DROITE",
+                            this.getClass(), "pousserMur",
+                            new Object[] {Finstere.DROITE}));
+                        key++;
+                    }
                 }
             }
         }
@@ -275,10 +343,13 @@ public class Personnage extends Pion {
      */
     private int pmCaseLibre(int _x, int _y, int _rayon) {
         int coup = 10;
+        
+        /* Pour chaque Case possible */
         for (int[] c : this.casesPossibles(_x, _y, _rayon)) {
             int pmNecessaires = Math.abs(_x - c[0]) + Math.abs(_y - c[1]);
-            int direction = Finstere.HAUT;
             
+            /* Définistion de la direction à tester (pour les Mur) */
+            int direction = Finstere.HAUT;
             int diffY = Math.abs(_y - c[1]);
             int diffX = Math.abs(_x - c[0]);
             if (diffY > diffX) {
@@ -295,6 +366,9 @@ public class Personnage extends Pion {
                 }
             }
             
+            /* Si la Case est libre et les pm nécessaires sont inférieurs à ceux
+             * déjà déterminés
+             */
             if (this.partie.getLabyrinthe().isLibre(c[0], c[1], direction)
                     && pmNecessaires < coup) {
                 coup = pmNecessaires;

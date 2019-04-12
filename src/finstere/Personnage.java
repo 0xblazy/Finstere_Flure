@@ -348,7 +348,7 @@ public class Personnage extends Pion {
         for (int[] c : this.casesPossibles(_x, _y, _rayon)) {
             int pmNecessaires = Math.abs(_x - c[0]) + Math.abs(_y - c[1]);
             
-            /* Définistion de la direction à tester (pour les Mur) */
+            /* Définition de la direction à tester (pour les Mur) */
             int direction = Finstere.HAUT;
             int diffY = Math.abs(_y - c[1]);
             int diffX = Math.abs(_x - c[0]);

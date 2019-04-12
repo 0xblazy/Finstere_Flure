@@ -65,6 +65,8 @@ public class Monstre extends Pion {
     
     /* Déplace le Monstre */
     private Personnage deplacer() {
+        Personnage persoMort = null;
+        
         if (this.partie.getLabyrinthe().getCase(this.x, this.y).isBordure()) {
             Map<Integer, int[]> tp = this.partie.getLabyrinthe()
                     .getCase(this.x, this.y).getTp();
@@ -78,12 +80,32 @@ public class Monstre extends Pion {
             } else {
                 this.partie.getLabyrinthe().setMonstre(this.x, this.y, false);
                 if (this.direction == Finstere.HAUT) {
+                    Mur mur = this.partie.getMur(this.x, this.y - 1);
+                    if (mur != null) {
+                        persoMort = mur.pousserMonstre(this.direction);
+                        System.out.println("   Le Monstre pousse le Mur");
+                    }
                     this.y--;
                 } else if (this.direction == Finstere.BAS) {
+                    Mur mur = this.partie.getMur(this.x, this.y + 1);
+                    if (mur != null) {
+                        persoMort = mur.pousserMonstre(this.direction);
+                        System.out.println("   Le Monstre pousse le Mur");
+                    }
                     this.y++;
                 } else if (this.direction == Finstere.GAUCHE) {
+                    Mur mur = this.partie.getMur(this.x - 1, this.y);
+                    if (mur != null) {
+                        persoMort = mur.pousserMonstre(this.direction);
+                        System.out.println("   Le Monstre pousse le Mur");
+                    }
                     this.x--;
                 } else if (this.direction == Finstere.DROITE) {
+                    Mur mur = this.partie.getMur(this.x + 1, this.y);
+                    if (mur != null) {
+                        persoMort = mur.pousserMonstre(this.direction);
+                        System.out.println("   Le Monstre pousse le Mur");
+                    }
                     this.x++;
                 }
                 this.partie.getLabyrinthe().setMonstre(this.x, this.y, true);
@@ -93,19 +115,43 @@ public class Monstre extends Pion {
         } else {
             this.partie.getLabyrinthe().setMonstre(this.x, this.y, false);
             if (this.direction == Finstere.HAUT) {
+                Mur mur = this.partie.getMur(this.x, this.y - 1);
+                if (mur != null) {
+                    persoMort = mur.pousserMonstre(this.direction);
+                    System.out.println("   Le Monstre pousse le Mur");
+                }
                 this.y--;
             } else if (this.direction == Finstere.BAS) {
+                Mur mur = this.partie.getMur(this.x, this.y + 1);
+                if (mur != null) {
+                    persoMort = mur.pousserMonstre(this.direction);
+                    System.out.println("   Le Monstre pousse le Mur");
+                }
                 this.y++;
             } else if (this.direction == Finstere.GAUCHE) {
+                Mur mur = this.partie.getMur(this.x - 1, this.y);
+                if (mur != null) {
+                    persoMort = mur.pousserMonstre(this.direction);
+                    System.out.println("   Le Monstre pousse le Mur");
+                }
                 this.x--;
             } else if (this.direction == Finstere.DROITE) {
+                Mur mur = this.partie.getMur(this.x + 1, this.y);
+                if (mur != null) {
+                    persoMort = mur.pousserMonstre(this.direction);
+                    System.out.println("   Le Monstre pousse le Mur");
+                }
                 this.x++;
             }
             this.partie.getLabyrinthe().setMonstre(this.x, this.y, true);
             System.out.println("   Le Monstre se déplace en (" + this.x 
                     + "," + this.y +")");
         }
-        return this.partie.getPersonnage(this.x, this.y);
+        if (persoMort != null) {
+            return persoMort;
+        } else {
+            return this.partie.getPersonnage(this.x, this.y);
+        }
     }
     
     /* Trouve la direction à donner au Monstre en fonction de la situation */

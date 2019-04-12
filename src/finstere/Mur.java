@@ -34,6 +34,97 @@ public class Mur extends Pion {
         }
     }
     
+    /* Déplace le Mur dans la direction donnée lorsqu'il est poussé par le Monstre */
+    public Personnage pousserMonstre(int _dir) {
+        this.partie.getLabyrinthe().setMur(this.x, this.y, false);
+        
+        /* Récupère le Mur ou le Personnage qui peut être derrière ce Mur */
+        Mur mur = null;
+        Personnage perso = null, persoMort = null;
+        if(_dir == Finstere.HAUT) {
+            if (this.y > 0) {
+                mur = this.partie.getMur(this.x, this.y - 1);
+                perso = this.partie.getPersonnage(this.x, this.y - 1);   
+            }
+            this.y--;
+        } else if(_dir == Finstere.BAS) {
+            if (this.y < 10) {
+                mur = this.partie.getMur(this.x, this.y + 1);
+                perso = this.partie.getPersonnage(this.x, this.y + 1);
+            }
+            this.y++;
+        } else if(_dir == Finstere.GAUCHE) {
+            if (this.x > 0) {
+                mur = this.partie.getMur(this.x - 1, this.y);
+                perso = this.partie.getPersonnage(this.x - 1, this.y);
+            }
+            this.x--;
+        } else if(_dir == Finstere.DROITE) {
+            if (this.x < 15) {
+                mur = this.partie.getMur(this.x + 1, this.y);
+                perso = this.partie.getPersonnage(this.x + 1, this.y);
+            }
+            this.x++;
+        }
+        
+        /* Appel récursif si il y a un Mur derrière celui-ci */
+        if (mur != null) {
+            persoMort = mur.pousserMonstre(_dir);
+        }
+        
+        /* Déplacement ou suppression de ce Mur */
+        if (this.x < 0 || this.x > 15 || this.y < 0 || this.y > 10) {
+            this.partie.supprimerMur(this);
+        } else if ((this.x == 0 && this.y == 0) 
+                || (this.x == 15 && this.y == 10)
+                || this.partie.getLabyrinthe().isBlocked(this.x, this.y)) {
+            this.partie.supprimerMur(this);
+        } else {
+            this.partie.getLabyrinthe().setMur(this.x, this.y, true);
+        }
+        
+        /* Si il y a un Personnage derrière le Mur, le supprime ou le déplace
+         * Appel récursif si il y a un Mur derrière le Personnage
+         */
+        if (perso != null) {
+            if (_dir == Finstere.HAUT) {
+                if (perso.getY() == 0) {
+                    return perso;
+                } else {
+                    perso.deplacer(this.x, this.y - 1, 0);
+                    Mur m = this.partie.getMur(this.x, this.y - 1);
+                    if (m != null) persoMort = m.pousserMonstre(_dir);
+                }
+            } else if (_dir == Finstere.BAS) {
+                if (perso.getY() == 10) {
+                    return perso;
+                } else {
+                    perso.deplacer(this.x, this.y + 1, 0);
+                    Mur m = this.partie.getMur(this.x, this.y + 1);
+                    if (m != null) persoMort = m.pousserMonstre(_dir);
+                }
+            } else if (_dir == Finstere.GAUCHE) {
+                if (perso.getX() == 0) {
+                    return perso;
+                } else {
+                    perso.deplacer(this.x - 1, this.y, 0);
+                    Mur m = this.partie.getMur(this.x - 1, this.y);
+                    if (m != null) persoMort = m.pousserMonstre(_dir);
+                }
+            } else if (_dir == Finstere.DROITE) {
+                if (perso.getX() == 15) {
+                    return perso;
+                } else {
+                    perso.deplacer(this.x + 1, this.y, 0);
+                    Mur m = this.partie.getMur(this.x + 1, this.y);
+                    if (m != null) persoMort = m.pousserMonstre(_dir);
+                }
+            }
+        }
+        
+        return persoMort;
+    }
+    
     /* Retourne true si le Mur est poussable par un Personnage dans la direction
      * donnée
      */

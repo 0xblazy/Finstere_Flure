@@ -6,6 +6,7 @@
 package finstere;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -154,13 +155,13 @@ public class Partie {
         int nbTour = 1;
 
         /* Boucle pour la Partie */
-        while (nbTour < 17 && this.joueurs[0].getNbRestant() + this.joueurs[1].getNbRestant() > 0) {
+        while (nbTour < 15 && this.joueurs[0].getNbRestant() + this.joueurs[1].getNbRestant() > 0) {
             int maxJouer = 4;
             if (nbTour == 1) {
                 maxJouer = 2;
             }
             
-            if (nbTour == 1 || nbTour == 9) {
+            if (nbTour == 1 || nbTour == 8) {
                 this.paquet.melanger();
             }
 
@@ -187,20 +188,17 @@ public class Partie {
             System.out.println("Carte tirée : " + carte);
             List<Personnage> morts = this.monstre.tour(carte);
             
-            for (int indexJoueur = 0 ; indexJoueur < 2 ; indexJoueur++) {
-                for (int indexPerso = 0 ; indexPerso < 4 ; indexPerso++) {
-                    for (Personnage perso : morts) {
-                        if (this.personnages[indexJoueur][indexPerso].equals(perso)) {
-                            this.personnages[indexJoueur][indexPerso].tue(nbTour);
-                            if (nbTour >= 9)
-                                this.joueurs[indexJoueur].setNbRestant();
-                        }
-                    }
-                }
-            }
             if (morts.size() > 0) {
                 System.out.println("Morts :");
                 for (Personnage perso : morts) {
+                    for (int indexJoueur = 0 ; indexJoueur < 2 ; indexJoueur++) {
+                        for (int indexPerso = 0 ; indexPerso < 4 ; indexPerso++) {
+                            if (this.personnages[indexJoueur][indexPerso].equals(perso)) {
+                                this.personnages[indexJoueur][indexPerso].tue(nbTour);
+                            if (nbTour > 7) this.joueurs[indexJoueur].setNbRestant();
+                            }
+                        }
+                    }
                     System.out.println("   " + perso);
                 }
             } else {
@@ -237,12 +235,12 @@ public class Partie {
         if (_nbJouer < this.joueurs[_indexJoueur].getNbRestant()) {
 
             /* Affichage des informations */
-            if (_nbTour < 9) {
+            if (_nbTour < 8) {
                 System.out.println("== MANCHE 1 - TOUR " + _nbTour
                         + " ==\n");
             } else {
                 System.out.println("== MANCHE 2 - TOUR "
-                        + (_nbTour - 8) + " ==\n");
+                        + (_nbTour - 7) + " ==\n");
             }
             this.afficherLaby();
             System.out.println("\n" + this.joueurs[_indexJoueur] + "\n");
@@ -313,8 +311,12 @@ public class Partie {
         
         for (int indexJoueur = 0 ; indexJoueur < 2 ; indexJoueur++) {
             for (int indexPerso = 0 ; indexPerso < 4 ; indexPerso++) {
-                if (this.personnages[indexJoueur][indexPerso].getX() == _x ||
+                if ((this.personnages[indexJoueur][indexPerso].getX() == _x ||
                         this.personnages[indexJoueur][indexPerso].getY()== _y)
+                        && this.personnages[indexJoueur][indexPerso].getX() > -1
+                        && this.personnages[indexJoueur][indexPerso].getX() < 16
+                        && this.personnages[indexJoueur][indexPerso].getY() > -1
+                        && this.personnages[indexJoueur][indexPerso].getY() < 11)
                     persos.add(this.personnages[indexJoueur][indexPerso]);
             }
         }

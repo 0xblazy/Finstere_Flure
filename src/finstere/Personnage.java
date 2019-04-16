@@ -81,6 +81,8 @@ public class Personnage extends Pion {
     
     /* Déplace le Personnage aux coordonnées _x, _y */
     public boolean deplacer(int _x, int _y, int _pm) {
+        this.enDessous = false;
+        
         /* Si le Personnage est déjà sur le Labyrinthe */
         if (this.x < Finstere.EXTERIEUR[0] && this.y <= Finstere.EXTERIEUR[1]) {
             if (this.auDessus) {
@@ -101,7 +103,7 @@ public class Personnage extends Pion {
         this.pm -= _pm;
         this.x = _x;
         this.y = _y;
-        this.partie.getLabyrinthe().setPersonnage(_x, _y, true);
+        this.partie.getLabyrinthe().setPersonnage(this.x, this.y, true);
         return true;
     }
     
@@ -393,15 +395,19 @@ public class Personnage extends Pion {
     
     /* Appelée lorsque le Personnage est tué par le Monstre */
     public void tue(int _nbTour) {
-        if (_nbTour < 9) {
+        if (_nbTour < 8) {
             this.partie.getLabyrinthe().setPersonnage(this.x, this.y, false);
             this.x = Finstere.EXTERIEUR[0];
             this.y = Finstere.EXTERIEUR[1];
+            this.auDessus = false;
+            this.enDessous = false;
         } else {
             this.partie.getLabyrinthe().setPersonnage(this.x, this.y, false);
             this.x = Finstere.MORT[0];
             this.y = Finstere.MORT[1];
             this.rip = true;
+            this.auDessus = false;
+            this.enDessous = false;
         }
     }
     

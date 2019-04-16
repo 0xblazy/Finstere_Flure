@@ -73,51 +73,76 @@ public class Mur extends Pion {
         }
         
         /* Déplacement ou suppression de ce Mur */
-        if (this.x < 0 || this.x > 15 || this.y < 0 || this.y > 10) {
+        if (this.x < 0 || this.x > 15 || this.y < 0 || this.y > 10 
+                || (this.x == 0 && this.y == 0)
+                || (this.x == 15 && this.y == 10)) {
             this.partie.supprimerMur(this);
-        } else if ((this.x == 0 && this.y == 0) 
-                || (this.x == 15 && this.y == 10)
-                || this.partie.getLabyrinthe().isBlocked(this.x, this.y)) {
+        } else if (this.partie.getLabyrinthe().isBlocked(this.x, this.y)) {
             this.partie.supprimerMur(this);
         } else {
             this.partie.getLabyrinthe().setMur(this.x, this.y, true);
         }
         
         /* Si il y a un Personnage derrière le Mur, le supprime ou le déplace
-         * Appel récursif si il y a un Mur derrière le Personnage
+         * Appel récursif si il y a un Mur ou un Personnage derrière le 
+         * Personnage
          */
-        if (perso != null) {
+        while (perso != null) {
             if (_dir == Finstere.HAUT) {
                 if (perso.getY() == 0) {
                     return perso;
+                } else if (this.partie.getLabyrinthe().isBlocked(perso.getX(),
+                        perso.getY() - 1)) {
+                    return perso;
                 } else {
-                    perso.deplacer(this.x, this.y - 1, 0);
-                    Mur m = this.partie.getMur(this.x, this.y - 1);
+                    Personnage p = this.partie.getPersonnage(perso.getX(),
+                            perso.getY() - 1);
+                    perso.deplacer(perso.getX(), perso.getY() - 1, 0);
+                    Mur m = this.partie.getMur(perso.getX(), perso.getY());
                     if (m != null) persoMort = m.pousserMonstre(_dir);
+                    perso = p;
                 }
             } else if (_dir == Finstere.BAS) {
                 if (perso.getY() == 10) {
                     return perso;
+                } else if (this.partie.getLabyrinthe().isBlocked(perso.getX(),
+                        perso.getY() + 1)) {
+                    return perso;
                 } else {
-                    perso.deplacer(this.x, this.y + 1, 0);
-                    Mur m = this.partie.getMur(this.x, this.y + 1);
+                    Personnage p = this.partie.getPersonnage(perso.getX(), 
+                            perso.getY() + 1);
+                    perso.deplacer(perso.getX(), perso.getY() + 1, 0);
+                    Mur m = this.partie.getMur(perso.getX(), perso.getY());
                     if (m != null) persoMort = m.pousserMonstre(_dir);
+                    perso = p;
                 }
             } else if (_dir == Finstere.GAUCHE) {
                 if (perso.getX() == 0) {
                     return perso;
+                } else if (this.partie.getLabyrinthe().isBlocked(perso.getX() - 1, 
+                        perso.getY())) {
+                    return perso;
                 } else {
-                    perso.deplacer(this.x - 1, this.y, 0);
-                    Mur m = this.partie.getMur(this.x - 1, this.y);
+                    Personnage p = this.partie.getPersonnage(perso.getX() - 1, 
+                            perso.getY());
+                    perso.deplacer(perso.getX() - 1, perso.getY(), 0);
+                    Mur m = this.partie.getMur(perso.getX(), perso.getY());
                     if (m != null) persoMort = m.pousserMonstre(_dir);
+                    perso = p;
                 }
             } else if (_dir == Finstere.DROITE) {
                 if (perso.getX() == 15) {
                     return perso;
-                } else {
-                    perso.deplacer(this.x + 1, this.y, 0);
-                    Mur m = this.partie.getMur(this.x + 1, this.y);
+                } else if (this.partie.getLabyrinthe().isBlocked(perso.getX() + 1, 
+                        perso.getY())) {
+                    return perso;
+                } else  {
+                    Personnage p = this.partie.getPersonnage(perso.getX() + 1, 
+                            perso.getY());
+                    perso.deplacer(perso.getX() + 1, perso.getY(), 0);
+                    Mur m = this.partie.getMur(perso.getX(), perso.getY());
                     if (m != null) persoMort = m.pousserMonstre(_dir);
+                    perso = p;
                 }
             }
         }

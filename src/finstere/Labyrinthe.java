@@ -291,7 +291,7 @@ public class Labyrinthe {
     
     public boolean isLibre(int _x, int _y, int _dir) {
         boolean libre = !this.isBlocked(_x, _y) && !this.isMonstre(_x, _y) 
-                && !this.isPersonnage(_x, _y);
+                && !this.isPersonnage(_x, _y) && !this.isHemoglobine(_x, _y);
         
         Mur mur = this.partie.getMur(_x, _y);
         if (mur != null && libre) {

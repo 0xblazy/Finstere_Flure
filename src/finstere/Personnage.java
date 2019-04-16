@@ -7,6 +7,7 @@ package finstere;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -107,23 +108,326 @@ public class Personnage extends Pion {
         return true;
     }
     
-    /* Pousse le Mur dans la direction donnée */
-    public boolean pousserMur(int _dir) {
+    /* Retourne les coordonnées des Case sur lequel le Personnage peut 
+     * possiblement aller
+     */
+    private ArrayList<int[]> casesPossibles(int _x, int _y, int _rayon) {
+        ArrayList<int[]> cases = new ArrayList<>();
+        
+        for (int j = -_rayon ; j <= _rayon ; j++) {
+            for (int i = -_rayon ; i <= _rayon ; i++) {
+                if (Math.abs(i) + Math.abs(j) <= _rayon 
+                        && _x + i < Finstere.EXTERIEUR[0] 
+                        && _x + i > -1 
+                        && _y + j <= Finstere.EXTERIEUR[1] 
+                        && _y + j > -1
+                        && !(j == 0 && i == 0)) {
+                    cases.add(new int[] {_x + i, _y + j});
+                }
+            }
+        }        
+        
+        return cases;
+    }
+    
+    /* Retourne le coup en pm nécessaire pour aller sur une Case libre 
+     * (retourne 10 si il n'y a pas de Case libre dans le rayon donné)
+     */
+    private int pmCaseLibre(int _x, int _y, int _rayon) {
+        int coup = 10;
+        
+        /* Pour chaque Case possible */
+        for (int[] c : this.casesPossibles(_x, _y, _rayon)) {
+            int pmNecessaires = Math.abs(_x - c[0]) + Math.abs(_y - c[1]);
+            
+            /* Définition de la direction à tester (pour les Mur) */
+            int direction = Finstere.HAUT;
+            int diffY = Math.abs(_y - c[1]);
+            int diffX = Math.abs(_x - c[0]);
+            if (diffY > diffX) {
+                if (_y > c[1]) {
+                    direction = Finstere.HAUT;
+                } else {
+                    direction = Finstere.BAS;
+                }
+            } else {
+                if (_x > c[0]) {
+                    direction = Finstere.GAUCHE;
+                } else {
+                    direction = Finstere.DROITE;
+                }
+            }
+            
+            /* Si la Case est libre et les pm nécessaires sont inférieurs à ceux
+             * déjà déterminés
+             */
+            if (this.partie.getLabyrinthe().isLibre(c[0], c[1], direction)
+                    && pmNecessaires < coup) {
+                coup = pmNecessaires;
+            }
+        }
+        
+        return coup;
+    }
+    
+    /* Détermine si la Case (_x,_y) est bloquée (pas suffisament de pm pour en 
+     * sortir avant la fin des actions) ou non
+     * Appelée lorsque la Case en question est un Personnage
+     */
+    private boolean bloquee(int _x, int _y) {
+        boolean bloquee = true;
+        if (_y > 0) {
+            if (!this.partie.getLabyrinthe().isMonstre(_x, _y - 1)
+                    && !this.partie.getLabyrinthe().isBlocked(_x, _y - 1)) {
+                if (this.partie.getLabyrinthe().isMur(_x, _y - 1)) {
+                    if (this.partie.getMur(_x, _y - 1)
+                            .poussable(Finstere.HAUT)) {
+                        bloquee = false;
+                    }
+                } else {
+                    bloquee = false;
+                }
+            }
+        }
+        if (_y < 10) {
+            if (!this.partie.getLabyrinthe().isMonstre(_x, _y + 1)
+                    && !this.partie.getLabyrinthe().isBlocked(_x, _y + 1)) {
+                if (this.partie.getLabyrinthe().isMur(_x, _y + 1)) {
+                    if (this.partie.getMur(_x, _y + 1)
+                            .poussable(Finstere.BAS)) {
+                        bloquee = false;
+                    }
+                } else {
+                    bloquee = false;
+                }
+            }
+        }
+        if (_x > 0) {
+            if (!this.partie.getLabyrinthe().isMonstre(_x - 1, _y)
+                    && !this.partie.getLabyrinthe().isBlocked(_x - 1, _y)) {
+                if (this.partie.getLabyrinthe().isMur(_x - 1, _y)) {
+                    if (this.partie.getMur(_x - 1, _y)
+                            .poussable(Finstere.GAUCHE)) {
+                        bloquee = false;
+                    }
+                } else {
+                bloquee = false;
+                }
+            }
+        }
+        if (_x < 15) {
+            if (!this.partie.getLabyrinthe().isMonstre(_x + 1, _y)
+                    && !this.partie.getLabyrinthe().isBlocked(_x + 1, _y)) {
+                if (this.partie.getLabyrinthe().isMur(_x + 1, _y)) {
+                    if (this.partie.getMur(_x + 1, _y)
+                            .poussable(Finstere.DROITE)) {
+                        bloquee = false;
+                    }
+                } else {
+                    bloquee = false;
+                }
+            }
+        }
+        return bloquee;
+    }
+    
+    /* Génère l'Action deplacer en fonction des contraintes du Labyrinthe
+     * Retourne null si l'Action n'est pas réalisable
+     */
+    private Action actionDeplacer(int _x, int _y) {
+        int pmA = Math.abs(_x - this.x) + Math.abs(_y - this.y);
+        
+        /* Si il y a un obstacle entre la Case et le Personnage */
+        if (this.partie.getLabyrinthe().obstacle(_x, _y, this.x, this.y)) {
+                
+            /* Si le Personnage a assez de pm pour contourner l'obstacle */
+            if (pmA + 2 <= this.pm) {
+                return new Action("Se Déplacer en (" + _x + "," + _y + ")", 
+                    this.getClass(), "deplacer", new Object[] {_x, _y, pmA + 2});
+            } else {
+                return null;
+            }
+        } else if (this.partie.getLabyrinthe().isPersonnage(_x, _y)) {
+            if (!this.bloquee(_x, _y) && pmA 
+                    + this.pmCaseLibre(_x, _y, this.pm - pmA) <= this.pm) {
+                return new Action("Se Déplacer en (" + _x + "," + _y + ")", 
+                    this.getClass(), "deplacer", new Object[] {_x, _y, pmA});
+            } else {
+                return null;
+            }
+        } else {
+            return new Action("Se Déplacer en (" + _x + "," + _y + ")", 
+                this.getClass(), "deplacer", new Object[] {_x, _y, pmA});
+        }
+    }
+    
+    /* Pousse _mur dans la direction donnée */
+    public boolean pousserMur(Mur _mur, int _dir) {
         if (_dir == Finstere.HAUT) {
-            this.partie.getMur(this.x, this.y - 1).pousser(_dir);
+            _mur.pousser(_dir);
             this.deplacer(this.x, this.y - 1, 1);
         } else if (_dir == Finstere.BAS) {
-            this.partie.getMur(this.x, this.y + 1).pousser(_dir);
+            _mur.pousser(_dir);
             this.deplacer(this.x, this.y + 1, 1);
         } else if (_dir == Finstere.GAUCHE) {
-            this.partie.getMur(this.x - 1, this.y).pousser(_dir);
+            _mur.pousser(_dir);
             this.deplacer(this.x - 1, this.y, 1);
         } else if (_dir == Finstere.DROITE) {
-            this.partie.getMur(this.x + 1, this.y).pousser(_dir);
+            _mur.pousser(_dir);
             this.deplacer(this.x + 1, this.y, 1);
         }
         
         return true;
+    }
+    
+    /* Glisse sur une flaque d'Hemoglobine dans la direction donnée */
+    public boolean glisser(Hemoglobine _hemo, int _dir) {
+        
+        return true;
+    }
+    
+    /* Retourne la liste des Actions possibles avec l'Hemoglobine */
+    private List<Action> actionsHemoglobine() {
+        ArrayList<Action> actions = new ArrayList<>();
+        
+        for (Hemoglobine hemo : this.partie.interactionsHemoglobine(this.x, this.y)) {
+            
+            /* Si l'Hemoglobine est carrée */
+            if (hemo.getType().equals(Finstere.CARRE)) {
+                
+                /* Si le Personnage est en BAS ou en HAUT de la flaque */
+                if (hemo.getX() == this.x || hemo.getX() + 1 == this.x) {
+                    if (hemo.getY() < this.y) {
+                        actions.add(new Action("Glisser vers le HAUT",
+                            this.getClass(), "glisser",
+                            new Object[] {hemo, Finstere.HAUT}));
+                    } else if (hemo.getY() >= this.y) {
+                        actions.add(new Action("Glisser vers le BAS",
+                            this.getClass(), "glisser",
+                            new Object[] {hemo, Finstere.BAS}));
+                    }
+                }
+                
+                /* Si le Personnage est à GAUCHE ou à DROITE de la flaque */
+                if (hemo.getY() == this.y || hemo.getY() + 1 == this.y) {
+                    if (hemo.getX() < this.x) {
+                        actions.add(new Action("Glisser vers le GAUCHE",
+                            this.getClass(), "glisser",
+                            new Object[] {hemo, Finstere.GAUCHE}));
+                    } else if (hemo.getX() >= this.x) {
+                        actions.add(new Action("Glisser vers le DROITE",
+                            this.getClass(), "glisser",
+                            new Object[] {hemo, Finstere.DROITE}));
+                    }
+                }
+                
+                /* Si le Personnage est en HAUT à GAUCHE */
+                if (hemo.getX() == this.x && hemo.getY() == this.y) {
+                    if (this.partie.getLabyrinthe().isPersonnage(this.x, this.y - 1)) {
+                        if (1 + this.pmCaseLibre(this.x, this.y - 1, this.pm - 1) <= this.pm) {
+                            actions.add(new Action("Sortir par le HAUT",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.HAUT}));
+                        } 
+                    } else {
+                        actions.add(new Action("Sortir par le HAUT",
+                            this.getClass(), "glisser",
+                            new Object[] {hemo, Finstere.HAUT}));
+                    }
+                    if (this.partie.getLabyrinthe().isPersonnage(this.x - 1, this.y)) {
+                        if (1 + this.pmCaseLibre(this.x - 1, this.y, this.pm - 1) <= this.pm) {
+                            actions.add(new Action("Sortir par la GAUCHE",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.GAUCHE}));
+                        } 
+                    } else {
+                        actions.add(new Action("Sortir par la GAUCHE",
+                            this.getClass(), "glisser",
+                            new Object[] {hemo, Finstere.GAUCHE}));
+                    }
+                }
+                
+                /* Si le Personnage est en HAUT à DROITE */
+                if (hemo.getX() + 1 == this.x && hemo.getY() == this.y) {
+                    if (this.partie.getLabyrinthe().isPersonnage(this.x, this.y - 1)) {
+                        if (1 + this.pmCaseLibre(this.x, this.y - 1, this.pm - 1) <= this.pm) {
+                            actions.add(new Action("Sortir par le HAUT",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.HAUT}));
+                        } 
+                    } else {
+                        actions.add(new Action("Sortir par le HAUT",
+                            this.getClass(), "glisser",
+                            new Object[] {hemo, Finstere.HAUT}));
+                    }
+                    if (this.partie.getLabyrinthe().isPersonnage(this.x + 1, this.y)) {
+                        if (1 + this.pmCaseLibre(this.x + 1, this.y, this.pm - 1) <= this.pm) {
+                            actions.add(new Action("Sortir par la DROITE",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.DROITE}));
+                        } 
+                    } else {
+                        actions.add(new Action("Sortir par la DROITE",
+                            this.getClass(), "glisser",
+                            new Object[] {hemo, Finstere.DROITE}));
+                    }
+                }
+                
+                /* Si le Personnage est en BAS à GAUCHE */
+                if (hemo.getX() == this.x && hemo.getY() + 1 == this.y) {
+                    if (this.partie.getLabyrinthe().isPersonnage(this.x, this.y + 1)) {
+                        if (1 + this.pmCaseLibre(this.x, this.y + 1, this.pm - 1) <= this.pm) {
+                            actions.add(new Action("Sortir par le BAS",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.BAS}));
+                        } 
+                    } else {
+                        actions.add(new Action("Sortir par le BAS",
+                            this.getClass(), "glisser",
+                            new Object[] {hemo, Finstere.BAS}));
+                    }
+                    if (this.partie.getLabyrinthe().isPersonnage(this.x - 1, this.y)) {
+                        if (1 + this.pmCaseLibre(this.x - 1, this.y, this.pm - 1) <= this.pm) {
+                            actions.add(new Action("Sortir par la GAUCHE",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.GAUCHE}));
+                        } 
+                    } else {
+                        actions.add(new Action("Sortir par la GAUCHE",
+                            this.getClass(), "glisser",
+                            new Object[] {hemo, Finstere.GAUCHE}));
+                    }
+                }
+                
+                /* Si le Personnage est en BAS à DROITE */
+                if (hemo.getX() + 1 == this.x && hemo.getY() == this.y) {
+                    if (this.partie.getLabyrinthe().isPersonnage(this.x, this.y + 1)) {
+                        if (1 + this.pmCaseLibre(this.x, this.y + 1, this.pm - 1) <= this.pm) {
+                            actions.add(new Action("Sortir par le BAS",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.BAS}));
+                        } 
+                    } else {
+                        actions.add(new Action("Sortir par le BAS",
+                            this.getClass(), "glisser",
+                            new Object[] {hemo, Finstere.BAS}));
+                    }
+                    if (this.partie.getLabyrinthe().isPersonnage(this.x + 1, this.y)) {
+                        if (1 + this.pmCaseLibre(this.x + 1, this.y, this.pm - 1) <= this.pm) {
+                            actions.add(new Action("Sortir par la DROITE",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.DROITE}));
+                        } 
+                    } else {
+                        actions.add(new Action("Sortir par la DROITE",
+                            this.getClass(), "glisser",
+                            new Object[] {hemo, Finstere.DROITE}));
+                    }
+                }
+            }
+        }
+        
+        return actions;
     }
     
     /* Fait sortir le Personnage du Labyrinthe */
@@ -176,7 +480,7 @@ public class Personnage extends Pion {
                     if (mur.poussable(Finstere.HAUT)) {
                         actions.put(key, new Action("Pousser le Mur vers le HAUT",
                             this.getClass(), "pousserMur",
-                            new Object[] {Finstere.HAUT}));
+                            new Object[] {mur, Finstere.HAUT}));
                         key++;
                     }
                 }
@@ -187,7 +491,7 @@ public class Personnage extends Pion {
                     if (mur.poussable(Finstere.BAS)) {
                         actions.put(key, new Action("Pousser le Mur vers le BAS",
                             this.getClass(), "pousserMur",
-                            new Object[] {Finstere.BAS}));
+                            new Object[] {mur, Finstere.BAS}));
                         key++;
                     }
                 }
@@ -198,7 +502,7 @@ public class Personnage extends Pion {
                     if (mur.poussable(Finstere.GAUCHE)) {
                         actions.put(key, new Action("Pousser le Mur vers la GAUCHE",
                             this.getClass(), "pousserMur",
-                            new Object[] {Finstere.GAUCHE}));
+                            new Object[] {mur, Finstere.GAUCHE}));
                         key++;
                     }
                 }
@@ -209,10 +513,18 @@ public class Personnage extends Pion {
                     if (mur.poussable(Finstere.DROITE)) {
                         actions.put(key, new Action("Pousser le Mur vers la DROITE",
                             this.getClass(), "pousserMur",
-                            new Object[] {Finstere.DROITE}));
+                            new Object[] {mur, Finstere.DROITE}));
                         key++;
                     }
                 }
+            }
+        }
+        
+        /* Glisser sur l'Hemoglobine */
+        if (this.pm > 0) {
+            for (Action action : this.actionsHemoglobine()) {
+                actions.put(key, action);
+            key++;
             }
         }
         
@@ -234,150 +546,6 @@ public class Personnage extends Pion {
         }
         
         return actions;
-    }
-    
-    /* Retourne les coordonnées des Case sur lequel le Personnage peut 
-     * possiblement aller
-     */
-    private ArrayList<int[]> casesPossibles(int _x, int _y, int _rayon) {
-        ArrayList<int[]> cases = new ArrayList<>();
-        
-        for (int j = -_rayon ; j <= _rayon ; j++) {
-            for (int i = -_rayon ; i <= _rayon ; i++) {
-                if (Math.abs(i) + Math.abs(j) <= _rayon 
-                        && _x + i < Finstere.EXTERIEUR[0] 
-                        && _x + i > -1 
-                        && _y + j <= Finstere.EXTERIEUR[1] 
-                        && _y + j > -1
-                        && !(j == 0 && i == 0)) {
-                    cases.add(new int[] {_x + i, _y + j});
-                }
-            }
-        }        
-        
-        return cases;
-    }
-    
-    /* Génère l'Action deplacer en fonction des contraintes du Labyrinthe
-     * Retourne null si l'Action n'est pas réalisable
-     */
-    private Action actionDeplacer(int _x, int _y) {
-        int pmA = Math.abs(_x - this.x) + Math.abs(_y - this.y);
-        
-        /* Si il y a un obstacle entre la Case et le Personnage */
-        if (this.partie.getLabyrinthe().obstacle(_x, _y, this.x, this.y)) {
-                
-            /* Si le Personnage a assez de pm pour contourner l'obstacle */
-            if (pmA + 2 <= this.pm) {
-                return new Action("Se Déplacer en (" + _x + "," + _y + ")", 
-                    this.getClass(), "deplacer", new Object[] {_x, _y, pmA + 2});
-            } else {
-                return null;
-            }
-        } else if (this.partie.getLabyrinthe().isPersonnage(_x, _y)) {
-            boolean bloque = true;
-            if (_y > 0) {
-                if (!this.partie.getLabyrinthe().isMonstre(_x, _y - 1)
-                        && !this.partie.getLabyrinthe().isBlocked(_x, _y - 1)) {
-                    if (this.partie.getLabyrinthe().isMur(_x, _y - 1)) {
-                        if (this.partie.getMur(_x, _y - 1)
-                                .poussable(Finstere.HAUT)) {
-                            bloque = false;
-                        }
-                    } else {
-                        bloque = false;
-                    }
-                }
-            }
-            if (_y < 10) {
-                if (!this.partie.getLabyrinthe().isMonstre(_x, _y + 1)
-                        && !this.partie.getLabyrinthe().isBlocked(_x, _y + 1)) {
-                    if (this.partie.getLabyrinthe().isMur(_x, _y + 1)) {
-                        if (this.partie.getMur(_x, _y + 1)
-                                .poussable(Finstere.BAS)) {
-                            bloque = false;
-                        }
-                    } else {
-                        bloque = false;
-                    }
-                }
-            }
-            if (_x > 0) {
-                if (!this.partie.getLabyrinthe().isMonstre(_x - 1, _y)
-                        && !this.partie.getLabyrinthe().isBlocked(_x - 1, _y)) {
-                    if (this.partie.getLabyrinthe().isMur(_x - 1, _y)) {
-                        if (this.partie.getMur(_x - 1, _y)
-                                .poussable(Finstere.GAUCHE)) {
-                            bloque = false;
-                        }
-                    } else {
-                        bloque = false;
-                    }
-                }
-            }
-            if (_x < 15) {
-                if (!this.partie.getLabyrinthe().isMonstre(_x + 1, _y)
-                        && !this.partie.getLabyrinthe().isBlocked(_x + 1, _y)) {
-                    if (this.partie.getLabyrinthe().isMur(_x + 1, _y)) {
-                        if (this.partie.getMur(_x + 1, _y)
-                                .poussable(Finstere.DROITE)) {
-                            bloque = false;
-                        }
-                    } else {
-                        bloque = false;
-                    }
-                }
-            }
-            if (!bloque && pmA + pmCaseLibre(_x, _y, this.pm - pmA) <= this.pm) {
-                return new Action("Se Déplacer en (" + _x + "," + _y + ")", 
-                    this.getClass(), "deplacer", new Object[] {_x, _y, pmA});
-            } else {
-                return null;
-            }
-        } else {
-            return new Action("Se Déplacer en (" + _x + "," + _y + ")", 
-                this.getClass(), "deplacer", new Object[] {_x, _y, pmA});
-        }
-    }
-    
-    /* Retourne le coup en pm nécessaire pour aller sur une Case libre 
-     * (retourne 10 si il n'y a pas de Case libre dans le rayon donné)
-     */
-    private int pmCaseLibre(int _x, int _y, int _rayon) {
-        int coup = 10;
-        
-        /* Pour chaque Case possible */
-        for (int[] c : this.casesPossibles(_x, _y, _rayon)) {
-            int pmNecessaires = Math.abs(_x - c[0]) + Math.abs(_y - c[1]);
-            
-            /* Définition de la direction à tester (pour les Mur) */
-            int direction = Finstere.HAUT;
-            int diffY = Math.abs(_y - c[1]);
-            int diffX = Math.abs(_x - c[0]);
-            if (diffY > diffX) {
-                if (_y > c[1]) {
-                    direction = Finstere.HAUT;
-                } else {
-                    direction = Finstere.BAS;
-                }
-            } else {
-                if (_x > c[0]) {
-                    direction = Finstere.GAUCHE;
-                } else {
-                    direction = Finstere.DROITE;
-                }
-            }
-            
-            /* Si la Case est libre et les pm nécessaires sont inférieurs à ceux
-             * déjà déterminés
-             */
-            if (this.partie.getLabyrinthe().isLibre(c[0], c[1], direction)
-                    && pmNecessaires < coup) {
-                coup = pmNecessaires;
-            }
-        }
-        
-        return coup;
     }
     
     /* Appelée en fin de tour pour retourner le Personnage si il n'a pas été 

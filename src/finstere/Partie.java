@@ -6,7 +6,6 @@
 package finstere;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -19,8 +18,10 @@ public class Partie {
 
     /* Labyrinthe de la partie */
     private Labyrinthe labyrinthe;
-    /* Flaques d'hémoglobine */
-    private Hemoglobine hemoCarree, hemoLine;
+    /* Flaques d'hémoglobine (hemoLineV présente en prévention d'une disposition
+     * aléatoire des flaques)
+     */
+    private Hemoglobine hemoCarree, hemoLineH, hemoLineV;
     /* Monstre (placé en (0,0))*/
     private Monstre monstre;
     /* Liste des murs */
@@ -33,9 +34,9 @@ public class Partie {
     private int nbJoueurs;
     /* Index du Joueur commencant le tour */
     private int premierJoueur;
-    /* Scanner pour la saisi dans la console */
+    /* Scanner pour la saisie dans la console */
     private Scanner sc;
-    /* Compteur pour le classement des Personnages */
+    /* Compteur pour le classement des Personnage */
     private int classement;
     /* Paquet de Carte */
     private Paquet paquet;
@@ -114,11 +115,14 @@ public class Partie {
         this.labyrinthe.setHemoglobine(9, 3, true);
         
         /* Ajout de la flaque linéaire horizontale */
-        this.hemoLine = new Hemoglobine(4, 8, Finstere.LINEHORI, this);
+        this.hemoLineH = new Hemoglobine(4, 8, Finstere.LINEHORI, this);
         this.labyrinthe.setHemoglobine(4, 8, true);
         this.labyrinthe.setHemoglobine(5, 8, true);
         this.labyrinthe.setHemoglobine(6, 8, true);
         this.labyrinthe.setHemoglobine(7, 8, true);
+        
+        /* Flaque linéaire verticale mise à null */
+        this.hemoLineV = null;
         
         /* Ajout des murs */
         this.murs.add(new Mur(2, 2, this));
@@ -328,6 +332,29 @@ public class Partie {
     public void supprimerMur(Mur _mur) {
         this.murs.remove(_mur);
     }
+    
+    /* Retourne la liste des flaques d'Hemoglobine avec lesquelles un Pion aux 
+     * coordonnées (_x,_y) peut interagir
+     */
+    public List<Hemoglobine> interactionsHemoglobine(int _x, int _y) {
+        ArrayList<Hemoglobine> hemo = new ArrayList<>();
+        
+        if (Finstere.isInList(this.hemoCarree.zoneInteraction(),new int[] {_x,_y})) {
+            hemo.add(this.hemoCarree);
+        }
+        if (this.hemoLineH != null) {
+            if (Finstere.isInList(this.hemoLineH.zoneInteraction(),new int[] {_x,_y})) {
+                hemo.add(this.hemoLineH);
+            }
+        }
+        if (this.hemoLineV != null) {
+            if (Finstere.isInList(this.hemoLineV.zoneInteraction(),new int[] {_x,_y})) {
+                hemo.add(this.hemoLineV);
+            }
+        }    
+        
+        return hemo;
+    }
 
     /* Affiche le Labyrinthe */
     public void afficherLaby() {
@@ -406,6 +433,14 @@ public class Partie {
 
     public int getClassement() {
         return this.classement;
+    }
+
+    public Hemoglobine getHemoCarree() {
+        return this.hemoCarree;
+    }
+
+    public Hemoglobine getHemoLineH() {
+        return this.hemoLineH;
     }
 
     /* Setters */

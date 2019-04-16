@@ -5,6 +5,9 @@
  */
 package finstere;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  *
  * @author nKBlaZy
@@ -35,5 +38,15 @@ public class Finstere {
         Partie partie = new Partie();
         partie.initPartie();
         partie.jouer();
-    }  
+    }
+    
+    /* Retourne true si le _tab est contenu dans _list */
+    public static boolean isInList(List<int[]> _list, int[] _tab) {
+        for (int[] elem : _list) {
+            if (Arrays.equals(elem, _tab)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

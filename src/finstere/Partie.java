@@ -339,8 +339,10 @@ public class Partie {
     public List<Hemoglobine> interactionsHemoglobine(int _x, int _y) {
         ArrayList<Hemoglobine> hemo = new ArrayList<>();
         
-        if (Finstere.isInList(this.hemoCarree.zoneInteraction(),new int[] {_x,_y})) {
-            hemo.add(this.hemoCarree);
+        if (this.hemoCarree != null) {
+            if (Finstere.isInList(this.hemoCarree.zoneInteraction(),new int[] {_x,_y})) {
+                hemo.add(this.hemoCarree);
+            }
         }
         if (this.hemoLineH != null) {
             if (Finstere.isInList(this.hemoLineH.zoneInteraction(),new int[] {_x,_y})) {
@@ -435,14 +437,25 @@ public class Partie {
         return this.classement;
     }
 
-    public Hemoglobine getHemoCarree() {
-        return this.hemoCarree;
+    public Hemoglobine getHemoglobine(int _x, int _y) {
+        if (this.hemoCarree != null) {
+            if (this.hemoCarree.isHere(_x, _y)) {
+                return this.hemoCarree;
+            }
+        }
+        if (this.hemoLineH != null) {
+            if (this.hemoLineH.isHere(_x, _y)) {
+                return this.hemoLineH;
+            }
+        }
+        if (this.hemoLineV != null) {
+            if (this.hemoLineV.isHere(_x, _y)) {
+                return this.hemoLineV;
+            }
+        }
+        return null;
     }
-
-    public Hemoglobine getHemoLineH() {
-        return this.hemoLineH;
-    }
-
+    
     /* Setters */
     public void setClassement() {
         this.classement++;

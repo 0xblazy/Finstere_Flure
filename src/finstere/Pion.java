@@ -31,4 +31,12 @@ abstract class Pion {
         return this.y;
     }
     
+    /* Setters */
+    public void setX(int _x) {
+        this.x = _x;
+    }
+
+    public void setY(int _y) {
+        this.y = _y;
+    } 
 }

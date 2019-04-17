@@ -19,14 +19,53 @@ public class Mur extends Pion {
     public void pousser(int _dir) {
         this.partie.getLabyrinthe().setMur(this.x, this.y, false);
         if(_dir == Finstere.HAUT) {
-            this.y--;
+            Hemoglobine hemo = this.partie.getHemoglobine(this.x, this.y - 1);
+            if (hemo != null) {
+                hemo.glissadeMur(this,_dir, this.x, hemo.getY() - 1);
+            } else {
+                this.y--;
+            }
         } else if(_dir == Finstere.BAS) {
-            this.y++;
+            Hemoglobine hemo = this.partie.getHemoglobine(this.x, this.y + 1);
+            if (hemo != null) {
+                switch (hemo.getType()) {
+                    case Finstere.CARRE:
+                        hemo.glissadeMur(this,_dir, this.x, hemo.getY() + 2);
+                        break;
+                    case Finstere.LINEHORI:
+                        hemo.glissadeMur(this,_dir, this.x, hemo.getY() + 1);
+                        break;
+                    case Finstere.LINEVERT:
+                        hemo.glissadeMur(this,_dir, this.x, hemo.getY() + 4);
+                        break;
+                    default:
+                        break;
+                }
+            } else {
+                this.y++;
+            }
         } else if(_dir == Finstere.GAUCHE) {
-            this.x--;
+            Hemoglobine hemo = this.partie.getHemoglobine(this.x - 1, this.y);
+            if (hemo != null) {
+                hemo.glissadeMur(this,_dir, hemo.getX() - 1, this.y);
+            } else {
+                this.x--;
+            }
         } else if(_dir == Finstere.DROITE) {
-            this.x++;
+            Hemoglobine hemo = this.partie.getHemoglobine(this.x + 1, this.y);
+            if (hemo != null) {
+                if (hemo.getType().equals(Finstere.CARRE)) {
+                    hemo.glissadeMur(this,_dir, hemo.getX() + 2, this.y);
+                } else if (hemo.getType().equals(Finstere.LINEHORI)) {
+                    hemo.glissadeMur(this,_dir, hemo.getX() + 4, this.y);
+                } else if (hemo.getType().equals(Finstere.LINEVERT)) {
+                    hemo.glissadeMur(this,_dir, hemo.getX() + 1, this.y);
+                }
+            } else {
+                this.x++;
+            }
         }
+        
         if ((this.x == 0 && this.y == 0) || (this.x == 15 && this.y == 10)) {
             this.partie.supprimerMur(this);
         } else {

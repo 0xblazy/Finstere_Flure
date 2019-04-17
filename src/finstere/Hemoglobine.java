@@ -131,6 +131,76 @@ public class Hemoglobine extends Pion {
         }
     }
     
+    /* Effectue la glissade du Mur passé en paramètre */
+    public void glissadeMur(Mur _mur, int _dir, int _x, int _y) {
+        if (_dir == Finstere.HAUT) {
+            int y = _mur.getY() - 1;
+            boolean isMur = false, isPerso = false;
+            while (!isMur && !isPerso && y >= _y) {
+                isMur = this.partie.getLabyrinthe().isMur(_x, y);
+                isPerso = this.partie.getLabyrinthe().isPersonnage(_x, y);
+                y--;
+            }
+            if (isMur || isPerso) {
+                _mur.setY(y + 2);
+            } else {
+                _mur.setY(_y);
+            }
+        } else if (_dir == Finstere.BAS) {
+            int y = _mur.getY() + 1;
+            boolean isMur = false, isPerso = false;
+            while (!isMur && !isPerso && y <= _y) {
+                isMur = this.partie.getLabyrinthe().isMur(_x, y);
+                isPerso = this.partie.getLabyrinthe().isPersonnage(_x, y);
+                y++;
+            }
+            if (isMur || isPerso) {
+                _mur.setY(y - 2);
+            } else {
+                _mur.setY(_y);
+            }
+        } else if (_dir == Finstere.GAUCHE) {
+            int x = _mur.getX() - 1;
+            boolean isMur = false, isPerso = false;
+            while (!isMur && !isPerso && x >= _x) {
+                isMur = this.partie.getLabyrinthe().isMur(x, _y);
+                isPerso = this.partie.getLabyrinthe().isPersonnage(x, _y);
+                x--;
+            }
+            if (isMur || isPerso) {
+                _mur.setX(x + 2);
+            } else {
+                _mur.setX(_x);
+            }
+        } else if (_dir == Finstere.DROITE) {
+            int x = _mur.getX() + 1;
+            boolean isMur = false, isPerso = false;
+            while (!isMur && !isPerso && x <= _x) {
+                isMur = this.partie.getLabyrinthe().isMur(x, _y);
+                isPerso = this.partie.getLabyrinthe().isPersonnage(x, _y);
+                x++;
+            }
+            if (isMur || isPerso) {
+                _mur.setX(x - 2);
+            } else {
+                _mur.setX(_x);
+            }
+        }
+    }
+    
+    /* Retourne true si les coordonnées (_x,_y) sont sur la flaque */
+    public boolean isHere(int _x, int _y) {
+        if (this.type.equals(Finstere.CARRE)) {
+            return (_x == this.x || _x == this.x + 1) 
+                    && (_y == this.y || _y == this.y + 1);
+        } else if (this.type.equals(Finstere.LINEHORI)) {
+            return _y == this.y && _x >= this.x && _x <= this.x + 3;
+        } else if (this.type.equals(Finstere.LINEVERT)) {
+            return _y >= this.y && _y <= this.y + 3 && _x == this.x;
+        }
+        return false;
+    }
+    
     /* Getters */
     public String getType() {
         return this.type;

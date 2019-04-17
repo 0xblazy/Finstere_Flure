@@ -283,6 +283,45 @@ public class Personnage extends Pion {
     /* Glisse sur une flaque d'Hemoglobine dans la direction donnée */
     public boolean glisser(Hemoglobine _hemo, int _dir) {
         
+        /* Si l'Hemoglobine est carrée */
+        if (_hemo.getType().equals(Finstere.CARRE)) {
+            if (_dir == Finstere.HAUT) {
+                _hemo.glissade(this, _dir, this.x, _hemo.getY() - 1);
+            } else if (_dir == Finstere.BAS) {
+                _hemo.glissade(this, _dir, this.x, _hemo.getY() + 2);
+            } else if (_dir == Finstere.GAUCHE) {
+                _hemo.glissade(this, _dir, _hemo.getX() - 1, this.y);
+            } else if (_dir == Finstere.DROITE) {
+                _hemo.glissade(this, _dir, _hemo.getX() + 2, this.y);
+            }
+        }
+        
+        /* Si l'Hemoglobine est linéaire horizontale */
+        if (_hemo.getType().equals(Finstere.LINEHORI)) {
+            if (_dir == Finstere.HAUT) {
+                _hemo.glissade(this, _dir, this.x, _hemo.getY() - 1);
+            } else if (_dir == Finstere.BAS) {
+                _hemo.glissade(this, _dir, this.x, _hemo.getY() + 1);
+            } else if (_dir == Finstere.GAUCHE) {
+                _hemo.glissade(this, _dir, _hemo.getX() - 1, this.y);
+            } else if (_dir == Finstere.DROITE) {
+                _hemo.glissade(this, _dir, _hemo.getX() + 4, this.y);
+            }
+        }
+        
+        /* Si l'Hemoglobine est linéaire verticale */
+        if (_hemo.getType().equals(Finstere.LINEVERT)) {
+            if (_dir == Finstere.HAUT) {
+                _hemo.glissade(this, _dir, this.x, _hemo.getY() - 1);
+            } else if (_dir == Finstere.BAS) {
+                _hemo.glissade(this, _dir, this.x, _hemo.getY() + 4);
+            } else if (_dir == Finstere.GAUCHE) {
+                _hemo.glissade(this, _dir, _hemo.getX() - 1, this.y);
+            } else if (_dir == Finstere.DROITE) {
+                _hemo.glissade(this, _dir, _hemo.getX() + 1, this.y);
+            }
+        }
+
         return true;
     }
     
@@ -290,7 +329,8 @@ public class Personnage extends Pion {
     private List<Action> actionsHemoglobine() {
         ArrayList<Action> actions = new ArrayList<>();
         
-        for (Hemoglobine hemo : this.partie.interactionsHemoglobine(this.x, this.y)) {
+        for (Hemoglobine hemo : this.partie.interactionsHemoglobine(this.x, 
+                this.y)) {
             
             /* Si l'Hemoglobine est carrée */
             if (hemo.getType().equals(Finstere.CARRE)) {
@@ -298,26 +338,66 @@ public class Personnage extends Pion {
                 /* Si le Personnage est en BAS ou en HAUT de la flaque */
                 if (hemo.getX() == this.x || hemo.getX() + 1 == this.x) {
                     if (hemo.getY() < this.y) {
-                        actions.add(new Action("Glisser vers le HAUT",
-                            this.getClass(), "glisser",
-                            new Object[] {hemo, Finstere.HAUT}));
+                        if (this.partie.getLabyrinthe().isPersonnage(this.x, 
+                                hemo.getY() - 1)) {
+                            if (1 + this.pmCaseLibre(this.x, hemo.getY() - 1, 
+                                    this.pm - 1) <= this.pm) {
+                                actions.add(new Action("Glisser vers le HAUT",
+                                    this.getClass(), "glisser",
+                                    new Object[] {hemo, Finstere.HAUT}));
+                            }
+                        } else {
+                           actions.add(new Action("Glisser vers le HAUT",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.HAUT})); 
+                        }
                     } else if (hemo.getY() >= this.y) {
-                        actions.add(new Action("Glisser vers le BAS",
-                            this.getClass(), "glisser",
-                            new Object[] {hemo, Finstere.BAS}));
+                        if (this.partie.getLabyrinthe().isPersonnage(this.x, 
+                                hemo.getY() + 2)) {
+                            if (1 + this.pmCaseLibre(this.x, hemo.getY() + 2, 
+                                    this.pm - 1) <= this.pm) {
+                                actions.add(new Action("Glisser vers le BAS",
+                                    this.getClass(), "glisser",
+                                    new Object[] {hemo, Finstere.BAS}));
+                            }
+                        } else {
+                            actions.add(new Action("Glisser vers le BAS",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.BAS}));
+                        } 
                     }
                 }
                 
                 /* Si le Personnage est à GAUCHE ou à DROITE de la flaque */
                 if (hemo.getY() == this.y || hemo.getY() + 1 == this.y) {
                     if (hemo.getX() < this.x) {
-                        actions.add(new Action("Glisser vers le GAUCHE",
-                            this.getClass(), "glisser",
-                            new Object[] {hemo, Finstere.GAUCHE}));
+                        if (this.partie.getLabyrinthe().isPersonnage(hemo.getX() - 1, 
+                                this.y)) {
+                            if (1 + this.pmCaseLibre(hemo.getX() - 1, this.y, 
+                                    this.pm - 1) <= this.pm) {
+                                actions.add(new Action("Glisser vers le GAUCHE",
+                                    this.getClass(), "glisser",
+                                    new Object[] {hemo, Finstere.GAUCHE}));
+                            }
+                        } else {
+                            actions.add(new Action("Glisser vers le GAUCHE",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.GAUCHE}));
+                        }  
                     } else if (hemo.getX() >= this.x) {
-                        actions.add(new Action("Glisser vers le DROITE",
-                            this.getClass(), "glisser",
-                            new Object[] {hemo, Finstere.DROITE}));
+                        if (this.partie.getLabyrinthe().isPersonnage(hemo.getX() + 2, 
+                                this.y)) {
+                            if (1 + this.pmCaseLibre(hemo.getX() + 2, this.y, 
+                                    this.pm - 1) <= this.pm) {
+                                actions.add(new Action("Glisser vers le DROITE",
+                                    this.getClass(), "glisser",
+                                    new Object[] {hemo, Finstere.DROITE}));
+                            }
+                        } else {
+                            actions.add(new Action("Glisser vers le DROITE",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.DROITE})); 
+                        }
                     }
                 }
                 
@@ -425,6 +505,348 @@ public class Personnage extends Pion {
                     }
                 }
             }
+            
+            /* Si l'Hemoglobine est linéaire horizontale */
+            if (hemo.getType().equals(Finstere.LINEHORI)) {
+                
+                /* Si le Personnage est en BAS ou en HAUT de la flaque */
+                if (hemo.getX() <= this.x && hemo.getX() + 3 >= this.x) {
+                    if (hemo.getY() < this.y) {
+                        if (this.partie.getLabyrinthe().isPersonnage(this.x, 
+                                hemo.getY() - 1)) {
+                            if (1 + this.pmCaseLibre(this.x, hemo.getY() - 1, 
+                                    this.pm - 1) <= this.pm) {
+                                actions.add(new Action("Glisser vers le HAUT",
+                                    this.getClass(), "glisser",
+                                    new Object[] {hemo, Finstere.HAUT}));
+                            }
+                        } else {
+                           actions.add(new Action("Glisser vers le HAUT",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.HAUT})); 
+                        }
+                    } else if (hemo.getY() > this.y) {
+                        if (this.partie.getLabyrinthe().isPersonnage(this.x, 
+                                hemo.getY() + 1)) {
+                            if (1 + this.pmCaseLibre(this.x, hemo.getY() + 1, 
+                                    this.pm - 1) <= this.pm) {
+                                actions.add(new Action("Glisser vers le BAS",
+                                    this.getClass(), "glisser",
+                                    new Object[] {hemo, Finstere.BAS}));
+                            }
+                        } else {
+                            actions.add(new Action("Glisser vers le BAS",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.BAS}));
+                        } 
+                    }
+                }
+                
+                /* Si le Personnage est à GAUCHE ou à DROITE de la flaque */
+                if (hemo.getY() == this.y) {
+                    if (hemo.getX() < this.x) {
+                        if (this.partie.getLabyrinthe().isPersonnage(hemo.getX() - 1, 
+                                this.y)) {
+                            if (1 + this.pmCaseLibre(hemo.getX() - 1, this.y, 
+                                    this.pm - 1) <= this.pm) {
+                                actions.add(new Action("Glisser vers le GAUCHE",
+                                    this.getClass(), "glisser",
+                                    new Object[] {hemo, Finstere.GAUCHE}));
+                            }
+                        } else {
+                            actions.add(new Action("Glisser vers le GAUCHE",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.GAUCHE}));
+                        }  
+                    } else if (hemo.getX() + 3 > this.x) {
+                        if (this.partie.getLabyrinthe().isPersonnage(hemo.getX() + 4, 
+                                this.y)) {
+                            if (1 + this.pmCaseLibre(hemo.getX() + 4, this.y, 
+                                    this.pm - 1) <= this.pm) {
+                                actions.add(new Action("Glisser vers le DROITE",
+                                    this.getClass(), "glisser",
+                                    new Object[] {hemo, Finstere.DROITE}));
+                            }
+                        } else {
+                            actions.add(new Action("Glisser vers le DROITE",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.DROITE})); 
+                        }
+                    }
+                }
+                
+                /* Si le Personnage est à GAUCHE */
+                if (hemo.getX() == this.x && hemo.getY() == this.y) {
+                    if (this.partie.getLabyrinthe().isPersonnage(this.x, this.y - 1)) {
+                        if (1 + this.pmCaseLibre(this.x, this.y - 1, this.pm - 1) <= this.pm) {
+                            actions.add(new Action("Sortir par le HAUT",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.HAUT}));
+                        } 
+                    } else {
+                        actions.add(new Action("Sortir par le HAUT",
+                            this.getClass(), "glisser",
+                            new Object[] {hemo, Finstere.HAUT}));
+                    }
+                    if (this.partie.getLabyrinthe().isPersonnage(this.x - 1, this.y)) {
+                        if (1 + this.pmCaseLibre(this.x - 1, this.y, this.pm - 1) <= this.pm) {
+                            actions.add(new Action("Sortir par la GAUCHE",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.GAUCHE}));
+                        } 
+                    } else {
+                        actions.add(new Action("Sortir par la GAUCHE",
+                            this.getClass(), "glisser",
+                            new Object[] {hemo, Finstere.GAUCHE}));
+                    }
+                    if (this.partie.getLabyrinthe().isPersonnage(this.x, this.y + 1)) {
+                        if (1 + this.pmCaseLibre(this.x, this.y + 1, this.pm - 1) <= this.pm) {
+                            actions.add(new Action("Sortir par le BAS",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.BAS}));
+                        } 
+                    } else {
+                        actions.add(new Action("Sortir par le BAS",
+                            this.getClass(), "glisser",
+                            new Object[] {hemo, Finstere.BAS}));
+                    }
+                }
+                
+                /* Si le Personnage est au CENTRE */
+                if ((hemo.getX() + 1 == this.x || hemo.getX() + 2 == this.x) 
+                        && hemo.getY() == this.y) {
+                    if (this.partie.getLabyrinthe().isPersonnage(this.x, this.y - 1)) {
+                        if (1 + this.pmCaseLibre(this.x, this.y - 1, this.pm - 1) <= this.pm) {
+                            actions.add(new Action("Sortir par le HAUT",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.HAUT}));
+                        } 
+                    } else {
+                        actions.add(new Action("Sortir par le HAUT",
+                            this.getClass(), "glisser",
+                            new Object[] {hemo, Finstere.HAUT}));
+                    }
+                    if (this.partie.getLabyrinthe().isPersonnage(this.x, this.y + 1)) {
+                        if (1 + this.pmCaseLibre(this.x, this.y + 1, this.pm - 1) <= this.pm) {
+                            actions.add(new Action("Sortir par le BAS",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.BAS}));
+                        } 
+                    } else {
+                        actions.add(new Action("Sortir par le BAS",
+                            this.getClass(), "glisser",
+                            new Object[] {hemo, Finstere.BAS}));
+                    }
+                }
+                
+                /* Si le Personnage est à DROITE */
+                if (hemo.getX() + 3 == this.x && hemo.getY() == this.y) {
+                    if (this.partie.getLabyrinthe().isPersonnage(this.x, this.y - 1)) {
+                        if (1 + this.pmCaseLibre(this.x, this.y - 1, this.pm - 1) <= this.pm) {
+                            actions.add(new Action("Sortir par le HAUT",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.HAUT}));
+                        } 
+                    } else {
+                        actions.add(new Action("Sortir par le HAUT",
+                            this.getClass(), "glisser",
+                            new Object[] {hemo, Finstere.HAUT}));
+                    }
+                    if (this.partie.getLabyrinthe().isPersonnage(this.x + 1, this.y)) {
+                        if (1 + this.pmCaseLibre(this.x + 1, this.y, this.pm - 1) <= this.pm) {
+                            actions.add(new Action("Sortir par la DROITE",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.DROITE}));
+                        } 
+                    } else {
+                        actions.add(new Action("Sortir par la DROITE",
+                            this.getClass(), "glisser",
+                            new Object[] {hemo, Finstere.DROITE}));
+                    }
+                    if (this.partie.getLabyrinthe().isPersonnage(this.x, this.y + 1)) {
+                        if (1 + this.pmCaseLibre(this.x, this.y + 1, this.pm - 1) <= this.pm) {
+                            actions.add(new Action("Sortir par le BAS",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.BAS}));
+                        } 
+                    } else {
+                        actions.add(new Action("Sortir par le BAS",
+                            this.getClass(), "glisser",
+                            new Object[] {hemo, Finstere.BAS}));
+                    }
+                }
+            }
+            
+            /* Si l'Hemoglobine est linéaire verticale */
+            if (hemo.getType().equals(Finstere.LINEVERT)) {
+                
+                /* Si le Personnage est en BAS ou en HAUT de la flaque */
+                if (hemo.getX() == this.x) {
+                    if (hemo.getY() < this.y) {
+                        if (this.partie.getLabyrinthe().isPersonnage(this.x, 
+                                hemo.getY() - 1)) {
+                            if (1 + this.pmCaseLibre(this.x, hemo.getY() - 1, 
+                                    this.pm - 1) <= this.pm) {
+                                actions.add(new Action("Glisser vers le HAUT",
+                                    this.getClass(), "glisser",
+                                    new Object[] {hemo, Finstere.HAUT}));
+                            }
+                        } else {
+                           actions.add(new Action("Glisser vers le HAUT",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.HAUT})); 
+                        }
+                    } else if (hemo.getY() + 3 > this.y) {
+                        if (this.partie.getLabyrinthe().isPersonnage(this.x, 
+                                hemo.getY() + 4)) {
+                            if (1 + this.pmCaseLibre(this.x, hemo.getY() + 4, 
+                                    this.pm - 1) <= this.pm) {
+                                actions.add(new Action("Glisser vers le BAS",
+                                    this.getClass(), "glisser",
+                                    new Object[] {hemo, Finstere.BAS}));
+                            }
+                        } else {
+                            actions.add(new Action("Glisser vers le BAS",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.BAS}));
+                        } 
+                    }
+                }
+                
+                /* Si le Personnage est à GAUCHE ou à DROITE de la flaque */
+                if (hemo.getY() <= this.y && hemo.getY() + 3 >= this.y) {
+                    if (hemo.getX() < this.x) {
+                        if (this.partie.getLabyrinthe().isPersonnage(hemo.getX() - 1, 
+                                this.y)) {
+                            if (1 + this.pmCaseLibre(hemo.getX() - 1, this.y, 
+                                    this.pm - 1) <= this.pm) {
+                                actions.add(new Action("Glisser vers le GAUCHE",
+                                    this.getClass(), "glisser",
+                                    new Object[] {hemo, Finstere.GAUCHE}));
+                            }
+                        } else {
+                            actions.add(new Action("Glisser vers le GAUCHE",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.GAUCHE}));
+                        }  
+                    } else if (hemo.getX() > this.x) {
+                        if (this.partie.getLabyrinthe().isPersonnage(hemo.getX() + 1, 
+                                this.y)) {
+                            if (1 + this.pmCaseLibre(hemo.getX() + 1, this.y, 
+                                    this.pm - 1) <= this.pm) {
+                                actions.add(new Action("Glisser vers le DROITE",
+                                    this.getClass(), "glisser",
+                                    new Object[] {hemo, Finstere.DROITE}));
+                            }
+                        } else {
+                            actions.add(new Action("Glisser vers le DROITE",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.DROITE})); 
+                        }
+                    }
+                }
+                
+                /* Si le Personnage est en HAUT */
+                if (hemo.getX() == this.x && hemo.getY() == this.y) {
+                    if (this.partie.getLabyrinthe().isPersonnage(this.x, this.y - 1)) {
+                        if (1 + this.pmCaseLibre(this.x, this.y - 1, this.pm - 1) <= this.pm) {
+                            actions.add(new Action("Sortir par le HAUT",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.HAUT}));
+                        } 
+                    } else {
+                        actions.add(new Action("Sortir par le HAUT",
+                            this.getClass(), "glisser",
+                            new Object[] {hemo, Finstere.HAUT}));
+                    }
+                    if (this.partie.getLabyrinthe().isPersonnage(this.x - 1, this.y)) {
+                        if (1 + this.pmCaseLibre(this.x - 1, this.y, this.pm - 1) <= this.pm) {
+                            actions.add(new Action("Sortir par la GAUCHE",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.GAUCHE}));
+                        } 
+                    } else {
+                        actions.add(new Action("Sortir par la GAUCHE",
+                            this.getClass(), "glisser",
+                            new Object[] {hemo, Finstere.GAUCHE}));
+                    }
+                    if (this.partie.getLabyrinthe().isPersonnage(this.x + 1, this.y)) {
+                        if (1 + this.pmCaseLibre(this.x + 1, this.y, this.pm - 1) <= this.pm) {
+                            actions.add(new Action("Sortir par la DROITE",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.DROITE}));
+                        } 
+                    } else {
+                        actions.add(new Action("Sortir par la DROITE",
+                            this.getClass(), "glisser",
+                            new Object[] {hemo, Finstere.DROITE}));
+                    }
+                }
+                
+                /* Si le Personnage est au CENTRE */
+                if ((hemo.getY() + 1 == this.y || hemo.getY() + 2 == this.y) 
+                        && hemo.getY() == this.y) {
+                    if (this.partie.getLabyrinthe().isPersonnage(this.x - 1, this.y)) {
+                        if (1 + this.pmCaseLibre(this.x - 1, this.y, this.pm - 1) <= this.pm) {
+                            actions.add(new Action("Sortir par la GAUCHE",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.GAUCHE}));
+                        } 
+                    } else {
+                        actions.add(new Action("Sortir par la GAUCHE",
+                            this.getClass(), "glisser",
+                            new Object[] {hemo, Finstere.GAUCHE}));
+                    }
+                    if (this.partie.getLabyrinthe().isPersonnage(this.x + 1, this.y)) {
+                        if (1 + this.pmCaseLibre(this.x + 1, this.y, this.pm - 1) <= this.pm) {
+                            actions.add(new Action("Sortir par la DROITE",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.DROITE}));
+                        } 
+                    } else {
+                        actions.add(new Action("Sortir par la DROITE",
+                            this.getClass(), "glisser",
+                            new Object[] {hemo, Finstere.DROITE}));
+                    }
+                }
+                
+                /* Si le Personnage est en BAS */
+                if (hemo.getX() == this.x && hemo.getY() + 3 == this.y) {
+                    if (this.partie.getLabyrinthe().isPersonnage(this.x - 1, this.y)) {
+                        if (1 + this.pmCaseLibre(this.x - 1, this.y, this.pm - 1) <= this.pm) {
+                            actions.add(new Action("Sortir par la GAUCHE",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.GAUCHE}));
+                        } 
+                    } else {
+                        actions.add(new Action("Sortir par la GAUCHE",
+                            this.getClass(), "glisser",
+                            new Object[] {hemo, Finstere.GAUCHE}));
+                    }
+                    if (this.partie.getLabyrinthe().isPersonnage(this.x + 1, this.y)) {
+                        if (1 + this.pmCaseLibre(this.x + 1, this.y, this.pm - 1) <= this.pm) {
+                            actions.add(new Action("Sortir par la DROITE",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.DROITE}));
+                        } 
+                    } else {
+                        actions.add(new Action("Sortir par la DROITE",
+                            this.getClass(), "glisser",
+                            new Object[] {hemo, Finstere.DROITE}));
+                    }
+                    if (this.partie.getLabyrinthe().isPersonnage(this.x, this.y + 4)) {
+                        if (1 + this.pmCaseLibre(this.x, this.y + 4, this.pm - 1) <= this.pm) {
+                            actions.add(new Action("Sortir par le BAS",
+                                this.getClass(), "glisser",
+                                new Object[] {hemo, Finstere.BAS}));
+                        } 
+                    } else {
+                        actions.add(new Action("Sortir par le BAS",
+                            this.getClass(), "glisser",
+                            new Object[] {hemo, Finstere.BAS}));
+                    }
+                }
+            }
         }
         
         return actions;
@@ -524,7 +946,7 @@ public class Personnage extends Pion {
         if (this.pm > 0) {
             for (Action action : this.actionsHemoglobine()) {
                 actions.put(key, action);
-            key++;
+                key++;
             }
         }
         

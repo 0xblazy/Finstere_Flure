@@ -39,12 +39,12 @@ public class Monstre extends Pion {
         int nbDeplacement = 0;
         
         while (nbDeplacement < 20 && morts.size() < _nbProie) {
-            this.trouverDirection();
+            this.trouverDirection(morts);
             Personnage mort = this.deplacer();
             if (mort != null) morts.add(mort);
             nbDeplacement++;
         }
-        this.trouverDirection();
+        this.trouverDirection(morts);
         
         return morts;
     }
@@ -54,13 +54,13 @@ public class Monstre extends Pion {
         ArrayList<Personnage> morts = new ArrayList<>();
         
         for (int i = 0 ; i < _nbDeplacement ; i++) {
-            this.trouverDirection();
+            this.trouverDirection(morts);
             Personnage mort = this.deplacer();
             if (mort != null) {
                 if (!morts.contains(mort)) morts.add(mort);
             }
         }
-        this.trouverDirection();
+        this.trouverDirection(morts);
         
         return morts;
     }
@@ -137,12 +137,12 @@ public class Monstre extends Pion {
     }
     
     /* Trouve la direction à donner au Monstre en fonction de la situation */
-    private void trouverDirection() {
+    private void trouverDirection(List<Personnage> _morts) {
         int ancienneDirection = this.direction;
         int distance = 16;
         
         /* Pour chaque Personnage visible */
-        for (Map.Entry<Integer,Personnage> entry : this.persoVisibles().entrySet()) {
+        for (Map.Entry<Integer,Personnage> entry : this.persoVisibles(_morts).entrySet()) {
             
             /* Si le Personnage est aligné horizontalement */
             if (entry.getKey() == Finstere.GAUCHE 
@@ -179,91 +179,92 @@ public class Monstre extends Pion {
     }
     
     /* Retourne les Personnage visibles avec leur direction par rapport au Monstre */
-    private Map<Integer,Personnage> persoVisibles() {
+    private Map<Integer,Personnage> persoVisibles(List<Personnage> _morts) {
         HashMap<Integer,Personnage> persoV = new HashMap<Integer, Personnage>();
-        
-        List<Personnage> persos = this.partie.persoAlignes(this.x, this.y);
-        
+
         /* Pour chaque Personnage aligné */
-        for (Personnage perso : persos) {
+        for (Personnage perso : this.partie.persoAlignes(this.x, this.y)) {
             
-            /* Si le Personnage est a GAUCHE */
-            if (perso.getX() < this.x) {
-                int direction = Finstere.GAUCHE;
-                boolean visible = (direction != -this.direction);
-                int i = this.x - 1;
-                while (visible && i > perso.getX()) {
-                     visible = !this.partie.getLabyrinthe().isMur(i, this.y);
-                     i--;
-                }
-                if (visible) {
-                    if (persoV.containsKey(direction)) {
-                        if (Math.abs(this.x - perso.getX()) < 
-                                Math.abs(this.x - persoV.get(direction)
-                                        .getX())) 
-                            persoV.put(direction, perso);
-                    } else {
-                        persoV.put(direction, perso);
+            /* Si le Personnage n'est pas dans _morts */
+            if (!_morts.contains(perso)) {
+                /* Si le Personnage est a GAUCHE */
+                if (perso.getX() < this.x) {
+                    int direction = Finstere.GAUCHE;
+                    boolean visible = (direction != -this.direction);
+                    int i = this.x - 1;
+                    while (visible && i > perso.getX()) {
+                        visible = !this.partie.getLabyrinthe().isMur(i, this.y);
+                        i--;
                     }
-                }
+                    if (visible) {
+                        if (persoV.containsKey(direction)) {
+                            if (Math.abs(this.x - perso.getX()) < 
+                                    Math.abs(this.x - persoV.get(direction)
+                                        .getX())) 
+                                persoV.put(direction, perso);
+                        } else {
+                            persoV.put(direction, perso);
+                        }
+                    }
             
-            /* Si le Personnage est a DROITE */
-            } else if (perso.getX() > this.x) {
-                int direction = Finstere.DROITE;
-                boolean visible = (direction != -this.direction);
-                int i = this.x + 1;
-                while (visible && i < perso.getX()) {
-                     visible = !this.partie.getLabyrinthe().isMur(i, this.y);
-                     i++;
-                }
-                if (visible) {
-                    if (persoV.containsKey(direction)) {
-                        if (Math.abs(this.x - perso.getX()) < 
-                                Math.abs(this.x - persoV.get(direction)
+                /* Si le Personnage est a DROITE */
+                } else if (perso.getX() > this.x) {
+                    int direction = Finstere.DROITE;
+                    boolean visible = (direction != -this.direction);
+                    int i = this.x + 1;
+                    while (visible && i < perso.getX()) {
+                        visible = !this.partie.getLabyrinthe().isMur(i, this.y);
+                        i++;
+                    }
+                    if (visible) {
+                        if (persoV.containsKey(direction)) {
+                            if (Math.abs(this.x - perso.getX()) < 
+                                    Math.abs(this.x - persoV.get(direction)
                                         .getX())) 
+                                persoV.put(direction, perso);
+                        } else {
                             persoV.put(direction, perso);
-                    } else {
-                        persoV.put(direction, perso);
+                        }
                     }
-                }
                 
-            /* Si le Personnage est en HAUT */
-            } else if (perso.getY() < this.y) {
-                int direction = Finstere.HAUT;
-                boolean visible = (direction != -this.direction);
-                int j = this.y - 1;
-                while (visible && j > perso.getY()) {
-                     visible = !this.partie.getLabyrinthe().isMur(this.x, j);
-                     j--;
-                }
-                if (visible) {
-                    if (persoV.containsKey(direction)) {
-                        if (Math.abs(this.y - perso.getY()) < 
-                                Math.abs(this.y - persoV.get(direction)
-                                        .getY())) 
-                            persoV.put(direction, perso);
-                    } else {
-                        persoV.put(direction, perso);
+                /* Si le Personnage est en HAUT */
+                } else if (perso.getY() < this.y) {
+                    int direction = Finstere.HAUT;
+                    boolean visible = (direction != -this.direction);
+                    int j = this.y - 1;
+                    while (visible && j > perso.getY()) {
+                        visible = !this.partie.getLabyrinthe().isMur(this.x, j);
+                        j--;
                     }
-                }
-                
-            /* Si le Personnage est en BAS */
-            } else if (perso.getY() > this.y) {
-                int direction = Finstere.BAS;
-                boolean visible = (direction != -this.direction);
-                int j = this.y + 1;
-                while (visible && j < perso.getY()) {
-                     visible = !this.partie.getLabyrinthe().isMur(this.x, j);
-                     j++;
-                }
-                if (visible) {
-                    if (persoV.containsKey(direction)) {
-                        if (Math.abs(this.y - perso.getY()) < 
-                                Math.abs(this.y - persoV.get(direction)
+                    if (visible) {
+                        if (persoV.containsKey(direction)) {
+                            if (Math.abs(this.y - perso.getY()) < 
+                                    Math.abs(this.y - persoV.get(direction)
                                         .getY())) 
+                                persoV.put(direction, perso);
+                        } else {
                             persoV.put(direction, perso);
-                    } else {
-                        persoV.put(direction, perso);
+                        }
+                    }
+                
+                /* Si le Personnage est en BAS */
+                } else if (perso.getY() > this.y) {
+                    int direction = Finstere.BAS;
+                    boolean visible = (direction != -this.direction);
+                    int j = this.y + 1;
+                    while (visible && j < perso.getY()) {
+                        visible = !this.partie.getLabyrinthe().isMur(this.x, j);
+                        j++;
+                    }
+                    if (visible) {
+                        if (persoV.containsKey(direction)) {
+                            if (Math.abs(this.y - perso.getY()) < 
+                                    Math.abs(this.y - persoV.get(direction)
+                                        .getY())) 
+                                persoV.put(direction, perso);
+                        } else {
+                            persoV.put(direction, perso);
+                        }
                     }
                 }
             }

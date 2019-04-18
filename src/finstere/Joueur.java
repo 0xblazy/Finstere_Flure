@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class Joueur {
     /* Nom du Joueur */
-    private String name;
+    private final String name;
     /* Personnage du Joueur */
     private Personnage[] personnages;
     /* Nombre de Personnage restant */
@@ -22,7 +22,7 @@ public class Joueur {
     /* Partie dans laquelle joue le Joueur */
     private Partie partie;
     /* Couleur des Personnage du Joueur */
-    private String couleur;
+    private final String couleur;
     
     /* Constructeur */
     public Joueur(String _name, Partie _partie, String _couleur, Personnage[] _personnages) {

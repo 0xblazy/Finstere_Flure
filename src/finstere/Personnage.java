@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  *
@@ -141,7 +142,7 @@ public class Personnage extends Pion {
             int pmNecessaires = Math.abs(_x - c[0]) + Math.abs(_y - c[1]);
             
             /* Définition de la direction à tester (pour les Mur) */
-            int direction = Finstere.HAUT;
+            int direction;
             int diffY = Math.abs(_y - c[1]);
             int diffX = Math.abs(_x - c[0]);
             if (diffY > diffX) {
@@ -1062,6 +1063,15 @@ public class Personnage extends Pion {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 89 * hash + this.pmC;
+        hash = 89 * hash + this.pmF;
+        hash = 89 * hash + Objects.hashCode(this.couleur);
+        return hash;
     }
     
     /* Getters */

@@ -11,7 +11,7 @@ package finstere;
  */
 public class Carte {
     /* Valeur de la Carte */
-    private int valeur;
+    private final int valeur;
     
     /* Constructeur */
     public Carte(int _valeur) {

@@ -98,36 +98,40 @@ public class Monstre extends Pion {
      */
     private Personnage deplacerSurCase() {
         Personnage persoMort = null;
+        Mur mur;
         
         this.partie.getLabyrinthe().setMonstre(this.x, this.y, false);
-        if (this.direction == Finstere.HAUT) {
-            Mur mur = this.partie.getMur(this.x, this.y - 1);
-            if (mur != null) {
-                persoMort = mur.pousserMonstre(this.direction);
-                System.out.println("   Le Monstre pousse le Mur");
-            }
-            this.y--;
-        } else if (this.direction == Finstere.BAS) {
-            Mur mur = this.partie.getMur(this.x, this.y + 1);
-            if (mur != null) {
-                persoMort = mur.pousserMonstre(this.direction);
-                System.out.println("   Le Monstre pousse le Mur");
-            }
-            this.y++;
-        } else if (this.direction == Finstere.GAUCHE) {
-            Mur mur = this.partie.getMur(this.x - 1, this.y);
-            if (mur != null) {
-                persoMort = mur.pousserMonstre(this.direction);
-                System.out.println("   Le Monstre pousse le Mur");
-            }
-            this.x--;
-        } else if (this.direction == Finstere.DROITE) {
-            Mur mur = this.partie.getMur(this.x + 1, this.y);
-            if (mur != null) {
-                persoMort = mur.pousserMonstre(this.direction);
-                System.out.println("   Le Monstre pousse le Mur");
-            }
-            this.x++;
+        switch (this.direction) {
+            case Finstere.HAUT:
+                mur = this.partie.getMur(this.x, this.y - 1);
+                if (mur != null) {
+                    persoMort = mur.pousserMonstre(this.direction);
+                    System.out.println("   Le Monstre pousse le Mur");
+                }   this.y--;
+                break;
+            case Finstere.BAS:
+                mur = this.partie.getMur(this.x, this.y + 1);
+                if (mur != null) {
+                    persoMort = mur.pousserMonstre(this.direction);
+                    System.out.println("   Le Monstre pousse le Mur");
+                }   this.y++;
+                break;
+            case Finstere.GAUCHE:
+                mur = this.partie.getMur(this.x - 1, this.y);
+                if (mur != null) {
+                    persoMort = mur.pousserMonstre(this.direction);
+                    System.out.println("   Le Monstre pousse le Mur");
+                }   this.x--;
+                break;
+            case Finstere.DROITE:
+                mur = this.partie.getMur(this.x + 1, this.y);
+                if (mur != null) {
+                    persoMort = mur.pousserMonstre(this.direction);
+                    System.out.println("   Le Monstre pousse le Mur");
+                }   this.x++;
+                break;
+            default:
+                break;
         }
         this.partie.getLabyrinthe().setMonstre(this.x, this.y, true);
         System.out.println("   Le Monstre se déplace en (" + this.x 
@@ -180,7 +184,7 @@ public class Monstre extends Pion {
     
     /* Retourne les Personnage visibles avec leur direction par rapport au Monstre */
     private Map<Integer,Personnage> persoVisibles(List<Personnage> _morts) {
-        HashMap<Integer,Personnage> persoV = new HashMap<Integer, Personnage>();
+        HashMap<Integer,Personnage> persoV = new HashMap<>();
 
         /* Pour chaque Personnage aligné */
         for (Personnage perso : this.partie.persoAlignes(this.x, this.y)) {
@@ -189,81 +193,81 @@ public class Monstre extends Pion {
             if (!_morts.contains(perso)) {
                 /* Si le Personnage est a GAUCHE */
                 if (perso.getX() < this.x) {
-                    int direction = Finstere.GAUCHE;
-                    boolean visible = (direction != -this.direction);
+                    int dir = Finstere.GAUCHE;
+                    boolean visible = (dir != -this.direction);
                     int i = this.x - 1;
                     while (visible && i > perso.getX()) {
                         visible = !this.partie.getLabyrinthe().isMur(i, this.y);
                         i--;
                     }
                     if (visible) {
-                        if (persoV.containsKey(direction)) {
+                        if (persoV.containsKey(dir)) {
                             if (Math.abs(this.x - perso.getX()) < 
-                                    Math.abs(this.x - persoV.get(direction)
+                                    Math.abs(this.x - persoV.get(dir)
                                         .getX())) 
-                                persoV.put(direction, perso);
+                                persoV.put(dir, perso);
                         } else {
-                            persoV.put(direction, perso);
+                            persoV.put(dir, perso);
                         }
                     }
             
                 /* Si le Personnage est a DROITE */
                 } else if (perso.getX() > this.x) {
-                    int direction = Finstere.DROITE;
-                    boolean visible = (direction != -this.direction);
+                    int dir = Finstere.DROITE;
+                    boolean visible = (dir != -this.direction);
                     int i = this.x + 1;
                     while (visible && i < perso.getX()) {
                         visible = !this.partie.getLabyrinthe().isMur(i, this.y);
                         i++;
                     }
                     if (visible) {
-                        if (persoV.containsKey(direction)) {
+                        if (persoV.containsKey(dir)) {
                             if (Math.abs(this.x - perso.getX()) < 
-                                    Math.abs(this.x - persoV.get(direction)
+                                    Math.abs(this.x - persoV.get(dir)
                                         .getX())) 
-                                persoV.put(direction, perso);
+                                persoV.put(dir, perso);
                         } else {
-                            persoV.put(direction, perso);
+                            persoV.put(dir, perso);
                         }
                     }
                 
                 /* Si le Personnage est en HAUT */
                 } else if (perso.getY() < this.y) {
-                    int direction = Finstere.HAUT;
-                    boolean visible = (direction != -this.direction);
+                    int dir = Finstere.HAUT;
+                    boolean visible = (dir != -this.direction);
                     int j = this.y - 1;
                     while (visible && j > perso.getY()) {
                         visible = !this.partie.getLabyrinthe().isMur(this.x, j);
                         j--;
                     }
                     if (visible) {
-                        if (persoV.containsKey(direction)) {
+                        if (persoV.containsKey(dir)) {
                             if (Math.abs(this.y - perso.getY()) < 
-                                    Math.abs(this.y - persoV.get(direction)
+                                    Math.abs(this.y - persoV.get(dir)
                                         .getY())) 
-                                persoV.put(direction, perso);
+                                persoV.put(dir, perso);
                         } else {
-                            persoV.put(direction, perso);
+                            persoV.put(dir, perso);
                         }
                     }
                 
                 /* Si le Personnage est en BAS */
                 } else if (perso.getY() > this.y) {
-                    int direction = Finstere.BAS;
-                    boolean visible = (direction != -this.direction);
+                    int dir = Finstere.BAS;
+                    boolean visible = (dir != -this.direction);
                     int j = this.y + 1;
                     while (visible && j < perso.getY()) {
                         visible = !this.partie.getLabyrinthe().isMur(this.x, j);
                         j++;
                     }
                     if (visible) {
-                        if (persoV.containsKey(direction)) {
+                        if (persoV.containsKey(dir)) {
                             if (Math.abs(this.y - perso.getY()) < 
-                                    Math.abs(this.y - persoV.get(direction)
+                                    Math.abs(this.y - persoV.get(dir)
                                         .getY())) 
-                                persoV.put(direction, perso);
+                                persoV.put(dir, perso);
                         } else {
-                            persoV.put(direction, perso);
+                            persoV.put(dir, perso);
                         }
                     }
                 }
@@ -278,16 +282,17 @@ public class Monstre extends Pion {
      */
     @Override
     public String toString() {
-        if (this.direction == Finstere.HAUT) {
-            return "M/\\";
-        } else if (this.direction == Finstere.BAS) {
-            return "M\\/";
-        } else if (this.direction == Finstere.GAUCHE) {
-            return "<<M";
-        } else if (this.direction == Finstere.DROITE) {
-            return "M>>";
+        switch (this.direction) {
+            case Finstere.HAUT:
+                return "M/\\";
+            case Finstere.BAS:
+                return "M\\/";
+            case Finstere.GAUCHE:
+                return "<<M";
+            case Finstere.DROITE:
+                return "M>>";
+            default:
+                return " M ";
         }
-        
-        return " M ";
     }
 }

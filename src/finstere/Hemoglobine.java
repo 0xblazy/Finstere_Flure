@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class Hemoglobine extends Pion {
     /* Type de flaque d'hémoglobine (nom de l'image sans l'extension) */
-    private String type;
+    private final String type;
     
     /* Constructeur */
     public Hemoglobine(int _x, int _y, String _type, Partie _partie) {
@@ -28,31 +28,35 @@ public class Hemoglobine extends Pion {
     public List<int[]> zoneInteraction() {
         ArrayList<int[]> zone = new ArrayList<>();
         
-        if (this.type.equals(Finstere.CARRE)) {
-            for (int i = 0 ; i < 2 ; i++) {
-                zone.add(new int[] {this.x + i, this.y - 1});
-                zone.add(new int[] {this.x + i, this.y + 2});
-                zone.add(new int[] {this.x - 1, this.y + i});
-                zone.add(new int[] {this.x + 2, this.y + i});
-                zone.add(new int[] {this.x + i, this.y});
-                zone.add(new int[] {this.x + i, this.y + 1});
-            }
-        } else if (this.type.equals(Finstere.LINEHORI)) {
-            zone.add(new int[] {this.x - 1, this.y});
-            for (int i = 0 ; i < 4 ; i++) {
-                zone.add(new int[] {this.x + i, this.y - 1});
-                zone.add(new int[] {this.x + i, this.y});
-                zone.add(new int[] {this.x + i, this.y + 1});
-            }
-            zone.add(new int[] {this.x + 4, this.y});
-        } else if (this.type.equals(Finstere.LINEVERT)) {
-            zone.add(new int[] {this.x, this.y - 1});
-            for (int j = 0 ; j < 4 ; j++) {
-                zone.add(new int[] {this.x - 1, this.y + j});
-                zone.add(new int[] {this.x, this.y + j});
-                zone.add(new int[] {this.x + 1, this.y + j});
-            }
-            zone.add(new int[] {this.x, this.y + 4});
+        switch (this.type) {
+            case Finstere.CARRE:
+                for (int i = 0 ; i < 2 ; i++) {
+                    zone.add(new int[] {this.x + i, this.y - 1});
+                    zone.add(new int[] {this.x + i, this.y + 2});
+                    zone.add(new int[] {this.x - 1, this.y + i});
+                    zone.add(new int[] {this.x + 2, this.y + i});
+                    zone.add(new int[] {this.x + i, this.y});
+                    zone.add(new int[] {this.x + i, this.y + 1});
+                }
+                break;
+            case Finstere.LINEHORI:
+                zone.add(new int[] {this.x - 1, this.y});
+                for (int i = 0 ; i < 4 ; i++) {
+                    zone.add(new int[] {this.x + i, this.y - 1});
+                    zone.add(new int[] {this.x + i, this.y});
+                    zone.add(new int[] {this.x + i, this.y + 1});
+                }   zone.add(new int[] {this.x + 4, this.y});
+                break;
+            case Finstere.LINEVERT:
+                zone.add(new int[] {this.x, this.y - 1});
+                for (int j = 0 ; j < 4 ; j++) {
+                    zone.add(new int[] {this.x - 1, this.y + j});
+                    zone.add(new int[] {this.x, this.y + j});
+                    zone.add(new int[] {this.x + 1, this.y + j});
+                }   zone.add(new int[] {this.x, this.y + 4});
+                break;
+            default:
+                break;
         }
         
         return zone;
@@ -61,11 +65,11 @@ public class Hemoglobine extends Pion {
     /* Effectue la glissade jusqu'en (_x,_y) du Personnage passé en paramètre */
     public void glissade(Personnage _perso, int _dir, int _x, int _y) {
         if (_dir == Finstere.HAUT) {
-            int y = _perso.getY() - 1;
+            int j = _perso.getY() - 1;
             Mur mur = null;
-            while (mur == null && y >= _y) {
-                mur = this.partie.getMur(_x, y);
-                y--;
+            while (mur == null && j >= _y) {
+                mur = this.partie.getMur(_x, j);
+                j--;
             }
             if (mur != null) {
                 if (mur.poussable(_dir)) {
@@ -78,11 +82,11 @@ public class Hemoglobine extends Pion {
                 _perso.deplacer(_x, _y, 1);
             }
         } else if (_dir == Finstere.BAS) {
-            int y = _perso.getY() + 1;
+            int j = _perso.getY() + 1;
             Mur mur = null;
-            while (mur == null && y <= _y) {
-                mur = this.partie.getMur(_x, y);
-                y++;
+            while (mur == null && j <= _y) {
+                mur = this.partie.getMur(_x, j);
+                j++;
             }
             if (mur != null) {
                 if (mur.poussable(_dir)) {
@@ -95,11 +99,11 @@ public class Hemoglobine extends Pion {
                 _perso.deplacer(_x, _y, 1);
             }
         } else if (_dir == Finstere.GAUCHE) {
-            int x = _perso.getX() - 1;
+            int i = _perso.getX() - 1;
             Mur mur = null;
-            while (mur == null && x >= _x) {
-                mur = this.partie.getMur(x, _y);
-                x--;
+            while (mur == null && i >= _x) {
+                mur = this.partie.getMur(i, _y);
+                i--;
             }
             if (mur != null) {
                 if (mur.poussable(_dir)) {
@@ -112,11 +116,11 @@ public class Hemoglobine extends Pion {
                 _perso.deplacer(_x, _y, 1);
             }
         } else if (_dir == Finstere.DROITE) {
-            int x = _perso.getX() + 1;
+            int i = _perso.getX() + 1;
             Mur mur = null;
-            while (mur == null && x <= _x) {
-                mur = this.partie.getMur(x, _y);
-                x++;
+            while (mur == null && i <= _x) {
+                mur = this.partie.getMur(i, _y);
+                i++;
             }
             if (mur != null) {
                 if (mur.poussable(_dir)) {
@@ -134,54 +138,54 @@ public class Hemoglobine extends Pion {
     /* Effectue la glissade du Mur passé en paramètre */
     public void glissadeMur(Mur _mur, int _dir, int _x, int _y) {
         if (_dir == Finstere.HAUT) {
-            int y = _mur.getY() - 1;
+            int j = _mur.getY() - 1;
             boolean isMur = false, isPerso = false;
-            while (!isMur && !isPerso && y >= _y) {
-                isMur = this.partie.getLabyrinthe().isMur(_x, y);
-                isPerso = this.partie.getLabyrinthe().isPersonnage(_x, y);
-                y--;
+            while (!isMur && !isPerso && j >= _y) {
+                isMur = this.partie.getLabyrinthe().isMur(_x, j);
+                isPerso = this.partie.getLabyrinthe().isPersonnage(_x, j);
+                j--;
             }
             if (isMur || isPerso) {
-                _mur.setY(y + 2);
+                _mur.setY(j + 2);
             } else {
                 _mur.setY(_y);
             }
         } else if (_dir == Finstere.BAS) {
-            int y = _mur.getY() + 1;
+            int j = _mur.getY() + 1;
             boolean isMur = false, isPerso = false;
-            while (!isMur && !isPerso && y <= _y) {
-                isMur = this.partie.getLabyrinthe().isMur(_x, y);
-                isPerso = this.partie.getLabyrinthe().isPersonnage(_x, y);
-                y++;
+            while (!isMur && !isPerso && j <= _y) {
+                isMur = this.partie.getLabyrinthe().isMur(_x, j);
+                isPerso = this.partie.getLabyrinthe().isPersonnage(_x, j);
+                j++;
             }
             if (isMur || isPerso) {
-                _mur.setY(y - 2);
+                _mur.setY(j - 2);
             } else {
                 _mur.setY(_y);
             }
         } else if (_dir == Finstere.GAUCHE) {
-            int x = _mur.getX() - 1;
+            int i = _mur.getX() - 1;
             boolean isMur = false, isPerso = false;
-            while (!isMur && !isPerso && x >= _x) {
-                isMur = this.partie.getLabyrinthe().isMur(x, _y);
-                isPerso = this.partie.getLabyrinthe().isPersonnage(x, _y);
-                x--;
+            while (!isMur && !isPerso && i >= _x) {
+                isMur = this.partie.getLabyrinthe().isMur(i, _y);
+                isPerso = this.partie.getLabyrinthe().isPersonnage(i, _y);
+                i--;
             }
             if (isMur || isPerso) {
-                _mur.setX(x + 2);
+                _mur.setX(i + 2);
             } else {
                 _mur.setX(_x);
             }
         } else if (_dir == Finstere.DROITE) {
-            int x = _mur.getX() + 1;
+            int i = _mur.getX() + 1;
             boolean isMur = false, isPerso = false;
-            while (!isMur && !isPerso && x <= _x) {
-                isMur = this.partie.getLabyrinthe().isMur(x, _y);
-                isPerso = this.partie.getLabyrinthe().isPersonnage(x, _y);
-                x++;
+            while (!isMur && !isPerso && i <= _x) {
+                isMur = this.partie.getLabyrinthe().isMur(i, _y);
+                isPerso = this.partie.getLabyrinthe().isPersonnage(i, _y);
+                i++;
             }
             if (isMur || isPerso) {
-                _mur.setX(x - 2);
+                _mur.setX(i - 2);
             } else {
                 _mur.setX(_x);
             }
@@ -190,15 +194,17 @@ public class Hemoglobine extends Pion {
     
     /* Retourne true si les coordonnées (_x,_y) sont sur la flaque */
     public boolean isHere(int _x, int _y) {
-        if (this.type.equals(Finstere.CARRE)) {
-            return (_x == this.x || _x == this.x + 1) 
-                    && (_y == this.y || _y == this.y + 1);
-        } else if (this.type.equals(Finstere.LINEHORI)) {
-            return _y == this.y && _x >= this.x && _x <= this.x + 3;
-        } else if (this.type.equals(Finstere.LINEVERT)) {
-            return _y >= this.y && _y <= this.y + 3 && _x == this.x;
+        switch (this.type) {
+            case Finstere.CARRE:
+                return (_x == this.x || _x == this.x + 1)
+                        && (_y == this.y || _y == this.y + 1);
+            case Finstere.LINEHORI:
+                return _y == this.y && _x >= this.x && _x <= this.x + 3;
+            case Finstere.LINEVERT:
+                return _y >= this.y && _y <= this.y + 3 && _x == this.x;
+            default:
+                return false;
         }
-        return false;
     }
     
     /* Getters */

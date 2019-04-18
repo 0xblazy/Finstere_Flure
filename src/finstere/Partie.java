@@ -35,7 +35,7 @@ public class Partie {
     /* Index du Joueur commencant le tour */
     private int premierJoueur;
     /* Scanner pour la saisie dans la console */
-    private Scanner sc;
+    private final Scanner sc;
     /* Compteur pour le classement des Personnage */
     private int classement;
     /* Paquet de Carte */
@@ -263,8 +263,7 @@ public class Partie {
                         + " en choisir un autre : ");
                 indexPerso = this.scannerInt();
             }
-            while (this.personnages[_indexJoueur][indexPerso-1].getActions()
-                    .size() == 0) {
+            while (this.personnages[_indexJoueur][indexPerso-1].getActions().isEmpty()) {
                 System.out.print("Aucune action possible avec ce Personnage "
                         + "pour le moment, veuillez en choisir un autre : ");
                 indexPerso = this.scannerInt();

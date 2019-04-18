@@ -67,11 +67,16 @@ public class Hemoglobine extends Pion {
         if (_dir == Finstere.HAUT) {
             int j = _perso.getY() - 1;
             Mur mur = null;
-            while (mur == null && j >= _y) {
+            boolean isMonstre = false;
+            while (mur == null && !isMonstre && j >= _y) {
                 mur = this.partie.getMur(_x, j);
+                isMonstre = this.partie.getLabyrinthe().isMonstre(_x, j);
                 j--;
             }
-            if (mur != null) {
+            
+            if (isMonstre) {
+                _perso.deplacer(_x, j + 2, 0);
+            } else if (mur != null) {
                 if (mur.poussable(_dir)) {
                     _perso.deplacer(mur.getX(), mur.getY(), 0);
                     mur.pousser(_dir);
@@ -84,11 +89,16 @@ public class Hemoglobine extends Pion {
         } else if (_dir == Finstere.BAS) {
             int j = _perso.getY() + 1;
             Mur mur = null;
-            while (mur == null && j <= _y) {
+            boolean isMonstre = false;
+            while (mur == null && !isMonstre && j <= _y) {
                 mur = this.partie.getMur(_x, j);
+                isMonstre = this.partie.getLabyrinthe().isMonstre(_x, j);
                 j++;
             }
-            if (mur != null) {
+            
+            if (isMonstre) {
+                _perso.deplacer(_x, j - 2, 0);
+            } else if (mur != null) {
                 if (mur.poussable(_dir)) {
                     _perso.deplacer(mur.getX(), mur.getY(), 0);
                     mur.pousser(_dir);
@@ -101,11 +111,16 @@ public class Hemoglobine extends Pion {
         } else if (_dir == Finstere.GAUCHE) {
             int i = _perso.getX() - 1;
             Mur mur = null;
-            while (mur == null && i >= _x) {
+            boolean isMonstre = false;
+            while (mur == null && !isMonstre && i >= _x) {
                 mur = this.partie.getMur(i, _y);
+                isMonstre = this.partie.getLabyrinthe().isMonstre(i, _y);
                 i--;
             }
-            if (mur != null) {
+            
+            if (isMonstre) {
+                _perso.deplacer(i + 2, _y, 0);
+            } else if (mur != null) {
                 if (mur.poussable(_dir)) {
                     _perso.deplacer(mur.getX(), mur.getY(), 0);
                     mur.pousser(_dir);
@@ -118,11 +133,16 @@ public class Hemoglobine extends Pion {
         } else if (_dir == Finstere.DROITE) {
             int i = _perso.getX() + 1;
             Mur mur = null;
-            while (mur == null && i <= _x) {
+            boolean isMonstre = false;
+            while (mur == null && !isMonstre && i <= _x) {
                 mur = this.partie.getMur(i, _y);
+                isMonstre = this.partie.getLabyrinthe().isMonstre(i, _y);
                 i++;
             }
-            if (mur != null) {
+            
+            if (isMonstre) {
+                _perso.deplacer(_x - 2, _y, 0);
+            } else if (mur != null) {
                 if (mur.poussable(_dir)) {
                     _perso.deplacer(mur.getX(), mur.getY(), 0);
                     mur.pousser(_dir);

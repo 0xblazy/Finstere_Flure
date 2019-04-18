@@ -282,7 +282,7 @@ public class Personnage extends Pion {
     }
     
     /* Glisse sur une flaque d'Hemoglobine dans la direction donnée */
-    public boolean glisser(Hemoglobine _hemo, int _dir) {
+    public boolean glisser(Hemoglobine _hemo, int _dir, int _pm) {
         
         /* Si l'Hemoglobine est carrée */
         if (_hemo.getType().equals(Finstere.CARRE)) {
@@ -322,7 +322,9 @@ public class Personnage extends Pion {
                 _hemo.glissade(this, _dir, _hemo.getX() + 1, this.y);
             }
         }
-
+        
+        this.pm -= _pm;
+        
         return true;
     }
     
@@ -345,12 +347,12 @@ public class Personnage extends Pion {
                                     this.pm - 1) <= this.pm) {
                                 actions.add(new Action("Glisser vers le HAUT",
                                     this.getClass(), "glisser",
-                                    new Object[] {hemo, Finstere.HAUT}));
+                                    new Object[] {hemo, Finstere.HAUT, 1}));
                             }
                         } else {
                            actions.add(new Action("Glisser vers le HAUT",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.HAUT})); 
+                                new Object[] {hemo, Finstere.HAUT , 1})); 
                         }
                     } else if (hemo.getY() >= this.y) {
                         if (this.partie.getLabyrinthe().isPersonnage(this.x, 
@@ -359,12 +361,12 @@ public class Personnage extends Pion {
                                     this.pm - 1) <= this.pm) {
                                 actions.add(new Action("Glisser vers le BAS",
                                     this.getClass(), "glisser",
-                                    new Object[] {hemo, Finstere.BAS}));
+                                    new Object[] {hemo, Finstere.BAS, 1}));
                             }
                         } else {
                             actions.add(new Action("Glisser vers le BAS",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.BAS}));
+                                new Object[] {hemo, Finstere.BAS, 1}));
                         } 
                     }
                 }
@@ -378,12 +380,12 @@ public class Personnage extends Pion {
                                     this.pm - 1) <= this.pm) {
                                 actions.add(new Action("Glisser vers le GAUCHE",
                                     this.getClass(), "glisser",
-                                    new Object[] {hemo, Finstere.GAUCHE}));
+                                    new Object[] {hemo, Finstere.GAUCHE, 1}));
                             }
                         } else {
                             actions.add(new Action("Glisser vers le GAUCHE",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.GAUCHE}));
+                                new Object[] {hemo, Finstere.GAUCHE, 1}));
                         }  
                     } else if (hemo.getX() >= this.x) {
                         if (this.partie.getLabyrinthe().isPersonnage(hemo.getX() + 2, 
@@ -392,12 +394,12 @@ public class Personnage extends Pion {
                                     this.pm - 1) <= this.pm) {
                                 actions.add(new Action("Glisser vers le DROITE",
                                     this.getClass(), "glisser",
-                                    new Object[] {hemo, Finstere.DROITE}));
+                                    new Object[] {hemo, Finstere.DROITE, 1}));
                             }
                         } else {
                             actions.add(new Action("Glisser vers le DROITE",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.DROITE})); 
+                                new Object[] {hemo, Finstere.DROITE, 1})); 
                         }
                     }
                 }
@@ -408,23 +410,23 @@ public class Personnage extends Pion {
                         if (1 + this.pmCaseLibre(this.x, this.y - 1, this.pm - 1) <= this.pm) {
                             actions.add(new Action("Sortir par le HAUT",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.HAUT}));
+                                new Object[] {hemo, Finstere.HAUT, 1}));
                         } 
                     } else {
                         actions.add(new Action("Sortir par le HAUT",
                             this.getClass(), "glisser",
-                            new Object[] {hemo, Finstere.HAUT}));
+                            new Object[] {hemo, Finstere.HAUT, 1}));
                     }
                     if (this.partie.getLabyrinthe().isPersonnage(this.x - 1, this.y)) {
                         if (1 + this.pmCaseLibre(this.x - 1, this.y, this.pm - 1) <= this.pm) {
                             actions.add(new Action("Sortir par la GAUCHE",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.GAUCHE}));
+                                new Object[] {hemo, Finstere.GAUCHE, 1}));
                         } 
                     } else {
                         actions.add(new Action("Sortir par la GAUCHE",
                             this.getClass(), "glisser",
-                            new Object[] {hemo, Finstere.GAUCHE}));
+                            new Object[] {hemo, Finstere.GAUCHE, 1}));
                     }
                 }
                 
@@ -434,23 +436,23 @@ public class Personnage extends Pion {
                         if (1 + this.pmCaseLibre(this.x, this.y - 1, this.pm - 1) <= this.pm) {
                             actions.add(new Action("Sortir par le HAUT",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.HAUT}));
+                                new Object[] {hemo, Finstere.HAUT, 1}));
                         } 
                     } else {
                         actions.add(new Action("Sortir par le HAUT",
                             this.getClass(), "glisser",
-                            new Object[] {hemo, Finstere.HAUT}));
+                            new Object[] {hemo, Finstere.HAUT, 1}));
                     }
                     if (this.partie.getLabyrinthe().isPersonnage(this.x + 1, this.y)) {
                         if (1 + this.pmCaseLibre(this.x + 1, this.y, this.pm - 1) <= this.pm) {
                             actions.add(new Action("Sortir par la DROITE",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.DROITE}));
+                                new Object[] {hemo, Finstere.DROITE, 1}));
                         } 
                     } else {
                         actions.add(new Action("Sortir par la DROITE",
                             this.getClass(), "glisser",
-                            new Object[] {hemo, Finstere.DROITE}));
+                            new Object[] {hemo, Finstere.DROITE, 1}));
                     }
                 }
                 
@@ -460,23 +462,23 @@ public class Personnage extends Pion {
                         if (1 + this.pmCaseLibre(this.x, this.y + 1, this.pm - 1) <= this.pm) {
                             actions.add(new Action("Sortir par le BAS",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.BAS}));
+                                new Object[] {hemo, Finstere.BAS, 1}));
                         } 
                     } else {
                         actions.add(new Action("Sortir par le BAS",
                             this.getClass(), "glisser",
-                            new Object[] {hemo, Finstere.BAS}));
+                            new Object[] {hemo, Finstere.BAS, 1}));
                     }
                     if (this.partie.getLabyrinthe().isPersonnage(this.x - 1, this.y)) {
                         if (1 + this.pmCaseLibre(this.x - 1, this.y, this.pm - 1) <= this.pm) {
                             actions.add(new Action("Sortir par la GAUCHE",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.GAUCHE}));
+                                new Object[] {hemo, Finstere.GAUCHE, 1}));
                         } 
                     } else {
                         actions.add(new Action("Sortir par la GAUCHE",
                             this.getClass(), "glisser",
-                            new Object[] {hemo, Finstere.GAUCHE}));
+                            new Object[] {hemo, Finstere.GAUCHE, 1}));
                     }
                 }
                 
@@ -486,23 +488,23 @@ public class Personnage extends Pion {
                         if (1 + this.pmCaseLibre(this.x, this.y + 1, this.pm - 1) <= this.pm) {
                             actions.add(new Action("Sortir par le BAS",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.BAS}));
+                                new Object[] {hemo, Finstere.BAS, 1}));
                         } 
                     } else {
                         actions.add(new Action("Sortir par le BAS",
                             this.getClass(), "glisser",
-                            new Object[] {hemo, Finstere.BAS}));
+                            new Object[] {hemo, Finstere.BAS, 1}));
                     }
                     if (this.partie.getLabyrinthe().isPersonnage(this.x + 1, this.y)) {
                         if (1 + this.pmCaseLibre(this.x + 1, this.y, this.pm - 1) <= this.pm) {
                             actions.add(new Action("Sortir par la DROITE",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.DROITE}));
+                                new Object[] {hemo, Finstere.DROITE, 1}));
                         } 
                     } else {
                         actions.add(new Action("Sortir par la DROITE",
                             this.getClass(), "glisser",
-                            new Object[] {hemo, Finstere.DROITE}));
+                            new Object[] {hemo, Finstere.DROITE, 1}));
                     }
                 }
             }
@@ -519,12 +521,12 @@ public class Personnage extends Pion {
                                     this.pm - 1) <= this.pm) {
                                 actions.add(new Action("Glisser vers le HAUT",
                                     this.getClass(), "glisser",
-                                    new Object[] {hemo, Finstere.HAUT}));
+                                    new Object[] {hemo, Finstere.HAUT, 1}));
                             }
                         } else {
                            actions.add(new Action("Glisser vers le HAUT",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.HAUT})); 
+                                new Object[] {hemo, Finstere.HAUT, 1})); 
                         }
                     } else if (hemo.getY() > this.y) {
                         if (this.partie.getLabyrinthe().isPersonnage(this.x, 
@@ -533,12 +535,12 @@ public class Personnage extends Pion {
                                     this.pm - 1) <= this.pm) {
                                 actions.add(new Action("Glisser vers le BAS",
                                     this.getClass(), "glisser",
-                                    new Object[] {hemo, Finstere.BAS}));
+                                    new Object[] {hemo, Finstere.BAS, 1}));
                             }
                         } else {
                             actions.add(new Action("Glisser vers le BAS",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.BAS}));
+                                new Object[] {hemo, Finstere.BAS, 1}));
                         } 
                     }
                 }
@@ -552,12 +554,12 @@ public class Personnage extends Pion {
                                     this.pm - 1) <= this.pm) {
                                 actions.add(new Action("Glisser vers le GAUCHE",
                                     this.getClass(), "glisser",
-                                    new Object[] {hemo, Finstere.GAUCHE}));
+                                    new Object[] {hemo, Finstere.GAUCHE, 1}));
                             }
                         } else {
                             actions.add(new Action("Glisser vers le GAUCHE",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.GAUCHE}));
+                                new Object[] {hemo, Finstere.GAUCHE, 1}));
                         }  
                     } else if (hemo.getX() + 3 > this.x) {
                         if (this.partie.getLabyrinthe().isPersonnage(hemo.getX() + 4, 
@@ -566,12 +568,12 @@ public class Personnage extends Pion {
                                     this.pm - 1) <= this.pm) {
                                 actions.add(new Action("Glisser vers le DROITE",
                                     this.getClass(), "glisser",
-                                    new Object[] {hemo, Finstere.DROITE}));
+                                    new Object[] {hemo, Finstere.DROITE, 1}));
                             }
                         } else {
                             actions.add(new Action("Glisser vers le DROITE",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.DROITE})); 
+                                new Object[] {hemo, Finstere.DROITE, 1})); 
                         }
                     }
                 }
@@ -582,34 +584,34 @@ public class Personnage extends Pion {
                         if (1 + this.pmCaseLibre(this.x, this.y - 1, this.pm - 1) <= this.pm) {
                             actions.add(new Action("Sortir par le HAUT",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.HAUT}));
+                                new Object[] {hemo, Finstere.HAUT, 1}));
                         } 
                     } else {
                         actions.add(new Action("Sortir par le HAUT",
                             this.getClass(), "glisser",
-                            new Object[] {hemo, Finstere.HAUT}));
+                            new Object[] {hemo, Finstere.HAUT, 1}));
                     }
                     if (this.partie.getLabyrinthe().isPersonnage(this.x - 1, this.y)) {
                         if (1 + this.pmCaseLibre(this.x - 1, this.y, this.pm - 1) <= this.pm) {
                             actions.add(new Action("Sortir par la GAUCHE",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.GAUCHE}));
+                                new Object[] {hemo, Finstere.GAUCHE, 1}));
                         } 
                     } else {
                         actions.add(new Action("Sortir par la GAUCHE",
                             this.getClass(), "glisser",
-                            new Object[] {hemo, Finstere.GAUCHE}));
+                            new Object[] {hemo, Finstere.GAUCHE, 1}));
                     }
                     if (this.partie.getLabyrinthe().isPersonnage(this.x, this.y + 1)) {
                         if (1 + this.pmCaseLibre(this.x, this.y + 1, this.pm - 1) <= this.pm) {
                             actions.add(new Action("Sortir par le BAS",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.BAS}));
+                                new Object[] {hemo, Finstere.BAS, 1}));
                         } 
                     } else {
                         actions.add(new Action("Sortir par le BAS",
                             this.getClass(), "glisser",
-                            new Object[] {hemo, Finstere.BAS}));
+                            new Object[] {hemo, Finstere.BAS, 1}));
                     }
                 }
                 
@@ -620,23 +622,23 @@ public class Personnage extends Pion {
                         if (1 + this.pmCaseLibre(this.x, this.y - 1, this.pm - 1) <= this.pm) {
                             actions.add(new Action("Sortir par le HAUT",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.HAUT}));
+                                new Object[] {hemo, Finstere.HAUT, 1}));
                         } 
                     } else {
                         actions.add(new Action("Sortir par le HAUT",
                             this.getClass(), "glisser",
-                            new Object[] {hemo, Finstere.HAUT}));
+                            new Object[] {hemo, Finstere.HAUT, 1}));
                     }
                     if (this.partie.getLabyrinthe().isPersonnage(this.x, this.y + 1)) {
                         if (1 + this.pmCaseLibre(this.x, this.y + 1, this.pm - 1) <= this.pm) {
                             actions.add(new Action("Sortir par le BAS",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.BAS}));
+                                new Object[] {hemo, Finstere.BAS, 1}));
                         } 
                     } else {
                         actions.add(new Action("Sortir par le BAS",
                             this.getClass(), "glisser",
-                            new Object[] {hemo, Finstere.BAS}));
+                            new Object[] {hemo, Finstere.BAS, 1}));
                     }
                 }
                 
@@ -646,34 +648,34 @@ public class Personnage extends Pion {
                         if (1 + this.pmCaseLibre(this.x, this.y - 1, this.pm - 1) <= this.pm) {
                             actions.add(new Action("Sortir par le HAUT",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.HAUT}));
+                                new Object[] {hemo, Finstere.HAUT, 1}));
                         } 
                     } else {
                         actions.add(new Action("Sortir par le HAUT",
                             this.getClass(), "glisser",
-                            new Object[] {hemo, Finstere.HAUT}));
+                            new Object[] {hemo, Finstere.HAUT, 1}));
                     }
                     if (this.partie.getLabyrinthe().isPersonnage(this.x + 1, this.y)) {
                         if (1 + this.pmCaseLibre(this.x + 1, this.y, this.pm - 1) <= this.pm) {
                             actions.add(new Action("Sortir par la DROITE",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.DROITE}));
+                                new Object[] {hemo, Finstere.DROITE, 1}));
                         } 
                     } else {
                         actions.add(new Action("Sortir par la DROITE",
                             this.getClass(), "glisser",
-                            new Object[] {hemo, Finstere.DROITE}));
+                            new Object[] {hemo, Finstere.DROITE, 1}));
                     }
                     if (this.partie.getLabyrinthe().isPersonnage(this.x, this.y + 1)) {
                         if (1 + this.pmCaseLibre(this.x, this.y + 1, this.pm - 1) <= this.pm) {
                             actions.add(new Action("Sortir par le BAS",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.BAS}));
+                                new Object[] {hemo, Finstere.BAS, 1}));
                         } 
                     } else {
                         actions.add(new Action("Sortir par le BAS",
                             this.getClass(), "glisser",
-                            new Object[] {hemo, Finstere.BAS}));
+                            new Object[] {hemo, Finstere.BAS, 1}));
                     }
                 }
             }
@@ -690,12 +692,12 @@ public class Personnage extends Pion {
                                     this.pm - 1) <= this.pm) {
                                 actions.add(new Action("Glisser vers le HAUT",
                                     this.getClass(), "glisser",
-                                    new Object[] {hemo, Finstere.HAUT}));
+                                    new Object[] {hemo, Finstere.HAUT, 1}));
                             }
                         } else {
                            actions.add(new Action("Glisser vers le HAUT",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.HAUT})); 
+                                new Object[] {hemo, Finstere.HAUT, 1})); 
                         }
                     } else if (hemo.getY() + 3 > this.y) {
                         if (this.partie.getLabyrinthe().isPersonnage(this.x, 
@@ -704,12 +706,12 @@ public class Personnage extends Pion {
                                     this.pm - 1) <= this.pm) {
                                 actions.add(new Action("Glisser vers le BAS",
                                     this.getClass(), "glisser",
-                                    new Object[] {hemo, Finstere.BAS}));
+                                    new Object[] {hemo, Finstere.BAS, 1}));
                             }
                         } else {
                             actions.add(new Action("Glisser vers le BAS",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.BAS}));
+                                new Object[] {hemo, Finstere.BAS, 1}));
                         } 
                     }
                 }
@@ -723,12 +725,12 @@ public class Personnage extends Pion {
                                     this.pm - 1) <= this.pm) {
                                 actions.add(new Action("Glisser vers le GAUCHE",
                                     this.getClass(), "glisser",
-                                    new Object[] {hemo, Finstere.GAUCHE}));
+                                    new Object[] {hemo, Finstere.GAUCHE, 1}));
                             }
                         } else {
                             actions.add(new Action("Glisser vers le GAUCHE",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.GAUCHE}));
+                                new Object[] {hemo, Finstere.GAUCHE, 1}));
                         }  
                     } else if (hemo.getX() > this.x) {
                         if (this.partie.getLabyrinthe().isPersonnage(hemo.getX() + 1, 
@@ -737,12 +739,12 @@ public class Personnage extends Pion {
                                     this.pm - 1) <= this.pm) {
                                 actions.add(new Action("Glisser vers le DROITE",
                                     this.getClass(), "glisser",
-                                    new Object[] {hemo, Finstere.DROITE}));
+                                    new Object[] {hemo, Finstere.DROITE, 1}));
                             }
                         } else {
                             actions.add(new Action("Glisser vers le DROITE",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.DROITE})); 
+                                new Object[] {hemo, Finstere.DROITE, 1})); 
                         }
                     }
                 }
@@ -753,34 +755,34 @@ public class Personnage extends Pion {
                         if (1 + this.pmCaseLibre(this.x, this.y - 1, this.pm - 1) <= this.pm) {
                             actions.add(new Action("Sortir par le HAUT",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.HAUT}));
+                                new Object[] {hemo, Finstere.HAUT, 1}));
                         } 
                     } else {
                         actions.add(new Action("Sortir par le HAUT",
                             this.getClass(), "glisser",
-                            new Object[] {hemo, Finstere.HAUT}));
+                            new Object[] {hemo, Finstere.HAUT, 1}));
                     }
                     if (this.partie.getLabyrinthe().isPersonnage(this.x - 1, this.y)) {
                         if (1 + this.pmCaseLibre(this.x - 1, this.y, this.pm - 1) <= this.pm) {
                             actions.add(new Action("Sortir par la GAUCHE",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.GAUCHE}));
+                                new Object[] {hemo, Finstere.GAUCHE, 1}));
                         } 
                     } else {
                         actions.add(new Action("Sortir par la GAUCHE",
                             this.getClass(), "glisser",
-                            new Object[] {hemo, Finstere.GAUCHE}));
+                            new Object[] {hemo, Finstere.GAUCHE, 1}));
                     }
                     if (this.partie.getLabyrinthe().isPersonnage(this.x + 1, this.y)) {
                         if (1 + this.pmCaseLibre(this.x + 1, this.y, this.pm - 1) <= this.pm) {
                             actions.add(new Action("Sortir par la DROITE",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.DROITE}));
+                                new Object[] {hemo, Finstere.DROITE, 1}));
                         } 
                     } else {
                         actions.add(new Action("Sortir par la DROITE",
                             this.getClass(), "glisser",
-                            new Object[] {hemo, Finstere.DROITE}));
+                            new Object[] {hemo, Finstere.DROITE, 1}));
                     }
                 }
                 
@@ -791,23 +793,23 @@ public class Personnage extends Pion {
                         if (1 + this.pmCaseLibre(this.x - 1, this.y, this.pm - 1) <= this.pm) {
                             actions.add(new Action("Sortir par la GAUCHE",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.GAUCHE}));
+                                new Object[] {hemo, Finstere.GAUCHE, 1}));
                         } 
                     } else {
                         actions.add(new Action("Sortir par la GAUCHE",
                             this.getClass(), "glisser",
-                            new Object[] {hemo, Finstere.GAUCHE}));
+                            new Object[] {hemo, Finstere.GAUCHE, 1}));
                     }
                     if (this.partie.getLabyrinthe().isPersonnage(this.x + 1, this.y)) {
                         if (1 + this.pmCaseLibre(this.x + 1, this.y, this.pm - 1) <= this.pm) {
                             actions.add(new Action("Sortir par la DROITE",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.DROITE}));
+                                new Object[] {hemo, Finstere.DROITE, 1}));
                         } 
                     } else {
                         actions.add(new Action("Sortir par la DROITE",
                             this.getClass(), "glisser",
-                            new Object[] {hemo, Finstere.DROITE}));
+                            new Object[] {hemo, Finstere.DROITE, 1}));
                     }
                 }
                 
@@ -817,34 +819,34 @@ public class Personnage extends Pion {
                         if (1 + this.pmCaseLibre(this.x - 1, this.y, this.pm - 1) <= this.pm) {
                             actions.add(new Action("Sortir par la GAUCHE",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.GAUCHE}));
+                                new Object[] {hemo, Finstere.GAUCHE, 1}));
                         } 
                     } else {
                         actions.add(new Action("Sortir par la GAUCHE",
                             this.getClass(), "glisser",
-                            new Object[] {hemo, Finstere.GAUCHE}));
+                            new Object[] {hemo, Finstere.GAUCHE, 1}));
                     }
                     if (this.partie.getLabyrinthe().isPersonnage(this.x + 1, this.y)) {
                         if (1 + this.pmCaseLibre(this.x + 1, this.y, this.pm - 1) <= this.pm) {
                             actions.add(new Action("Sortir par la DROITE",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.DROITE}));
+                                new Object[] {hemo, Finstere.DROITE, 1}));
                         } 
                     } else {
                         actions.add(new Action("Sortir par la DROITE",
                             this.getClass(), "glisser",
-                            new Object[] {hemo, Finstere.DROITE}));
+                            new Object[] {hemo, Finstere.DROITE, 1}));
                     }
                     if (this.partie.getLabyrinthe().isPersonnage(this.x, this.y + 4)) {
                         if (1 + this.pmCaseLibre(this.x, this.y + 4, this.pm - 1) <= this.pm) {
                             actions.add(new Action("Sortir par le BAS",
                                 this.getClass(), "glisser",
-                                new Object[] {hemo, Finstere.BAS}));
+                                new Object[] {hemo, Finstere.BAS, 1}));
                         } 
                     } else {
                         actions.add(new Action("Sortir par le BAS",
                             this.getClass(), "glisser",
-                            new Object[] {hemo, Finstere.BAS}));
+                            new Object[] {hemo, Finstere.BAS, 1}));
                     }
                 }
             }

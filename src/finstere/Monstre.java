@@ -76,6 +76,8 @@ public class Monstre extends Pion {
                 this.partie.getLabyrinthe().setMonstre(this.x, this.y, false);
                 this.x = tp.get(this.direction)[0];
                 this.y = tp.get(this.direction)[1];
+                Mur mur = this.partie.getMur(this.x, this.y);
+                if (mur != null) persoMort = mur.pousserMonstre(this.direction);
                 this.partie.getLabyrinthe().setMonstre(this.x, this.y, true);
                 System.out.println("   Le Monstre se téléporte en (" + this.x 
                         + "," + this.y +")");
@@ -102,35 +104,35 @@ public class Monstre extends Pion {
         
         this.partie.getLabyrinthe().setMonstre(this.x, this.y, false);
         switch (this.direction) {
-            case Finstere.HAUT:
+            case Finstere.HAUT :
                 mur = this.partie.getMur(this.x, this.y - 1);
                 if (mur != null) {
                     persoMort = mur.pousserMonstre(this.direction);
                     System.out.println("   Le Monstre pousse le Mur");
                 }   this.y--;
                 break;
-            case Finstere.BAS:
+            case Finstere.BAS :
                 mur = this.partie.getMur(this.x, this.y + 1);
                 if (mur != null) {
                     persoMort = mur.pousserMonstre(this.direction);
                     System.out.println("   Le Monstre pousse le Mur");
                 }   this.y++;
                 break;
-            case Finstere.GAUCHE:
+            case Finstere.GAUCHE :
                 mur = this.partie.getMur(this.x - 1, this.y);
                 if (mur != null) {
                     persoMort = mur.pousserMonstre(this.direction);
                     System.out.println("   Le Monstre pousse le Mur");
                 }   this.x--;
                 break;
-            case Finstere.DROITE:
+            case Finstere.DROITE :
                 mur = this.partie.getMur(this.x + 1, this.y);
                 if (mur != null) {
                     persoMort = mur.pousserMonstre(this.direction);
                     System.out.println("   Le Monstre pousse le Mur");
                 }   this.x++;
                 break;
-            default:
+            default :
                 break;
         }
         this.partie.getLabyrinthe().setMonstre(this.x, this.y, true);
@@ -283,15 +285,15 @@ public class Monstre extends Pion {
     @Override
     public String toString() {
         switch (this.direction) {
-            case Finstere.HAUT:
+            case Finstere.HAUT :
                 return "M/\\";
-            case Finstere.BAS:
+            case Finstere.BAS :
                 return "M\\/";
-            case Finstere.GAUCHE:
+            case Finstere.GAUCHE :
                 return "<<M";
-            case Finstere.DROITE:
+            case Finstere.DROITE :
                 return "M>>";
-            default:
+            default :
                 return " M ";
         }
     }

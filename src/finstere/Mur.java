@@ -20,7 +20,7 @@ public class Mur extends Pion {
         this.partie.getLabyrinthe().setMur(this.x, this.y, false);
         Hemoglobine hemo;
         switch (_dir) {
-            case Finstere.HAUT:
+            case Finstere.HAUT :
                 hemo = this.partie.getHemoglobine(this.x, this.y - 1);
                 if (hemo != null) {
                     hemo.glissadeMur(this,_dir, this.x, hemo.getY() - 1);
@@ -28,27 +28,27 @@ public class Mur extends Pion {
                     this.y--;
                 }
                 break;
-            case Finstere.BAS:
+            case Finstere.BAS :
                 hemo = this.partie.getHemoglobine(this.x, this.y + 1);
                 if (hemo != null) {
                     switch (hemo.getType()) {
-                        case Finstere.CARRE:
+                        case Finstere.CARRE :
                             hemo.glissadeMur(this,_dir, this.x, hemo.getY() + 2);
                             break;
-                        case Finstere.LINEHORI:
+                        case Finstere.LINEHORI :
                             hemo.glissadeMur(this,_dir, this.x, hemo.getY() + 1);
                             break;
-                        case Finstere.LINEVERT:
+                        case Finstere.LINEVERT :
                             hemo.glissadeMur(this,_dir, this.x, hemo.getY() + 4);
                             break;
-                        default:
+                        default :
                             break;
                     }
                 } else {
                     this.y++;
                 }
                 break;
-            case Finstere.GAUCHE:
+            case Finstere.GAUCHE :
                 hemo = this.partie.getHemoglobine(this.x - 1, this.y);
                 if (hemo != null) {
                     hemo.glissadeMur(this,_dir, hemo.getX() - 1, this.y);
@@ -56,27 +56,27 @@ public class Mur extends Pion {
                     this.x--;
                 }
                 break;
-            case Finstere.DROITE:
+            case Finstere.DROITE :
                 hemo = this.partie.getHemoglobine(this.x + 1, this.y);
                 if (hemo != null) {
                     switch (hemo.getType()) {
-                        case Finstere.CARRE:
+                        case Finstere.CARRE :
                             hemo.glissadeMur(this,_dir, hemo.getX() + 2, this.y);
                             break;
-                        case Finstere.LINEHORI:
+                        case Finstere.LINEHORI :
                             hemo.glissadeMur(this,_dir, hemo.getX() + 4, this.y);
                             break;
-                        case Finstere.LINEVERT:
+                        case Finstere.LINEVERT :
                             hemo.glissadeMur(this,_dir, hemo.getX() + 1, this.y);
                             break;
-                        default:
+                        default :
                             break;
                     }
                 } else {
                     this.x++;
                 }
                 break;
-            default:
+            default :
                 break;
         }
         
@@ -91,45 +91,93 @@ public class Mur extends Pion {
     public Personnage pousserMonstre(int _dir) {
         this.partie.getLabyrinthe().setMur(this.x, this.y, false);
         
-        /* Récupère le Mur ou le Personnage qui peut être derrière ce Mur */
+        /* Récupère le Mur, le Personnage ou la flaque d'Hemoglobine qui peut 
+         * être derrière ce Mur
+         */
         Mur mur = null;
         Personnage perso = null, persoMort = null;
+        Hemoglobine hemo = null;
         switch (_dir) {
-            case Finstere.HAUT:
+            case Finstere.HAUT :
                 if (this.y > 0) {
                     mur = this.partie.getMur(this.x, this.y - 1);
                     perso = this.partie.getPersonnage(this.x, this.y - 1);
+                    hemo = this.partie.getHemoglobine(this.x, this.y - 1);
                 }
                 this.y--;
                 break;
-            case Finstere.BAS:
+            case Finstere.BAS :
                 if (this.y < 10) {
                     mur = this.partie.getMur(this.x, this.y + 1);
                     perso = this.partie.getPersonnage(this.x, this.y + 1);
+                    hemo = this.partie.getHemoglobine(this.x, this.y + 1);
                 }
                 this.y++;
                 break;
-            case Finstere.GAUCHE:
+            case Finstere.GAUCHE :
                 if (this.x > 0) {
                     mur = this.partie.getMur(this.x - 1, this.y);
                     perso = this.partie.getPersonnage(this.x - 1, this.y);
+                    hemo = this.partie.getHemoglobine(this.x - 1, this.y);
                 }
                 this.x--;
                 break;
-            case Finstere.DROITE:
+            case Finstere.DROITE :
                 if (this.x < 15) {
                     mur = this.partie.getMur(this.x + 1, this.y);
                     perso = this.partie.getPersonnage(this.x + 1, this.y);
+                    hemo = this.partie.getHemoglobine(this.x + 1, this.y);
                 }
                 this.x++;
                 break;
-            default:
+            default :
                 break;
         }
         
         /* Appel récursif si il y a un Mur derrière celui-ci */
         if (mur != null) {
             persoMort = mur.pousserMonstre(_dir);
+        } else if (perso == null && hemo != null) {
+            switch (_dir) {
+                case Finstere.HAUT :
+                    hemo.glissadeMur(this,_dir, this.x, hemo.getY() - 1);
+                    break;
+                case Finstere.BAS :
+                    switch (hemo.getType()) {
+                        case Finstere.CARRE :
+                            hemo.glissadeMur(this,_dir, this.x, hemo.getY() + 2);
+                            break;
+                        case Finstere.LINEHORI :
+                            hemo.glissadeMur(this,_dir, this.x, hemo.getY() + 1);
+                            break;
+                        case Finstere.LINEVERT :
+                            hemo.glissadeMur(this,_dir, this.x, hemo.getY() + 4);
+                            break;
+                        default :
+                            break;
+                    }
+                    break;
+                case Finstere.GAUCHE :
+                    hemo.glissadeMur(this,_dir, hemo.getX() - 1, this.y);
+                    break;
+                case Finstere.DROITE :
+                    switch (hemo.getType()) {
+                        case Finstere.CARRE :
+                            hemo.glissadeMur(this,_dir, hemo.getX() + 2, this.y);
+                            break;
+                        case Finstere.LINEHORI :
+                            hemo.glissadeMur(this,_dir, hemo.getX() + 4, this.y);
+                            break;
+                        case Finstere.LINEVERT :
+                            hemo.glissadeMur(this,_dir, hemo.getX() + 1, this.y);
+                            break;
+                        default :
+                            break;
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
         
         /* Déplacement ou suppression de ce Mur */
@@ -149,7 +197,7 @@ public class Mur extends Pion {
          */
         while (perso != null) {
             switch (_dir) {
-                case Finstere.HAUT:
+                case Finstere.HAUT :
                     if (perso.getY() == 0) {
                         return perso;
                     } else if (this.partie.getLabyrinthe().isBlocked(perso.getX(),
@@ -158,13 +206,19 @@ public class Mur extends Pion {
                     } else {
                         Personnage p = this.partie.getPersonnage(perso.getX(),
                                 perso.getY() - 1);
-                        perso.deplacer(perso.getX(), perso.getY() - 1, 0);
-                        Mur m = this.partie.getMur(perso.getX(), perso.getY());
+                        Hemoglobine h = this.partie.getHemoglobine(perso.getX(),
+                                perso.getY() - 1);
+                        Mur m = this.partie.getMur(perso.getX(), perso.getY() - 1);
                         if (m != null) persoMort = m.pousserMonstre(_dir);
+                        if (h != null) {
+                            perso.glisser(h, _dir, 0);
+                        } else {
+                            perso.deplacer(perso.getX(), perso.getY() - 1, 0);
+                        }
                         perso = p;
                     }
                     break;
-                case Finstere.BAS:
+                case Finstere.BAS :
                     if (perso.getY() == 10) {
                         return perso;
                     } else if (this.partie.getLabyrinthe().isBlocked(perso.getX(),
@@ -179,7 +233,7 @@ public class Mur extends Pion {
                         perso = p;
                     }
                     break;
-                case Finstere.GAUCHE:
+                case Finstere.GAUCHE :
                     if (perso.getX() == 0) {
                         return perso;
                     } else if (this.partie.getLabyrinthe().isBlocked(perso.getX() - 1,
@@ -194,7 +248,7 @@ public class Mur extends Pion {
                         perso = p;
                     }
                     break;
-                case Finstere.DROITE:
+                case Finstere.DROITE :
                     if (perso.getX() == 15) {
                         return perso;
                     } else if (this.partie.getLabyrinthe().isBlocked(perso.getX() + 1,
@@ -209,7 +263,7 @@ public class Mur extends Pion {
                         perso = p;
                     }
                     break;
-                default:
+                default :
                     break;
             }
         }
@@ -222,7 +276,7 @@ public class Mur extends Pion {
      */
     public boolean poussable(int _dir) {
         switch (_dir) {
-            case Finstere.HAUT:
+            case Finstere.HAUT :
                 if (this.y == 0) {
                     return false;
                 } else {
@@ -231,7 +285,7 @@ public class Mur extends Pion {
                             && !this.partie.getLabyrinthe().isMur(this.x, this.y - 1)
                             && !this.partie.getLabyrinthe().isPersonnage(this.x, this.y - 1);
                 }
-            case Finstere.BAS:
+            case Finstere.BAS :
                 if (this.y == 10) {
                     return false;
                 } else {
@@ -240,7 +294,7 @@ public class Mur extends Pion {
                             && !this.partie.getLabyrinthe().isMur(this.x, this.y + 1)
                             && !this.partie.getLabyrinthe().isPersonnage(this.x, this.y + 1);
                 }
-            case Finstere.GAUCHE:
+            case Finstere.GAUCHE :
                 if (this.x == 0) {
                     return false;
                 } else {
@@ -249,7 +303,7 @@ public class Mur extends Pion {
                             && !this.partie.getLabyrinthe().isMur(this.x - 1, this.y)
                             && !this.partie.getLabyrinthe().isPersonnage(this.x - 1, this.y);
                 }
-            case Finstere.DROITE:
+            case Finstere.DROITE :
                 if (this.x == 15) {
                     return false;
                 } else {
@@ -258,7 +312,7 @@ public class Mur extends Pion {
                             && !this.partie.getLabyrinthe().isMur(this.x + 1, this.y)
                             && !this.partie.getLabyrinthe().isPersonnage(this.x + 1, this.y);
                 }
-            default:
+            default :
                 return false;
         }
     }

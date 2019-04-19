@@ -260,12 +260,16 @@ public class Labyrinthe {
     }
     
     /* Getters pour la Case (_x,_y) */
-    public Case getCase(int _x, int _y) {
-        return this.labyrinthe[_y][_x];
+    public Map<Integer, int[]> getTp(int _x, int _y) {
+        return this.labyrinthe[_y][_x].getTp();
     }
     
     public boolean isBlocked(int _x, int _y) {
         return this.labyrinthe[_y][_x].isBlocked();
+    }
+    
+    public boolean isBordure(int _x, int _y) {
+        return this.labyrinthe[_y][_x].isBordure();
     }
     
     public boolean isHemoglobine(int _x, int _y) {

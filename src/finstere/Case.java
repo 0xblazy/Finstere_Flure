@@ -68,11 +68,7 @@ public class Case {
             return "###";
         } else if (this.personnage) {
             Personnage perso = this.partie.getPersonnage(this.x, this.y);
-            if (perso != null) {
-                return perso.shortString();
-            } else {
-                return "   ";
-            }
+            return perso.shortString();
         } else if (this.monstre) {
             return "" + this.partie.getMonstre();
         } else if (this.mur) {

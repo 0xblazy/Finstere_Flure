@@ -199,7 +199,7 @@ public class Partie {
                         for (int indexPerso = 0 ; indexPerso < 4 ; indexPerso++) {
                             if (this.personnages[indexJoueur][indexPerso].equals(perso)) {
                                 this.personnages[indexJoueur][indexPerso].tue(nbTour);
-                            if (nbTour > 7) this.joueurs[indexJoueur].setNbRestant();
+                                if (nbTour > 7) this.joueurs[indexJoueur].setNbRestant();
                             }
                         }
                     }
@@ -210,7 +210,6 @@ public class Partie {
             }
             System.out.println("");
             System.out.println("");
-            
             
             nbTour++;
             this.premierJoueur = (this.premierJoueur + 1)%2;

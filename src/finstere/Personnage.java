@@ -1057,6 +1057,10 @@ public class Personnage extends Pion {
     }
 
     /* Getters */
+    public int getClassement() {
+        return this.classement;
+    }
+
     public boolean isJoue() {
         return this.joue;
     }

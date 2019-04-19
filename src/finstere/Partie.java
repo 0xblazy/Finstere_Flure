@@ -40,6 +40,8 @@ public class Partie {
     private int classement;
     /* Paquet de Carte */
     private Paquet paquet;
+    /* Compteur pour le nombre de Personnage de chaque Joueur sortis durant un tour */
+    private int sortisJ1, sortisJ2;
 
     /* Constructeur */
     public Partie() {
@@ -51,6 +53,8 @@ public class Partie {
         this.sc = new Scanner(System.in);
         this.classement = 1;
         this.paquet = new Paquet();
+        this.sortisJ1 = 0;
+        this.sortisJ2 = 0;
     }
 
     /* Initialisation de la Partie (création des Joueur) */
@@ -103,27 +107,27 @@ public class Partie {
     /* Génère le Labyrinthe et dispose les Pion dessus */
     private void genLaby() {
         System.out.println("\n...Génération du plateau de Jeu...\n");
-        
+
         /* Génération du Labyrinthe */
         this.labyrinthe.initLaby();
-        
+
         /* Ajout de la flaque carrée */
         this.hemoCarree = new Hemoglobine(8, 2, Finstere.CARRE, this);
         this.labyrinthe.setHemoglobine(8, 2, true);
         this.labyrinthe.setHemoglobine(9, 2, true);
         this.labyrinthe.setHemoglobine(8, 3, true);
         this.labyrinthe.setHemoglobine(9, 3, true);
-        
+
         /* Ajout de la flaque linéaire horizontale */
         this.hemoLineH = new Hemoglobine(4, 8, Finstere.LINEHORI, this);
         this.labyrinthe.setHemoglobine(4, 8, true);
         this.labyrinthe.setHemoglobine(5, 8, true);
         this.labyrinthe.setHemoglobine(6, 8, true);
         this.labyrinthe.setHemoglobine(7, 8, true);
-        
+
         /* Flaque linéaire verticale mise à null */
         this.hemoLineV = null;
-        
+
         /* Ajout des murs */
         this.murs.add(new Mur(2, 2, this));
         this.labyrinthe.setMur(2, 2, true);
@@ -147,7 +151,7 @@ public class Partie {
         this.labyrinthe.setMur(5, 9, true);
         this.murs.add(new Mur(8, 9, this));
         this.labyrinthe.setMur(8, 9, true);
-        
+
         /* Ajout du monstre */
         this.monstre = new Monstre(this);
         this.labyrinthe.setMonstre(0, 0, true);
@@ -157,83 +161,124 @@ public class Partie {
     public void jouer() {
         System.out.println("La partie commence !!!\nBonne chance à vous !!!\n");
         int nbTour = 1;
+        Joueur gagnant = null;
 
         /* Boucle pour la Partie */
-        while (nbTour < 15 && this.joueurs[0].getNbRestant() + this.joueurs[1].getNbRestant() > 0) {
+        while (nbTour < 15 && this.persoRestants() > 0 && gagnant == null) {
             int maxJouer = 4;
             if (nbTour == 1) {
                 maxJouer = 2;
             }
-            
+
             if (nbTour == 1 || nbTour == 8) {
                 this.paquet.melanger();
             }
 
             /* Boucle pour un tour */
-            for (int nbJouer = 0; nbJouer < maxJouer; nbJouer++) {
+            int nbJouer = 0;
+            while (nbJouer < maxJouer && gagnant == null) {
                 /* Condition en fonction du premier Joueur qui joue */
                 if (this.premierJoueur == 0) {
-                    this.tourJ1(nbJouer, nbTour);
+                    gagnant = this.tourJ1(nbJouer, nbTour);
                 } else {
-                    this.tourJ2(nbJouer, nbTour);
+                    gagnant = this.tourJ2(nbJouer, nbTour);
                 }
+                nbJouer++;
             }
             
+            /* Décrémentation du nombre de Personnage jouables en fonction de
+             * sortisJ1 et sortisJ2 
+             */
+            while (this.sortisJ1 > 0) {
+                this.joueurs[0].setNbRestant();
+                this.sortisJ1--;
+            }
+            while (this.sortisJ2 > 0) {
+                this.joueurs[1].setNbRestant();
+                this.sortisJ2--;
+            }
+
             /* Fin de tour pour tous les Personnage */
-            for (int j = 0; j < this.personnages.length; j++) {
-                for (int i = 0; i < this.personnages[j].length; i++) {
-                    this.personnages[j][i].finTour();
+            for (Personnage[] persos : this.personnages) {
+                for (Personnage perso : persos) {
+                    perso.finTour();
                 }
             }
-            
-            /* Tour du Monstre */
-            System.out.println("Le Monstre se déplace...");
-            Carte carte = this.paquet.tirerCarte();
-            System.out.println("Carte tirée : " + carte);
-            List<Personnage> morts = this.monstre.tour(carte);
-            
-            if (morts.size() > 0) {
-                System.out.println("Morts :");
-                for (Personnage perso : morts) {
-                    for (int indexJoueur = 0 ; indexJoueur < 2 ; indexJoueur++) {
-                        for (int indexPerso = 0 ; indexPerso < 4 ; indexPerso++) {
-                            if (this.personnages[indexJoueur][indexPerso].equals(perso)) {
-                                this.personnages[indexJoueur][indexPerso].tue(nbTour);
-                                if (nbTour > 7) this.joueurs[indexJoueur].setNbRestant();
+
+            /* Tour du Monstre uniquement si la Partie n'est pas encore gagnée */
+            if (gagnant == null) {
+                System.out.println("Le Monstre se déplace...");
+                Carte carte = this.paquet.tirerCarte();
+                System.out.println("Carte tirée : " + carte);
+                List<Personnage> morts = this.monstre.tour(carte);
+
+                if (morts.size() > 0) {
+                    System.out.println("Morts :");
+                    for (Personnage perso : morts) {
+                        for (int indexJoueur = 0; indexJoueur < 2; indexJoueur++) {
+                            for (int indexPerso = 0; indexPerso < 4; indexPerso++) {
+                                if (this.personnages[indexJoueur][indexPerso].equals(perso)) {
+                                    this.personnages[indexJoueur][indexPerso].tue(nbTour);
+                                    if (nbTour > 7) {
+                                        this.joueurs[indexJoueur].setNbRestant();
+                                    }
+                                }
                             }
                         }
+                        System.out.println("   " + perso);
                     }
-                    System.out.println("   " + perso);
+                } else {
+                    System.out.println("Aucun mort");
                 }
-            } else {
-                System.out.println("Aucun mort");
+
             }
             System.out.println("");
             System.out.println("");
-            
+
             nbTour++;
-            this.premierJoueur = (this.premierJoueur + 1)%2;
+            this.premierJoueur = (this.premierJoueur + 1) % 2;
         }
-    }
-    
-    /* Tour si le Joueur 1 commence */
-    private void tourJ1(int _nbJouer, int _nbTour) {
-        /* Boucle pour chaque Joueur */
-        for (int indexJoueur = 0; indexJoueur < this.joueurs.length; indexJoueur++) {
-            this.coupJoueur(_nbJouer, indexJoueur, _nbTour);
-        }
-    }
-    
-    /* Tour si le Joueur 2 commence */
-    private void tourJ2(int _nbJouer, int _nbTour) {
-        /* Boucle pour chaque Joueur */
-        for (int indexJoueur = 1; indexJoueur > -1; indexJoueur--) {
-            this.coupJoueur(_nbJouer, indexJoueur, _nbTour);
+        
+        /* Affichage ou récupération du gagnant en fonction de la situation */
+        if (gagnant != null) {
+            System.out.println("VICTOIREEEEEEEEE !!!!");
+            System.out.println(gagnant.getName() + " a réussi à faire sortir 3 "
+                    + "de ses Personnages, il remporte donc la Partie");
+        } else {
+            gagnant = this.gagnant(nbTour);
+            System.out.println("PARTIE TERMINÉE");
+            System.out.println(gagnant.getName() + " a réussi à faire sortir "
+                    + gagnant.nbSortis() + " de ses Personnages en premier,"
+                    + " il remporte donc la Partie");
         }
     }
 
+    /* Tour si le Joueur 1 commence */
+    private Joueur tourJ1(int _nbJouer, int _nbTour) {
+        /* Boucle pour chaque Joueur */
+        for (int indexJoueur = 0; indexJoueur < this.joueurs.length; indexJoueur++) {
+            Joueur joueur = this.coupJoueur(_nbJouer, indexJoueur, _nbTour);
+            if (joueur != null) {
+                return joueur;
+            }
+        }
+        return null;
+    }
+
+    /* Tour si le Joueur 2 commence */
+    private Joueur tourJ2(int _nbJouer, int _nbTour) {
+        /* Boucle pour chaque Joueur */
+        for (int indexJoueur = 1; indexJoueur > -1; indexJoueur--) {
+            Joueur joueur = this.coupJoueur(_nbJouer, indexJoueur, _nbTour);
+            if (joueur != null) {
+                return joueur;
+            }
+        }
+        return null;
+    }
+
     /* Coup pour un Joueur */
-    private void coupJoueur(int _nbJouer, int _indexJoueur, int _nbTour) {
+    private Joueur coupJoueur(int _nbJouer, int _indexJoueur, int _nbTour) {
         /* Si le Joueur a encore des Personnage jouables */
         if (_nbJouer < this.joueurs[_indexJoueur].getNbRestant()) {
 
@@ -262,7 +307,7 @@ public class Partie {
                         + " en choisir un autre : ");
                 indexPerso = this.scannerInt();
             }
-            while (this.personnages[_indexJoueur][indexPerso-1].getActions().isEmpty()) {
+            while (this.personnages[_indexJoueur][indexPerso - 1].getActions().isEmpty()) {
                 System.out.print("Aucune action possible avec ce Personnage "
                         + "pour le moment, veuillez en choisir un autre : ");
                 indexPerso = this.scannerInt();
@@ -273,8 +318,8 @@ public class Partie {
             /* Actions avec le Personnage */
             boolean continuer = true;
             while (continuer) {
-                System.out.println("Actions possibles (" 
-                        + this.personnages[_indexJoueur][indexPerso].getPm() 
+                System.out.println("Actions possibles ("
+                        + this.personnages[_indexJoueur][indexPerso].getPm()
                         + " pm restants)");
                 Map<Integer, Action> actions = this.personnages[_indexJoueur][indexPerso].getActions();
                 for (Map.Entry<Integer, Action> entry : actions.entrySet()) {
@@ -295,9 +340,15 @@ public class Partie {
                 } catch (Exception ex) {
                     System.out.println(ex);
                 }
-                if (this.personnages[_indexJoueur][indexPerso].isExit())
-                    this.joueurs[_indexJoueur].setNbRestant();
                 
+                if (this.personnages[_indexJoueur][indexPerso].isExit()) {
+                    if (_indexJoueur == 0) {
+                        this.sortisJ1++;
+                    } else {
+                        this.sortisJ2++;
+                    }
+                }
+
                 if (continuer) {
                     System.out.println("");
                     this.afficherLaby();
@@ -305,54 +356,94 @@ public class Partie {
                 System.out.println("");
             }
         }
-    }    
-    
+        return this.gagnant(_nbTour);
+    }
+
+    /* Retourne le nombre de Personnage restants */
+    private int persoRestants() {
+        return this.joueurs[0].getNbRestant() + this.joueurs[1].getNbRestant();
+    }
+
+    /* Retourne le Joueur gagnant (null sinon) */
+    private Joueur gagnant(int _nbTour) {
+        int nbJ1 = this.joueurs[0].nbSortis();
+        int nbJ2 = this.joueurs[1].nbSortis();
+
+        /* Si tous les Personnage sont sortis ou morts ou si la Partie est finie */
+        if (this.persoRestants() == 0 || _nbTour == 15) {
+
+            /* Si les 2 Joueur ont sortis autant de Personnage */
+            if (nbJ1 == nbJ2) {
+                if (this.joueurs[0].classementDernier() < this.joueurs[1].classementDernier()) {
+                    return this.joueurs[0];
+                } else {
+                    return this.joueurs[1];
+                }
+            } else if (nbJ1 > nbJ2) {
+                return this.joueurs[0];
+            } else {
+                return this.joueurs[1];
+            }
+
+            /* Si le Joueur 1 a sorti 3 Personnage */
+        } else if (nbJ1 == 3) {
+            return this.joueurs[0];
+
+            /* Si le Joueur 2 a sorti 3 Personnage */
+        } else if (nbJ2 == 3) {
+            return this.joueurs[1];
+        }
+
+        return null;
+    }
+
     /* Retourne la liste des Personnage alignés avec les coordonnées (_x,_y) */
     public List<Personnage> persoAlignes(int _x, int _y) {
         ArrayList<Personnage> persos = new ArrayList<>();
-        
-        for (int indexJoueur = 0 ; indexJoueur < 2 ; indexJoueur++) {
-            for (int indexPerso = 0 ; indexPerso < 4 ; indexPerso++) {
-                if ((this.personnages[indexJoueur][indexPerso].getX() == _x ||
-                        this.personnages[indexJoueur][indexPerso].getY()== _y)
+
+        for (int indexJoueur = 0; indexJoueur < 2; indexJoueur++) {
+            for (int indexPerso = 0; indexPerso < 4; indexPerso++) {
+                if ((this.personnages[indexJoueur][indexPerso].getX() == _x
+                        || this.personnages[indexJoueur][indexPerso].getY() == _y)
                         && this.personnages[indexJoueur][indexPerso].getX() > -1
                         && this.personnages[indexJoueur][indexPerso].getX() < 16
                         && this.personnages[indexJoueur][indexPerso].getY() > -1
-                        && this.personnages[indexJoueur][indexPerso].getY() < 11)
+                        && this.personnages[indexJoueur][indexPerso].getY() < 11) {
                     persos.add(this.personnages[indexJoueur][indexPerso]);
+                }
             }
         }
-        
+
         return persos;
     }
-    
+
     /* Supprime le Mur passé en paramètre */
     public void supprimerMur(Mur _mur) {
         this.murs.remove(_mur);
     }
-    
+
     /* Retourne la liste des flaques d'Hemoglobine avec lesquelles un Pion aux 
      * coordonnées (_x,_y) peut interagir
      */
     public List<Hemoglobine> interactionsHemoglobine(int _x, int _y) {
         ArrayList<Hemoglobine> hemo = new ArrayList<>();
-        
+
         if (this.hemoCarree != null) {
-            if (Finstere.isInList(this.hemoCarree.zoneInteraction(),new int[] {_x,_y})) {
+            if (Finstere.isInList(this.hemoCarree.zoneInteraction(), new int[]{_x, _y})) {
                 hemo.add(this.hemoCarree);
             }
         }
         if (this.hemoLineH != null) {
-            if (Finstere.isInList(this.hemoLineH.zoneInteraction(),new int[] {_x,_y})) {
+            if (Finstere.isInList(this.hemoLineH.zoneInteraction(), new int[]{_x, _y})) {
                 hemo.add(this.hemoLineH);
             }
         }
         if (this.hemoLineV != null) {
-            if (Finstere.isInList(this.hemoLineV.zoneInteraction(),new int[] {_x,_y})) {
+            if (Finstere.isInList(this.hemoLineV.zoneInteraction(), new int[]{_x, _y})) {
                 hemo.add(this.hemoLineV);
             }
-        }    
-        
+        }
+
         return hemo;
     }
 
@@ -388,41 +479,37 @@ public class Partie {
 
     /* Getters */
     public Personnage getPersonnage(int _x, int _y) {
-        for (int j = 0; j < this.personnages.length; j++) {
-            for (int i = 0; i < this.personnages[0].length; i++) {
-                if (this.personnages[j][i].getX() == _x
-                        && this.personnages[j][i].getY() == _y
-                        && !this.personnages[j][i].isEnDessous()) {
-                    return this.personnages[j][i];
+        for (Personnage[] persos : this.personnages) {
+            for (Personnage perso : persos) {
+                if (perso.getX() == _x && perso.getY() == _y && !perso.isEnDessous()) {
+                    return perso;
                 }
             }
         }
         return null;
     }
-    
+
     public Personnage getPersonnageEnDessous(int _x, int _y) {
-        for (int j = 0; j < this.personnages.length; j++) {
-            for (int i = 0; i < this.personnages[0].length; i++) {
-                if (this.personnages[j][i].getX() == _x
-                        && this.personnages[j][i].getY() == _y
-                        && this.personnages[j][i].isEnDessous()) {
-                    return this.personnages[j][i];
+        for (Personnage[] persos : this.personnages) {
+            for (Personnage perso : persos) {
+                if (perso.getX() == _x && perso.getY() == _y && perso.isEnDessous()) {
+                    return perso;
                 }
             }
         }
         return null;
     }
-    
+
     public Mur getMur(int _x, int _y) {
-        for (int i = 0 ; i < this.murs.size() ; i++) {
-            if (this.murs.get(i).getX() == _x 
+        for (int i = 0; i < this.murs.size(); i++) {
+            if (this.murs.get(i).getX() == _x
                     && this.murs.get(i).getY() == _y) {
                 return this.murs.get(i);
             }
         }
         return null;
     }
-    
+
     public Labyrinthe getLabyrinthe() {
         return this.labyrinthe;
     }
@@ -453,7 +540,7 @@ public class Partie {
         }
         return null;
     }
-    
+
     /* Setters */
     public void setClassement() {
         this.classement++;

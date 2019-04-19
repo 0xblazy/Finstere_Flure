@@ -49,6 +49,28 @@ public class Joueur {
         return perso;
     }
     
+    /* Retourne le nombre de Personnage sortis */
+    public int nbSortis() {
+        int nb = 0;
+        
+        for (Personnage perso : this.personnages)  {
+            if (perso.isExit()) nb++;
+        }
+        
+        return nb;
+    }
+    
+    /* Retourne le classement du dernier Personnage sorti */
+    public int classementDernier() {
+        int classement = 0;
+        
+        for (Personnage perso : this.personnages) {
+            if (perso.getClassement() > classement) classement = perso.getClassement();
+        }
+        
+        return classement;
+    }
+    
     /* Retourne le Joueur sous forme d'une chaîne de caractère */
     @Override
     public String toString() {
@@ -63,6 +85,7 @@ public class Joueur {
         
         return s;
     }
+    
     /* Setters */
     public void setNbRestant() {
         this.nbRestant--;
@@ -73,5 +96,8 @@ public class Joueur {
     public int getNbRestant() {
         return this.nbRestant;
     }
-    
+
+    public String getName() {
+        return name;
+    }
 }

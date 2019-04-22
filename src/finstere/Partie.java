@@ -243,13 +243,13 @@ public class Partie {
         if (gagnant != null) {
             System.out.println("VICTOIREEEEEEEEE !!!!");
             System.out.println(gagnant.getName() + " a réussi à faire sortir 3 "
-                    + "de ses Personnages, il remporte donc la Partie");
+                    + "de ses Personnages et remporte donc la Partie");
         } else {
             gagnant = this.gagnant(nbTour);
             System.out.println("PARTIE TERMINÉE");
             System.out.println(gagnant.getName() + " a réussi à faire sortir "
-                    + gagnant.nbSortis() + " de ses Personnages en premier,"
-                    + " il remporte donc la Partie");
+                    + gagnant.nbSortis() + " de ses Personnages en premier"
+                    + " et remporte donc la Partie");
         }
     }
 

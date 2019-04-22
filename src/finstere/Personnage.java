@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-
 /**
  *
  * @author nKBlaZy
@@ -256,8 +254,18 @@ public class Personnage extends Pion {
 
             /* Si le Personnage a assez de pm pour contourner l'obstacle */
             if (pmA + 2 <= this.pm) {
-                return new Action("Se Déplacer en (" + _x + "," + _y + ")",
+                if (this.partie.getLabyrinthe().isPersonnage(_x, _y)) {
+                    if (!this.bloquee(_x, _y) && pmA + 2
+                            + this.pmCaseLibre(_x, _y, this.pm - (pmA + 2)) <= this.pm) {
+                        return new Action("Se Déplacer en (" + _x + "," + _y + ")",
+                            this.getClass(), "deplacer", new Object[]{_x, _y, pmA + 2});
+                    } else {
+                        return null;
+                    }
+                } else {
+                    return new Action("Se Déplacer en (" + _x + "," + _y + ")",
                         this.getClass(), "deplacer", new Object[]{_x, _y, pmA + 2});
+                }
             } else {
                 return null;
             }
@@ -856,7 +864,7 @@ public class Personnage extends Pion {
         int key = 1;
 
         /* Déplacement */
- /* Pour chaque Case possible */
+        /* Pour chaque Case possible */
         for (int[] c : cases) {
 
             /* Si la Case est disponible */

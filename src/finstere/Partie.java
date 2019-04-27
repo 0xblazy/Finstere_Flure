@@ -16,6 +16,10 @@ import java.util.Scanner;
  */
 public class Partie {
 
+    /* Vue de la Partie */
+    private Finstere finstere;
+    /* true si la Partie se déroule dans le terminal */
+    private boolean inTerm;
     /* Labyrinthe de la partie */
     private Labyrinthe labyrinthe;
     /* Flaques d'hémoglobine (hemoLineV présente en prévention d'une disposition
@@ -44,7 +48,9 @@ public class Partie {
     private int sortisJ1, sortisJ2;
 
     /* Constructeur */
-    public Partie() {
+    public Partie(Finstere _fin, boolean _inTerm) {
+        this.finstere = _fin;
+        this.inTerm = _inTerm;
         this.labyrinthe = new Labyrinthe(this);
         this.murs = new ArrayList<>();
         this.joueurs = new Joueur[2];

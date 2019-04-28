@@ -5,12 +5,11 @@
  */
 package finstere;
 
-import java.util.ArrayList;
+import java.awt.Dimension;
 import java.util.Arrays;
 import java.util.List;
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.border.EmptyBorder;
 
 /**
  *
@@ -32,8 +31,13 @@ public class Finstere extends javax.swing.JFrame {
     public final static int X = 11, XX = 12;
     /* Constantes pour les coordonnées des Personnage à l'extérieur, sortis, morts */
     public final static int[] EXTERIEUR = {16,10}, SORTI = {-1,0}, MORT = {15, -1};
+    
     /* Partie de Finstere */
     private Partie partie;
+    /* JLabel des Personnage de chaque Joueur */
+    private JLabel[] listePersosJ1, listePersosJ2;
+    /* JLabel du Monstre */
+    private JLabel monstre;
 
     /**
      * Creates new form FinstereFenetre
@@ -101,10 +105,8 @@ public class Finstere extends javax.swing.JFrame {
         newGame.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         newGame.setTitle("Nouvelle Partie");
         newGame.setLocation(new java.awt.Point(850, 350));
-        newGame.setMaximumSize(new java.awt.Dimension(274, 249));
         newGame.setMinimumSize(new java.awt.Dimension(274, 249));
         newGame.setName("Nouvelle Partie"); // NOI18N
-        newGame.setPreferredSize(new java.awt.Dimension(274, 239));
         newGame.setResizable(false);
         newGame.setSize(new java.awt.Dimension(274, 249));
 
@@ -367,6 +369,7 @@ public class Finstere extends javax.swing.JFrame {
         nomJ1.setForeground(new java.awt.Color(254, 248, 120));
         nomJ1.setText("Joueur 1");
 
+        persosJ1.setOpaque(false);
         persosJ1.setPreferredSize(new java.awt.Dimension(174, 39));
         persosJ1.setLayout(new javax.swing.BoxLayout(persosJ1, javax.swing.BoxLayout.LINE_AXIS));
 
@@ -376,6 +379,7 @@ public class Finstere extends javax.swing.JFrame {
         nomJ2.setForeground(new java.awt.Color(254, 248, 120));
         nomJ2.setText("Joueur 2");
 
+        persosJ2.setOpaque(false);
         persosJ2.setPreferredSize(new java.awt.Dimension(174, 39));
         persosJ2.setLayout(new javax.swing.BoxLayout(persosJ2, javax.swing.BoxLayout.LINE_AXIS));
 
@@ -461,7 +465,6 @@ public class Finstere extends javax.swing.JFrame {
         newGameMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
         newGameMenu.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         newGameMenu.setText("Nouvelle Partie");
-        newGameMenu.setActionCommand("Nouvelle Partie");
         newGameMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 newGameMenuActionPerformed(evt);
@@ -608,19 +611,60 @@ public class Finstere extends javax.swing.JFrame {
                 couleurs[0] = this.j1Color.getSelectedIndex();
             }
             this.nomJ1.setText(noms[0]);
-            this.nomJ1.repaint();
             if (nbJoueurs > 1) {
                 this.nomJ2.setText(noms[1]);
             } else {
                 this.nomJ2.setText("Bot");
             }
-            this.nomJ2.repaint();
             this.creationJoueurs.setVisible(false);
             this.partie.initPartie(nbJoueurs, noms, couleurs);
-            /*this.partie.jouer();*/
+            this.initInterface();
         }
     }//GEN-LAST:event_commencerPartieMouseClicked
 
+    /* Dispose les élements de la Partie sur l'Interface */
+    private void initInterface() {
+        
+        /* Mise en place des Personnage */
+        Personnage[][] persos = this.partie.getPersonnages();
+        this.listePersosJ1 = new JLabel[4];
+        this.listePersosJ2 = new JLabel[4];
+        for (int indexJ = 0 ; indexJ < persos.length ; indexJ++) {
+            for (int indexP = 0 ; indexP < persos[indexJ].length ; indexP++) {
+                if (indexJ == 0) {
+                    this.listePersosJ1[indexP] = new JLabel();
+                    this.listePersosJ1[indexP].setIcon(persos[indexJ][indexP]
+                            .getImageIcon());
+                    this.listePersosJ1[indexP].setPreferredSize(
+                            new Dimension(39, 39));
+                    if (indexP < 3) {
+                        this.listePersosJ1[indexP].setBorder(
+                                new EmptyBorder(0,0,0,6));
+                    }
+                    this.persosJ1.add(this.listePersosJ1[indexP]);
+                } else if (indexJ == 1) {
+                    this.listePersosJ2[indexP] = new JLabel();
+                    this.listePersosJ2[indexP].setIcon(persos[indexJ][indexP]
+                            .getImageIcon());
+                    this.listePersosJ2[indexP].setPreferredSize(
+                            new Dimension(39, 39));
+                    if (indexP < 3) {
+                        this.listePersosJ2[indexP].setBorder(
+                                new EmptyBorder(0,0,0,6));
+                    }
+                    this.persosJ2.add(this.listePersosJ2[indexP]);
+                }
+            }
+        }
+        
+        /* Mise en place du Monstre */
+        Monstre m = this.partie.getMonstre();
+        this.monstre = new JLabel("Monstre");
+        this.monstre.setPreferredSize(new Dimension(38, 38));
+        this.monstre.setIcon(m.getImageIcon());
+        this.monstre.setLocation(0, 0);
+        this.layeredPanel.add(this.monstre, new Integer(500));
+    }
     
     /**
      * @param args the command line arguments

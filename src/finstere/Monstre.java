@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -470,5 +471,20 @@ public class Monstre extends Pion {
         }
     
         return " M ";
+    }
+    
+    /* Getters */
+    public ImageIcon getImageIcon() {
+        if (this.direction == Finstere.HAUT) {
+            return new ImageIcon(getClass().getResource("/img/monstre1.gif"));
+        } else if (this.direction == Finstere.BAS) {
+            return new ImageIcon(getClass().getResource("/img/monstre3.gif"));
+        } else if (this.direction == Finstere.GAUCHE) {
+            return new ImageIcon(getClass().getResource("/img/monstre4.gif"));
+        } else if (this.direction == Finstere.DROITE) {
+            return new ImageIcon(getClass().getResource("/img/monstre2.gif"));
+        }
+        
+        return null;
     }
 }

@@ -566,6 +566,10 @@ public class Partie {
         return null;
     }
 
+    public Personnage[][] getPersonnages() {
+        return this.personnages;
+    }    
+
     /* Setters */
     public void setClassement() {
         this.classement++;

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.swing.ImageIcon;
 /**
  *
  * @author nKBlaZy
@@ -1087,5 +1088,23 @@ public class Personnage extends Pion {
 
     public int getPm() {
         return this.pm;
+    }
+    
+    public ImageIcon getImageIcon() {
+        if (this.rip) {
+            return new ImageIcon(getClass().getResource("/img/rip.gif"));
+        } else if (this.exit) {
+            return new ImageIcon(getClass().getResource("/img/lauriers" 
+                    + this.classement + ".gif"));
+        } else if (this.faceClair) {
+            return new ImageIcon(getClass().getResource("/img/pion" 
+                    + this.couleur + "_" + this.pmC + "_" + this.pmF 
+                    + "_clair.gif"));
+        } else if (!this.faceClair) {
+            return new ImageIcon(getClass().getResource("/img/pion" 
+                    + this.couleur + "_" + this.pmC + "_" + this.pmF 
+                    + "_fonce.gif"));
+        }
+        return null;
     }
 }

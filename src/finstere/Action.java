@@ -15,6 +15,8 @@ import java.util.Arrays;
 public class Action {
     /* Chaine décrivant l'action */
     private String action;
+    /* Nom de la méthode */
+    private String methodName;
     /* Méthode associée à l'action */
     private Method methode;
     /* Paramètres à passer à la méthode */
@@ -37,6 +39,8 @@ public class Action {
                 types[i] = _param[i].getClass();
             }
         }
+        
+        this.methodName = _methodeName;
         
         /* Récupération de la méthode */
         try {

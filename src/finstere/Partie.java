@@ -64,55 +64,74 @@ public class Partie {
     }
 
     /* Initialisation de la Partie (création des Joueur) */
+    public void initPartie(int _nbJoueurs, String[] _noms, int[] _couleurs) {
+        this.nbJoueurs = _nbJoueurs;
+        
+        for (int i = 0 ; i < this.nbJoueurs ; i++) {
+            this.personnages[i][0] = new Personnage(1, 6, 
+                    Finstere.COULEURS[_couleurs[i]], this);
+            this.personnages[i][1] = new Personnage(3, 4, 
+                    Finstere.COULEURS[_couleurs[i]], this);
+            this.personnages[i][2] = new Personnage(4, 3, 
+                    Finstere.COULEURS[_couleurs[i]], this);
+            this.personnages[i][3] = new Personnage(5, 2, 
+                    Finstere.COULEURS[_couleurs[i]], this);
+
+            this.joueurs[i] = new Joueur(_noms[i], this, 
+                    Finstere.COULEURS[_couleurs[i]], this.personnages[i]);
+            
+        }
+        this.genLaby();
+    }
+    
+    /* Polymorphisme de initPartie lorsque la Partie se déroule dans le terminal */
     public void initPartie() {
         System.out.println("=== NOUVELLE PARTIE ===");
 
         /* Choix du nombre de Joueur humain */
         System.out.print("Nombre de joueurs humain (1 ou 2) : ");
-        this.nbJoueurs = this.scannerInt();
-        while (this.nbJoueurs > 2 || this.nbJoueurs < 1) {
+        int nbJoueurs = this.scannerInt();
+        while (nbJoueurs > 2 || nbJoueurs < 1) {
             System.out.print("Le nombre de joueurs humain doit être 1 ou 2\n"
                     + "Veuillez ressaisir un nombre : ");
-            this.nbJoueurs = this.scannerInt();
+            nbJoueurs = this.scannerInt();
         }
 
         /* Création des Joueur */
         int couleurPremier = 0;
-        for (int i = 0; i < this.nbJoueurs; i++) {
+        String[] noms = new String[nbJoueurs];
+        int[] couleurs = new int[nbJoueurs];
+        for (int i = 0 ; i < nbJoueurs ; i++) {
             System.out.println("Joueur " + (i + 1) + " : ");
             System.out.print("Nom : ");
-            String nom = this.sc.next();
+            noms[i] = this.sc.next();
             System.out.print("Couleurs\n   1 - Bleu\n   2 - Marron\n"
                     + "   3 - Gris\n   4 - Vert\n   5 - Violet\n   6 - Rouge\n"
                     + "   7 - Jaune\nChoix : ");
-            int couleur = this.scannerInt();
-            while (couleur < 1 || couleur > 7) {
+            couleurs[i] = this.scannerInt();
+            while (couleurs[i] < 1 || couleurs[i] > 7) {
                 System.out.print("Choix incorrecte, ressaisissez un nombre : ");
-                couleur = this.scannerInt();
+                couleurs[i] = this.scannerInt();
             }
             if (i == 0) {
-                couleurPremier = couleur;
+                couleurPremier = couleurs[i];
             } else {
-                while (couleurPremier == couleur) {
+                while (couleurPremier == couleurs[i]) {
                     System.out.print("Cette couleur est déjà prise...\n"
                             + "Choisissez en une autre : ");
-                    couleur = this.scannerInt();
+                    couleurs[i] = this.scannerInt();
                 }
             }
-
-            this.personnages[i][0] = new Personnage(1, 6, Finstere.COULEURS[couleur - 1], this);
-            this.personnages[i][1] = new Personnage(3, 4, Finstere.COULEURS[couleur - 1], this);
-            this.personnages[i][2] = new Personnage(4, 3, Finstere.COULEURS[couleur - 1], this);
-            this.personnages[i][3] = new Personnage(5, 2, Finstere.COULEURS[couleur - 1], this);
-
-            this.joueurs[i] = new Joueur(nom, this, Finstere.COULEURS[couleur - 1], this.personnages[i]);
+            couleurs[i]--;
         }
-        this.genLaby();
+        this.initPartie(nbJoueurs, noms, couleurs);
     }
 
     /* Génère le Labyrinthe et dispose les Pion dessus */
     private void genLaby() {
-        System.out.println("\n...Génération du plateau de Jeu...\n");
+        if (this.inTerm) {
+            System.out.println("\n...Génération du plateau de Jeu...\n");
+        }
 
         /* Génération du Labyrinthe */
         this.labyrinthe.initLaby();

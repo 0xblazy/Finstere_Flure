@@ -5,8 +5,12 @@
  */
 package finstere;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 
 /**
  *
@@ -36,7 +40,6 @@ public class Finstere extends javax.swing.JFrame {
      */
     public Finstere() {
         initComponents();
-        this.newGame.setVisible(true);
     }
     
     /* Retourne true si le _tab est contenu dans _list */
@@ -64,6 +67,16 @@ public class Finstere extends javax.swing.JFrame {
         bienvenue = new javax.swing.JLabel();
         newGameTerm = new javax.swing.JButton();
         newGameInterface = new javax.swing.JButton();
+        creationJoueurs = new javax.swing.JFrame();
+        creationJoueursPanel = new javax.swing.JPanel();
+        newGameLogo1 = new javax.swing.JLabel();
+        j1Label = new javax.swing.JLabel();
+        j1Name = new javax.swing.JTextField();
+        j1Color = new javax.swing.JComboBox<>();
+        j2Label = new javax.swing.JLabel();
+        j2Name = new javax.swing.JTextField();
+        j2Color = new javax.swing.JComboBox<>();
+        commencerPartie = new javax.swing.JButton();
         mainPanel = new javax.swing.JPanel();
         layeredPanel = new javax.swing.JLayeredPane();
         plateau = new javax.swing.JLabel();
@@ -81,10 +94,12 @@ public class Finstere extends javax.swing.JFrame {
         listeDefausse = new javax.swing.JLabel();
         menuBar = new javax.swing.JMenuBar();
         partieMenu = new javax.swing.JMenu();
+        newGameMenu = new javax.swing.JMenuItem();
+        quitMenu = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
 
-        newGame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        newGame.setAlwaysOnTop(true);
+        newGame.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        newGame.setTitle("Nouvelle Partie");
         newGame.setLocation(new java.awt.Point(850, 350));
         newGame.setMaximumSize(new java.awt.Dimension(274, 249));
         newGame.setMinimumSize(new java.awt.Dimension(274, 249));
@@ -129,6 +144,11 @@ public class Finstere extends javax.swing.JFrame {
         newGameInterface.setMaximumSize(new java.awt.Dimension(256, 31));
         newGameInterface.setMinimumSize(new java.awt.Dimension(256, 31));
         newGameInterface.setPreferredSize(new java.awt.Dimension(256, 31));
+        newGameInterface.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                newGameInterfaceMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout newGamePanelLayout = new javax.swing.GroupLayout(newGamePanel);
         newGamePanel.setLayout(newGamePanelLayout);
@@ -167,16 +187,139 @@ public class Finstere extends javax.swing.JFrame {
         newGame.getContentPane().setLayout(newGameLayout);
         newGameLayout.setHorizontalGroup(
             newGameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(newGamePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 268, Short.MAX_VALUE)
+            .addComponent(newGamePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         newGameLayout.setVerticalGroup(
             newGameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(newGamePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
+        creationJoueurs.setTitle("Création des Joueurs");
+        creationJoueurs.setLocation(new java.awt.Point(850, 350));
+
+        creationJoueursPanel.setBackground(new java.awt.Color(79, 99, 48));
+
+        newGameLogo1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        newGameLogo1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/logo_finstere.gif"))); // NOI18N
+        newGameLogo1.setPreferredSize(new java.awt.Dimension(216, 65));
+
+        j1Label.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        j1Label.setForeground(new java.awt.Color(254, 248, 120));
+        j1Label.setText("Joueur 1");
+
+        j1Name.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        j1Name.setPreferredSize(new java.awt.Dimension(100, 23));
+        j1Name.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                j1NameCaretUpdate(evt);
+            }
+        });
+
+        j1Color.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        j1Color.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bleu", "Marron", "Gris", "Vert", "Violet", "Rouge", "Jaune" }));
+        j1Color.setPreferredSize(new java.awt.Dimension(100, 25));
+        j1Color.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                j1ColorActionPerformed(evt);
+            }
+        });
+
+        j2Label.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        j2Label.setForeground(new java.awt.Color(254, 248, 120));
+        j2Label.setText("Joueur 2 (bot si aucun nom)");
+
+        j2Name.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        j2Name.setPreferredSize(new java.awt.Dimension(100, 23));
+        j2Name.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                j2NameCaretUpdate(evt);
+            }
+        });
+
+        j2Color.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        j2Color.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bleu", "Marron", "Gris", "Vert", "Violet", "Rouge", "Jaune" }));
+        j2Color.setEnabled(false);
+        j2Color.setPreferredSize(new java.awt.Dimension(100, 25));
+        j2Color.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                j2ColorActionPerformed(evt);
+            }
+        });
+
+        commencerPartie.setBackground(java.awt.Color.darkGray);
+        commencerPartie.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        commencerPartie.setForeground(new java.awt.Color(254, 248, 120));
+        commencerPartie.setText("Commencer la Partie");
+        commencerPartie.setEnabled(false);
+        commencerPartie.setPreferredSize(new java.awt.Dimension(216, 31));
+        commencerPartie.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                commencerPartieMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout creationJoueursPanelLayout = new javax.swing.GroupLayout(creationJoueursPanel);
+        creationJoueursPanel.setLayout(creationJoueursPanelLayout);
+        creationJoueursPanelLayout.setHorizontalGroup(
+            creationJoueursPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(creationJoueursPanelLayout.createSequentialGroup()
+                .addGroup(creationJoueursPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(creationJoueursPanelLayout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addGroup(creationJoueursPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(newGameLogo1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(j1Label)
+                            .addGroup(creationJoueursPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(creationJoueursPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(creationJoueursPanelLayout.createSequentialGroup()
+                                        .addComponent(j2Name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(16, 16, 16)
+                                        .addComponent(j2Color, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(j2Label))
+                                .addGroup(creationJoueursPanelLayout.createSequentialGroup()
+                                    .addComponent(j1Name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(16, 16, 16)
+                                    .addComponent(j1Color, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addGroup(creationJoueursPanelLayout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addComponent(commencerPartie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(37, 37, 37))
+        );
+        creationJoueursPanelLayout.setVerticalGroup(
+            creationJoueursPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(creationJoueursPanelLayout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addComponent(newGameLogo1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(j1Label)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(creationJoueursPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(j1Name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(j1Color, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(16, 16, 16)
+                .addComponent(j2Label)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(creationJoueursPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(j2Name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(j2Color, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(16, 16, 16)
+                .addComponent(commencerPartie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(16, 16, 16))
+        );
+
+        javax.swing.GroupLayout creationJoueursLayout = new javax.swing.GroupLayout(creationJoueurs.getContentPane());
+        creationJoueurs.getContentPane().setLayout(creationJoueursLayout);
+        creationJoueursLayout.setHorizontalGroup(
+            creationJoueursLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(creationJoueursPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        creationJoueursLayout.setVerticalGroup(
+            creationJoueursLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(creationJoueursPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Finstere Flure");
-        setPreferredSize(new java.awt.Dimension(1280, 720));
         setResizable(false);
 
         mainPanel.setBackground(new java.awt.Color(79, 99, 48));
@@ -257,35 +400,24 @@ public class Finstere extends javax.swing.JFrame {
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addComponent(layeredPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(16, 16, 16)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(finstereLogo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nbManche, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nbTour, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nomJ1)
                     .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(finstereLogo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(nbManche, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(nbTour, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(nomJ1)
-                            .addGroup(mainPanelLayout.createSequentialGroup()
-                                .addComponent(persosJ1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(6, 6, 6)
-                                .addComponent(permierJ1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(persosJ1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(6, 6, 6)
+                        .addComponent(permierJ1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(nomJ2)
                     .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(nomJ2)
-                            .addGroup(mainPanelLayout.createSequentialGroup()
-                                .addComponent(persosJ2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(6, 6, 6)
-                                .addComponent(permierJ2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addComponent(monstreLabel))
-                    .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addComponent(listePioche))
-                    .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addComponent(listeDefausse)))
+                        .addComponent(persosJ2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(6, 6, 6)
+                        .addComponent(permierJ2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(monstreLabel)
+                    .addComponent(listePioche)
+                    .addComponent(listeDefausse))
                 .addContainerGap(353, Short.MAX_VALUE))
         );
         mainPanelLayout.setVerticalGroup(
@@ -318,13 +450,39 @@ public class Finstere extends javax.swing.JFrame {
                         .addComponent(listePioche)
                         .addGap(6, 6, 6)
                         .addComponent(listeDefausse)))
-                .addContainerGap(202, Short.MAX_VALUE))
+                .addContainerGap(204, Short.MAX_VALUE))
         );
 
+        menuBar.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+
         partieMenu.setText("Partie");
+        partieMenu.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+
+        newGameMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
+        newGameMenu.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        newGameMenu.setText("Nouvelle Partie");
+        newGameMenu.setActionCommand("Nouvelle Partie");
+        newGameMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newGameMenuActionPerformed(evt);
+            }
+        });
+        partieMenu.add(newGameMenu);
+
+        quitMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
+        quitMenu.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        quitMenu.setText("Quitter");
+        quitMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                quitMenuActionPerformed(evt);
+            }
+        });
+        partieMenu.add(quitMenu);
+
         menuBar.add(partieMenu);
 
         jMenu2.setText("Edit");
+        jMenu2.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         menuBar.add(jMenu2);
 
         setJMenuBar(menuBar);
@@ -344,6 +502,7 @@ public class Finstere extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    /* Démarre une Partie dans le terminal */
     private void newGameTermMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newGameTermMouseClicked
         this.newGame.setVisible(false);
         this.setVisible(false);
@@ -352,6 +511,117 @@ public class Finstere extends javax.swing.JFrame {
         this.partie.jouer();
     }//GEN-LAST:event_newGameTermMouseClicked
 
+    /* Démarre une Partie avec l'Interface graphique */
+    private void newGameInterfaceMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newGameInterfaceMouseClicked
+        this.newGame.setVisible(false);
+        this.partie = new Partie(this, false);
+        this.creationJoueurs.requestFocusInWindow();
+        this.creationJoueurs.pack();
+        this.creationJoueurs.setVisible(true);
+    }//GEN-LAST:event_newGameInterfaceMouseClicked
+
+    /* Ouvre le menu pour commencer une nouvelle Partie */
+    private void newGameMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newGameMenuActionPerformed
+        this.newGame.requestFocusInWindow();
+        this.newGame.pack();
+        this.newGame.setVisible(true);
+    }//GEN-LAST:event_newGameMenuActionPerformed
+
+    /* Ferme le jeu */
+    private void quitMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitMenuActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_quitMenuActionPerformed
+    
+    /* Active le bouton Commencer la Partie si les couleurs choisies par les 
+     * Joueur ne sont pas identiques
+     */
+    private void j1ColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_j1ColorActionPerformed
+        if (this.j2Color.isEnabled()) {
+            if (this.j1Color.getSelectedIndex() == this.j2Color.getSelectedIndex()) {
+                this.commencerPartie.setEnabled(false);
+            } else {
+                this.commencerPartie.setEnabled(true);
+            }
+        } else {
+            this.commencerPartie.setEnabled(true);
+        }
+    }//GEN-LAST:event_j1ColorActionPerformed
+
+    private void j2ColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_j2ColorActionPerformed
+        if (this.j1Color.getSelectedIndex() == this.j2Color.getSelectedIndex()) {
+            this.commencerPartie.setEnabled(false);
+        } else {
+            this.commencerPartie.setEnabled(true);
+        }
+    }//GEN-LAST:event_j2ColorActionPerformed
+
+    /* Active le bouton Commencer la Partie lors de la saisie de j1Name */
+    private void j1NameCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_j1NameCaretUpdate
+        if (this.j1Name.getText().length() != 0) {
+            if (this.j2Color.isEnabled()) {
+                if (this.j1Color.getSelectedIndex() == this.j2Color.getSelectedIndex()) {
+                    this.commencerPartie.setEnabled(false);
+                } else {
+                    this.commencerPartie.setEnabled(true);
+                }
+            } else {
+                this.commencerPartie.setEnabled(true);
+            }
+        } else {
+            this.commencerPartie.setEnabled(false);
+        }
+    }//GEN-LAST:event_j1NameCaretUpdate
+
+    /* Active la ComboxBox j2Color si il y a un nom saisie dans j2Name */
+    private void j2NameCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_j2NameCaretUpdate
+        if (this.j2Name.getText().length() != 0) {
+            this.j2Color.setEnabled(true);
+            if (this.j1Color.getSelectedIndex() == this.j2Color.getSelectedIndex()) {
+                this.commencerPartie.setEnabled(false);
+            } else {
+                this.commencerPartie.setEnabled(true);
+            }
+        } else {
+            this.j2Color.setEnabled(false);
+            this.j2Color.setSelectedIndex(0);
+        }
+    }//GEN-LAST:event_j2NameCaretUpdate
+
+    /* Initialise et lance la Partie avec les informations saisies */
+    private void commencerPartieMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_commencerPartieMouseClicked
+        if (this.commencerPartie.isEnabled()) {
+            String[] noms;
+            int[] couleurs;
+            int nbJoueurs = 1;
+            if (this.j2Color.isEnabled()) {
+                nbJoueurs++;
+                noms = new String[2];
+                noms[0] = this.j1Name.getText();
+                noms[1] = this.j2Name.getText();
+                couleurs = new int[2];
+                couleurs[0] = this.j1Color.getSelectedIndex();
+                couleurs[1] = this.j2Color.getSelectedIndex();
+            } else {
+                noms = new String[1];
+                noms[0] = this.j1Name.getText();
+                couleurs = new int[1];
+                couleurs[0] = this.j1Color.getSelectedIndex();
+            }
+            this.nomJ1.setText(noms[0]);
+            this.nomJ1.repaint();
+            if (nbJoueurs > 1) {
+                this.nomJ2.setText(noms[1]);
+            } else {
+                this.nomJ2.setText("Bot");
+            }
+            this.nomJ2.repaint();
+            this.creationJoueurs.setVisible(false);
+            this.partie.initPartie(nbJoueurs, noms, couleurs);
+            /*this.partie.jouer();*/
+        }
+    }//GEN-LAST:event_commencerPartieMouseClicked
+
+    
     /**
      * @param args the command line arguments
      */
@@ -392,7 +662,16 @@ public class Finstere extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel bienvenue;
+    private javax.swing.JButton commencerPartie;
+    private javax.swing.JFrame creationJoueurs;
+    private javax.swing.JPanel creationJoueursPanel;
     private javax.swing.JLabel finstereLogo;
+    private javax.swing.JComboBox<String> j1Color;
+    private javax.swing.JLabel j1Label;
+    private javax.swing.JTextField j1Name;
+    private javax.swing.JComboBox<String> j2Color;
+    private javax.swing.JLabel j2Label;
+    private javax.swing.JTextField j2Name;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JLayeredPane layeredPanel;
     private javax.swing.JLabel listeDefausse;
@@ -405,6 +684,8 @@ public class Finstere extends javax.swing.JFrame {
     private javax.swing.JFrame newGame;
     private javax.swing.JButton newGameInterface;
     private javax.swing.JLabel newGameLogo;
+    private javax.swing.JLabel newGameLogo1;
+    private javax.swing.JMenuItem newGameMenu;
     private javax.swing.JPanel newGamePanel;
     private javax.swing.JButton newGameTerm;
     private javax.swing.JLabel nomJ1;
@@ -415,5 +696,6 @@ public class Finstere extends javax.swing.JFrame {
     private javax.swing.JPanel persosJ1;
     private javax.swing.JPanel persosJ2;
     private javax.swing.JLabel plateau;
+    private javax.swing.JMenuItem quitMenu;
     // End of variables declaration//GEN-END:variables
 }

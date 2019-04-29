@@ -535,6 +535,10 @@ public class Partie {
         return null;
     }
 
+    public List<Mur> getMurs() {
+        return this.murs;
+    }
+    
     public Labyrinthe getLabyrinthe() {
         return this.labyrinthe;
     }
@@ -565,6 +569,20 @@ public class Partie {
         }
         return null;
     }
+
+    public Hemoglobine getHemoCarree() {
+        return this.hemoCarree;
+    }
+
+    public Hemoglobine getHemoLineH() {
+        return this.hemoLineH;
+    }
+
+    public Hemoglobine getHemoLineV() {
+        return this.hemoLineV;
+    }
+    
+    
 
     public Personnage[][] getPersonnages() {
         return this.personnages;

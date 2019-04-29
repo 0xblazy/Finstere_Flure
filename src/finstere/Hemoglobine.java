@@ -7,6 +7,7 @@ package finstere;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -271,5 +272,9 @@ public class Hemoglobine extends Pion {
     /* Getters */
     public String getType() {
         return this.type;
+    }
+    
+    public ImageIcon getImageIcon() {
+        return new ImageIcon(getClass().getResource("/img/" + this.type + ".png"));
     }
 }

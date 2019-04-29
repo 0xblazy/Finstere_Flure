@@ -7,6 +7,7 @@ package finstere;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -21,9 +22,12 @@ public class Action {
     private Method methode;
     /* Paramètres à passer à la méthode */
     private Object[] param;
+    /* Coût de l'Action */
+    private int cout;
     
     /* Constructeur */
-    public Action(String _action, Class _class, String _methodeName, Object[] _param) {
+    public Action(String _action, Class _class, String _methodeName, 
+            Object[] _param, int _cout) {
         this.action =_action;
         
         /* Définition des types des paramètres */
@@ -50,11 +54,16 @@ public class Action {
         }
         
         this.param = _param;
+        this.cout = _cout;
     }
     
     /* Getters */
     public String getAction() {
         return this.action;
+    }
+
+    public String getMethodName() {
+        return this.methodName;
     }
 
     public Method getMethode() {
@@ -63,5 +72,10 @@ public class Action {
 
     public Object[] getParam() {
         return this.param;
+    }
+
+    public ImageIcon getImageIcon() {
+        return new ImageIcon(getClass().getResource("/img/dep" + this.cout 
+                + ".gif"));
     }
 }

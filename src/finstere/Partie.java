@@ -81,6 +81,26 @@ public class Partie {
                     Finstere.COULEURS[_couleurs[i]], this.personnages[i]);
             
         }
+        
+        if (_nbJoueurs == 1) {
+            int couleur = 0;
+            while (couleur == _couleurs[0]) {
+                couleur++;
+            }
+            
+            this.personnages[1][0] = new Personnage(1, 6, 
+                    Finstere.COULEURS[couleur], this);
+            this.personnages[1][1] = new Personnage(3, 4, 
+                    Finstere.COULEURS[couleur], this);
+            this.personnages[1][2] = new Personnage(4, 3, 
+                    Finstere.COULEURS[couleur], this);
+            this.personnages[1][3] = new Personnage(5, 2, 
+                    Finstere.COULEURS[couleur], this);
+
+            this.joueurs[1] = new Joueur("Bot", this, 
+                    Finstere.COULEURS[couleur], this.personnages[1]);
+        }
+        
         this.genLaby();
     }
     
@@ -105,9 +125,8 @@ public class Partie {
             System.out.println("Joueur " + (i + 1) + " : ");
             System.out.print("Nom : ");
             noms[i] = this.sc.next();
-            System.out.print("Couleurs\n   1 - Bleu\n   2 - Marron\n"
-                    + "   3 - Gris\n   4 - Vert\n   5 - Violet\n   6 - Rouge\n"
-                    + "   7 - Jaune\nChoix : ");
+            System.out.print("Couleurs\n   1 - Bleu\n   2 - Vert\n   3 - Rouge\n"
+                    + "   4 - Jaune\nChoix : ");
             couleurs[i] = this.scannerInt();
             while (couleurs[i] < 1 || couleurs[i] > 7) {
                 System.out.print("Choix incorrecte, ressaisissez un nombre : ");

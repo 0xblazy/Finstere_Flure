@@ -58,16 +58,10 @@ public class Personnage extends Pion {
         if (this.couleur.equals(Finstere.COULEURS[0])) {
             s += "B";
         } else if (this.couleur.equals(Finstere.COULEURS[1])) {
-            s += "M";
-        } else if (this.couleur.equals(Finstere.COULEURS[2])) {
-            s += "G";
-        } else if (this.couleur.equals(Finstere.COULEURS[3])) {
             s += "V";
-        } else if (this.couleur.equals(Finstere.COULEURS[4])) {
-            s += "P";
-        } else if (this.couleur.equals(Finstere.COULEURS[5])) {
+        } else if (this.couleur.equals(Finstere.COULEURS[2])) {
             s += "R";
-        } else if (this.couleur.equals(Finstere.COULEURS[6])) {
+        } else if (this.couleur.equals(Finstere.COULEURS[3])) {
             s += "J";
         }
 
@@ -1015,16 +1009,10 @@ public class Personnage extends Pion {
         if (this.couleur.equals(Finstere.COULEURS[0])) {
             s += "Bleu";
         } else if (this.couleur.equals(Finstere.COULEURS[1])) {
-            s += "Marron";
-        } else if (this.couleur.equals(Finstere.COULEURS[2])) {
-            s += "Gris";
-        } else if (this.couleur.equals(Finstere.COULEURS[3])) {
             s += "Vert";
-        } else if (this.couleur.equals(Finstere.COULEURS[4])) {
-            s += "Violet";
-        } else if (this.couleur.equals(Finstere.COULEURS[5])) {
+        } else if (this.couleur.equals(Finstere.COULEURS[2])) {
             s += "Rouge";
-        } else if (this.couleur.equals(Finstere.COULEURS[6])) {
+        } else if (this.couleur.equals(Finstere.COULEURS[3])) {
             s += "Jaune";
         }
 

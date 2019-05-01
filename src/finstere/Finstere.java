@@ -28,8 +28,7 @@ public class Finstere extends javax.swing.JFrame {
             LINEVERT = "tachesang_lineaireV",
             LINEHORI = "tachesang_lineaireH";
     /* Constantes pour les couleurs des personnages */
-    public final static String[] COULEURS = {"blue", "brown", "gray", "green",
-        "purple", "red", "yellow"};
+    public final static String[] COULEURS = {"blue", "green", "red", "yellow"};
     /* Constantes pour les valeurs des Carte "une proie" et "deux proies */
     public final static int X = 11, XX = 12;
     /* Constantes pour les coordonnées des Personnage à l'extérieur, sortis, morts */
@@ -45,7 +44,8 @@ public class Finstere extends javax.swing.JFrame {
             MUR = new Integer(2),
             MONST = new Integer(3),
             EN_DESSOUS = new Integer(3),
-            AU_DESSUS = new Integer(4);
+            AU_DESSUS = new Integer(4),
+            ACTION = new Integer(5);
             
     
     /* Partie de Finstere */
@@ -114,10 +114,10 @@ public class Finstere extends javax.swing.JFrame {
         nbTour = new javax.swing.JLabel();
         nbManche = new javax.swing.JLabel();
         nomJ1 = new javax.swing.JLabel();
-        persosJ1 = new javax.swing.JPanel();
+        persosJ1 = new javax.swing.JLayeredPane();
         permierJ1 = new javax.swing.JLabel();
         nomJ2 = new javax.swing.JLabel();
-        persosJ2 = new javax.swing.JPanel();
+        persosJ2 = new javax.swing.JLayeredPane();
         permierJ2 = new javax.swing.JLabel();
         monstreLabel = new javax.swing.JLabel();
         listePioche = new javax.swing.JLabel();
@@ -246,7 +246,7 @@ public class Finstere extends javax.swing.JFrame {
         });
 
         j1Color.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        j1Color.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bleu", "Marron", "Gris", "Vert", "Violet", "Rouge", "Jaune" }));
+        j1Color.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bleu", "Vert", "Rouge", "Jaune" }));
         j1Color.setPreferredSize(new java.awt.Dimension(100, 25));
         j1Color.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -267,7 +267,7 @@ public class Finstere extends javax.swing.JFrame {
         });
 
         j2Color.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        j2Color.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bleu", "Marron", "Gris", "Vert", "Violet", "Rouge", "Jaune" }));
+        j2Color.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Bleu", "Vert", "Rouge", "Jaune" }));
         j2Color.setEnabled(false);
         j2Color.setPreferredSize(new java.awt.Dimension(100, 25));
         j2Color.addActionListener(new java.awt.event.ActionListener() {
@@ -385,21 +385,39 @@ public class Finstere extends javax.swing.JFrame {
         nomJ1.setForeground(new java.awt.Color(254, 248, 120));
         nomJ1.setText("Joueur 1");
 
-        persosJ1.setOpaque(false);
-        persosJ1.setPreferredSize(new java.awt.Dimension(174, 39));
-        persosJ1.setLayout(new javax.swing.BoxLayout(persosJ1, javax.swing.BoxLayout.LINE_AXIS));
+        persosJ1.setPreferredSize(new java.awt.Dimension(178, 40));
 
-        permierJ1.setPreferredSize(new java.awt.Dimension(21, 35));
+        javax.swing.GroupLayout persosJ1Layout = new javax.swing.GroupLayout(persosJ1);
+        persosJ1.setLayout(persosJ1Layout);
+        persosJ1Layout.setHorizontalGroup(
+            persosJ1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 178, Short.MAX_VALUE)
+        );
+        persosJ1Layout.setVerticalGroup(
+            persosJ1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 40, Short.MAX_VALUE)
+        );
+
+        permierJ1.setPreferredSize(new java.awt.Dimension(21, 40));
 
         nomJ2.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         nomJ2.setForeground(new java.awt.Color(254, 248, 120));
         nomJ2.setText("Joueur 2");
 
-        persosJ2.setOpaque(false);
-        persosJ2.setPreferredSize(new java.awt.Dimension(174, 39));
-        persosJ2.setLayout(new javax.swing.BoxLayout(persosJ2, javax.swing.BoxLayout.LINE_AXIS));
+        persosJ2.setPreferredSize(new java.awt.Dimension(178, 40));
 
-        permierJ2.setPreferredSize(new java.awt.Dimension(21, 35));
+        javax.swing.GroupLayout persosJ2Layout = new javax.swing.GroupLayout(persosJ2);
+        persosJ2.setLayout(persosJ2Layout);
+        persosJ2Layout.setHorizontalGroup(
+            persosJ2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 178, Short.MAX_VALUE)
+        );
+        persosJ2Layout.setVerticalGroup(
+            persosJ2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 40, Short.MAX_VALUE)
+        );
+
+        permierJ2.setPreferredSize(new java.awt.Dimension(21, 40));
 
         monstreLabel.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         monstreLabel.setForeground(new java.awt.Color(254, 248, 120));
@@ -443,25 +461,25 @@ public class Finstere extends javax.swing.JFrame {
                     .addComponent(nbManche, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(nbTour, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(nomJ1)
-                    .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addComponent(persosJ1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(6, 6, 6)
-                        .addComponent(permierJ1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(nomJ2)
                     .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addComponent(persosJ1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12)
+                        .addComponent(permierJ1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(mainPanelLayout.createSequentialGroup()
                         .addComponent(persosJ2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(6, 6, 6)
+                        .addGap(12, 12, 12)
                         .addComponent(permierJ2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(monstreLabel)
                     .addComponent(listePioche)
                     .addComponent(listeDefausse))
-                .addContainerGap(353, Short.MAX_VALUE))
+                .addContainerGap(335, Short.MAX_VALUE))
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addGap(16, 16, 16)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(layeredPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addComponent(finstereLogo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -472,28 +490,25 @@ public class Finstere extends javax.swing.JFrame {
                         .addGap(32, 32, 32)
                         .addComponent(nomJ1)
                         .addGap(6, 6, 6)
-                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(persosJ1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(permierJ1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(16, 16, 16)
+                        .addGap(12, 12, 12)
                         .addComponent(nomJ2)
                         .addGap(6, 6, 6)
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(persosJ2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(permierJ2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(32, 32, 32)
+                        .addGap(35, 35, 35)
                         .addComponent(monstreLabel)
                         .addGap(6, 6, 6)
                         .addComponent(listePioche)
                         .addGap(6, 6, 6)
                         .addComponent(listeDefausse)))
+                .addGap(12, 12, 12)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(sortirButton))
-                    .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(terminerButton)))
+                    .addComponent(sortirButton)
+                    .addComponent(terminerButton))
                 .addContainerGap(161, Short.MAX_VALUE))
         );
 
@@ -666,6 +681,7 @@ public class Finstere extends javax.swing.JFrame {
     private void initInterface() {
         
         /* Mise en place des Personnage */
+        this.cleanListesPersos();
         Personnage[][] persos = this.partie.getPersonnages();
         this.listePersosJ1 = new JLabel[4];
         this.listePersosJ2 = new JLabel[4];
@@ -673,26 +689,28 @@ public class Finstere extends javax.swing.JFrame {
             for (int indexP = 0 ; indexP < persos[indexJ].length ; indexP++) {
                 if (indexJ == 0) {
                     this.listePersosJ1[indexP] = new JLabel();
+                    this.listePersosJ1[indexP].setBounds(
+                            (this.TAILLE + 6) * indexP, 0,
+                            this.TAILLE, this.TAILLE );
+                    this.listePersosJ1[indexP]
+                            .setVerticalAlignment(SwingConstants.CENTER);
+                    this.listePersosJ1[indexP]
+                            .setHorizontalAlignment(SwingConstants.CENTER);
                     this.listePersosJ1[indexP].setIcon(persos[indexJ][indexP]
                             .getImageIcon());
-                    this.listePersosJ1[indexP].setPreferredSize(
-                            new Dimension(this.TAILLE, this.TAILLE));
-                    if (indexP < 3) {
-                        this.listePersosJ1[indexP].setBorder(
-                                new EmptyBorder(0,0,0,6));
-                    }
-                    this.persosJ1.add(this.listePersosJ1[indexP]);
+                    this.persosJ1.add(this.listePersosJ1[indexP], this.EN_DESSOUS);
                 } else if (indexJ == 1) {
                     this.listePersosJ2[indexP] = new JLabel();
+                    this.listePersosJ2[indexP].setBounds(
+                            (this.TAILLE + 6) * indexP, 0,
+                            this.TAILLE, this.TAILLE );
+                    this.listePersosJ2[indexP]
+                            .setVerticalAlignment(SwingConstants.CENTER);
+                    this.listePersosJ2[indexP]
+                            .setHorizontalAlignment(SwingConstants.CENTER);
                     this.listePersosJ2[indexP].setIcon(persos[indexJ][indexP]
                             .getImageIcon());
-                    this.listePersosJ2[indexP].setPreferredSize(
-                            new Dimension(this.TAILLE, this.TAILLE));
-                    if (indexP < 3) {
-                        this.listePersosJ2[indexP].setBorder(
-                                new EmptyBorder(0,0,0,6));
-                    }
-                    this.persosJ2.add(this.listePersosJ2[indexP]);
+                    this.persosJ2.add(this.listePersosJ2[indexP], this.EN_DESSOUS);
                 }
             }
         }
@@ -742,6 +760,13 @@ public class Finstere extends javax.swing.JFrame {
         this.monstre = new JLabel();
         this.updateMonstre();
         
+    }
+    
+    private void cleanListesPersos() {
+        for (int i = 0 ; i < 4 ; i++) {
+            if (this.listePersosJ1 != null) this.persosJ1.remove(this.listePersosJ1[i]);
+            if (this.listePersosJ2 != null) this.persosJ2.remove(this.listePersosJ2[i]);
+        }
     }
     
     /* Met à jour la position du Monstre */
@@ -841,8 +866,8 @@ public class Finstere extends javax.swing.JFrame {
     private javax.swing.JMenu partieMenu;
     private javax.swing.JLabel permierJ1;
     private javax.swing.JLabel permierJ2;
-    private javax.swing.JPanel persosJ1;
-    private javax.swing.JPanel persosJ2;
+    private javax.swing.JLayeredPane persosJ1;
+    private javax.swing.JLayeredPane persosJ2;
     private javax.swing.JMenuItem quitMenu;
     private javax.swing.JToggleButton sortirButton;
     private javax.swing.JToggleButton terminerButton;

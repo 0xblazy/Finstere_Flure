@@ -1099,4 +1099,8 @@ public class Personnage extends Pion {
         }
         return null;
     }
+    
+    public boolean isJouable() {
+        return !this.exit && !this.rip && !this.joue && !this.getActions().isEmpty();
+    }
 }

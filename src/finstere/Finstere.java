@@ -5,14 +5,18 @@
  */
 package finstere;
 
-import java.awt.Dimension;
+import java.awt.Color;
+import java.awt.Cursor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Semaphore;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
 
 /**
  *
@@ -54,6 +58,14 @@ public class Finstere extends javax.swing.JFrame {
     private JLabel plateau;
     /* JLabel des Personnage de chaque Joueur */
     private JLabel[] listePersosJ1, listePersosJ2;
+    /* JLabel du choix du Personnage */
+    private JLabel[] choixPersoJ1, choixPersoJ2;
+    /* JLabel pour le choix de l'Action */
+    private JLabel[] choixAction;
+    /* Ecouteur pour le choix du Personnage ou de l'Action */
+    private ChoiceListener choiceListener;
+    /* Choix du Personnage ou de l'Action */
+    private int choix;
     /* JLabel des flaques d'Hemoglobine */
     private JLabel hemoCarre, hemoLineH, hemoLineV;
     /* JLabel des Mur */
@@ -71,6 +83,7 @@ public class Finstere extends javax.swing.JFrame {
         this.plateau.setIcon(new ImageIcon(getClass()
                 .getResource("/img/fns_plateau.jpg")));
         this.layeredPanel.add(this.plateau, this.PLAT);
+        this.choiceListener = new ChoiceListener(this);
     }
     
     /* Retourne true si le _tab est contenu dans _list */
@@ -566,7 +579,7 @@ public class Finstere extends javax.swing.JFrame {
         this.setVisible(false);
         this.partie = new Partie(this, true);
         this.partie.initPartie();
-        this.partie.jouer();
+        this.partie.start();
     }//GEN-LAST:event_newGameTermMouseClicked
 
     /* Démarre une Partie avec l'Interface graphique */
@@ -674,6 +687,7 @@ public class Finstere extends javax.swing.JFrame {
             this.creationJoueurs.setVisible(false);
             this.partie.initPartie(nbJoueurs, noms, couleurs);
             this.initInterface();
+            this.partie.start();
         }
     }//GEN-LAST:event_commencerPartieMouseClicked
 
@@ -794,6 +808,113 @@ public class Finstere extends javax.swing.JFrame {
             this.murs.add(mur);
         }
     }
+    
+    /* Met à jour les informations de la Partie (nbTour et nbManche) */
+    public void updateInfo() {
+        this.nbManche.setText("Manche n°" + this.partie.getNbManche());
+        this.nbTour.setText("Tour n°" + this.partie.getNbTour());
+    }
+    
+    /* Affiche les Personnage disponibles */
+    public void afficherChoixPerso(int _indexJoueur) {
+        Personnage[] persos = this.partie.getPersonnages()[_indexJoueur];
+        
+        if (_indexJoueur == 0) {
+            this.choixPersoJ1 = new JLabel[4];
+            for (int i = 0 ; i < 4 ; i++) {
+                if (persos[i].isJouable()) {
+                    this.choixPersoJ1[i] = new JLabel();
+                    this.choixPersoJ1[i].setBounds((this.TAILLE + 6) * i, 0,
+                            this.TAILLE, this.TAILLE );
+                    this.choixPersoJ1[i].setName("" + i);
+                    this.choixPersoJ1[i].setIcon(new ImageIcon(getClass()
+                            .getResource("/img/choix.png")));
+                    this.choixPersoJ1[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
+                    this.choixPersoJ1[i].addMouseListener(this.choiceListener);
+                    this.persosJ1.add(this.choixPersoJ1[i], this.ACTION);
+                }
+            }
+        } else {
+            this.choixPersoJ2 = new JLabel[4];
+            for (int i = 0 ; i < 4 ; i++) {
+                if (persos[i].isJouable()) {
+                    this.choixPersoJ2[i] = new JLabel();
+                    this.choixPersoJ2[i].setBounds((this.TAILLE + 6) * i, 0,
+                            this.TAILLE, this.TAILLE );
+                    this.choixPersoJ2[i].setName("" + i);
+                    this.choixPersoJ2[i].setIcon(new ImageIcon(getClass()
+                            .getResource("/img/choix.png")));
+                    this.choixPersoJ2[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
+                    this.choixPersoJ2[i].addMouseListener(this.choiceListener);
+                    this.persosJ2.add(this.choixPersoJ2[i], this.ACTION);
+                }
+            }
+        }
+    }
+    
+    /* Supprime les JLabel du choix du Personnage */
+    public void cleanChoixPerso() {
+        for (int i = 0 ; i < 4 ; i++) {
+            if (this.choixPersoJ1 != null) {
+                if (this.choixPersoJ1[i] != null) {
+                    this.persosJ1.remove(this.choixPersoJ1[i]);
+                }
+            }
+            if (this.choixPersoJ2 != null) {
+                if (this.choixPersoJ2[i] != null) {
+                    this.persosJ2.remove(this.choixPersoJ2[i]);
+                }
+            }
+        }
+        
+        this.persosJ1.repaint();
+        this.persosJ2.repaint();
+    }
+    
+    /* Affiche les Action possibles */
+    public void afficherChoixAction( Personnage _perso) {
+        Map<Integer, Action> actions = _perso.getActions();
+        this.choixAction = new JLabel[actions.size()];
+        
+        for (Map.Entry<Integer, Action> entry : actions.entrySet()) {
+            Action action = entry.getValue();
+            this.choixAction[entry.getKey() - 1] = new JLabel();
+            
+            if (action.getMethodName().equals("deplacer")) {
+                this.choixAction[entry.getKey() - 1].setBounds(
+                        this.DEBUT_X + this.TAILLE * (int) action.getParam()[0],
+                        this.DEBUT_Y + this.TAILLE * (int) action.getParam()[1],
+                        this.TAILLE, this.TAILLE);             
+            }
+            if (action.getMethodName().equals("pousserMur")) {
+                int dir = (int) action.getParam()[1];
+            }
+            
+            this.choixAction[entry.getKey() - 1].setName("" + entry.getKey());
+            this.choixAction[entry.getKey() - 1].setIcon(action.getImageIcon());
+            this.choixAction[entry.getKey() - 1].setVerticalAlignment(SwingConstants.CENTER);
+            this.choixAction[entry.getKey() - 1].setHorizontalAlignment(SwingConstants.CENTER);
+            this.choixAction[entry.getKey() - 1].setCursor(new Cursor(Cursor.HAND_CURSOR));
+            this.choixAction[entry.getKey() - 1].addMouseListener(this.choiceListener);
+            this.layeredPanel.add(this.choixAction[entry.getKey() - 1], this.ACTION);
+            
+        }
+    }
+    
+    /* Getters */
+    public int getChoix() {
+        return this.choix;
+    }
+
+    public Partie getPartie() {
+        return this.partie;
+    }    
+    
+    /* Setters */
+    public void setChoix(int _choix) {
+        this.choix = _choix;
+    }
+    
     
     /**
      * @param args the command line arguments

@@ -50,6 +50,8 @@ public class Partie extends Thread{
     private int sortisJ1, sortisJ2;
     /* Numéro de Tour et de Manche */
     private int nbTour, nbManche;
+    /* Déplacement du Monstre */
+    private String deplacementMonstre;
 
     /* Constructeur */
     public Partie(Finstere _fin, boolean _inTerm) {
@@ -217,6 +219,7 @@ public class Partie extends Thread{
 
         /* Boucle pour la Partie */
         while (this.nbTour < 15 && this.persoRestants() > 0 && gagnant == null) {
+            this.deplacementMonstre = "";
             int maxJouer = 4;
             if (this.nbTour == 1) {
                 maxJouer = 2;
@@ -224,10 +227,19 @@ public class Partie extends Thread{
 
             if (this.nbTour == 1 || this.nbTour == 8) {
                 this.paquet.melanger();
+                this.paquet.resetPioche();
             }
             
             if (this.nbTour == 8) {
                 this.nbManche++;
+            }
+            
+            if (!this.inTerm) {
+                if (this.premierJoueur == 0) {
+                    this.finstere.premierJ1();
+                } else {
+                    this.finstere.premierJ2();
+                }
             }
 
             /* Boucle pour un tour */
@@ -265,8 +277,20 @@ public class Partie extends Thread{
             if (gagnant == null) {
                 if (this.inTerm) System.out.println("Le Monstre se déplace...");
                 Carte carte = this.paquet.tirerCarte();
-                if (this.inTerm) System.out.println("Carte tirée : " + carte);
+                if (this.inTerm) {
+                    System.out.println("Carte tirée : " + carte);
+                } else {
+                    this.finstere.updatePiocheDefausse(this.paquet);
+                }
                 List<Personnage> morts = this.monstre.tour(carte);
+                
+                
+                if (this.inTerm) {
+                    System.out.println(this.deplacementMonstre);
+                } else {
+                    this.finstere.deplacementMonstre(carte, 
+                            this.deplacementMonstre, morts);
+                }
 
                 if (morts.size() > 0) {
                     if (this.inTerm) System.out.println("Morts :");
@@ -274,7 +298,7 @@ public class Partie extends Thread{
                         for (int indexJoueur = 0; indexJoueur < 2; indexJoueur++) {
                             for (int indexPerso = 0; indexPerso < 4; indexPerso++) {
                                 if (this.personnages[indexJoueur][indexPerso].equals(perso)) {
-                                    this.personnages[indexJoueur][indexPerso].tue(nbTour);
+                                    this.personnages[indexJoueur][indexPerso].tue(this.nbTour);
                                     if (nbTour > 7) {
                                         this.joueurs[indexJoueur].setNbRestant();
                                     }
@@ -361,6 +385,11 @@ public class Partie extends Thread{
                 System.out.println("\n" + this.joueurs[_indexJoueur] + "\n");
             } else {
                 this.finstere.updateInfo();
+                if (_indexJoueur == 0) {
+                    this.finstere.tourJ1();
+                } else {
+                    this.finstere.tourJ2();
+                }
             }
             
 
@@ -555,6 +584,15 @@ public class Partie extends Thread{
         return hemo;
     }
 
+    /* Ajoute la chaine _dep aux déplacement du Monstre */
+    public void addDeplacement(String _dep) {
+        if (this.deplacementMonstre.equals("")) {
+            this.deplacementMonstre += "   " + _dep;
+        } else {
+            this.deplacementMonstre += "\n   " + _dep;
+        }
+    }
+    
     /* Affiche le Labyrinthe */
     public void afficherLaby() {
         System.out.println(this.labyrinthe);

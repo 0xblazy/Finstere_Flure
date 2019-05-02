@@ -859,12 +859,11 @@ public class Personnage extends Pion {
     /* Retourne la liste des Action que peut faire le Personnage */
     public Map<Integer, Action> getActions() {
         HashMap<Integer, Action> actions = new HashMap<>();
-        ArrayList<int[]> cases = this.casesPossibles(this.x, this.y, this.pm);
         int key = 1;
 
         /* Déplacement */
         /* Pour chaque Case possible */
-        for (int[] c : cases) {
+        for (int[] c : this.casesPossibles(this.x, this.y, this.pm)) {
 
             /* Si la Case est disponible */
             if (this.partie.getLabyrinthe().isDisponible(c[0], c[1])) {

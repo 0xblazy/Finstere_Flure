@@ -91,8 +91,8 @@ public class Monstre extends Pion {
                     }
                 }
                 this.partie.getLabyrinthe().setMonstre(this.x, this.y, true);
-                System.out.println("   Le Monstre se téléporte en (" + this.x
-                        + "," + this.y + ")");
+                this.partie.addDeplacement("Le Monstre se téléporte en (" 
+                        + this.x + "," + this.y + ")");
             } else {
                 for (Personnage perso : this.deplacerSurCase()) {
                     if (!morts.contains(perso)) {
@@ -147,7 +147,7 @@ public class Monstre extends Pion {
                                 morts.add(persoMort);
                             }
                         }
-                        System.out.println("   Le Monstre pousse le Mur");
+                        this.partie.addDeplacement("Le Monstre pousse le Mur");
                     }
                     persoMort = this.partie.getPersonnage(this.x, this.y);
                     if (persoMort != null) {
@@ -155,7 +155,7 @@ public class Monstre extends Pion {
                             morts.add(persoMort);
                         }
                     }
-                    System.out.println("   Le Monstre glisse sur l'Hémoglobine");
+                    this.partie.addDeplacement("Le Monstre glisse sur l'Hémoglobine");
                     this.y--;
                 }
             } else {
@@ -167,7 +167,7 @@ public class Monstre extends Pion {
                             morts.add(persoMort);
                         }
                     }
-                    System.out.println("   Le Monstre pousse le Mur");
+                    this.partie.addDeplacement("Le Monstre pousse le Mur");
                 }
                 this.y--;
             }
@@ -191,7 +191,7 @@ public class Monstre extends Pion {
                                 morts.add(persoMort);
                             }
                         }
-                        System.out.println("   Le Monstre pousse le Mur");
+                        this.partie.addDeplacement("Le Monstre pousse le Mur");
                     }
                     persoMort = this.partie.getPersonnage(this.x, this.y);
                     if (persoMort != null) {
@@ -199,7 +199,7 @@ public class Monstre extends Pion {
                             morts.add(persoMort);
                         }
                     }
-                    System.out.println("   Le Monstre glisse sur l'Hémoglobine");
+                    this.partie.addDeplacement("Le Monstre glisse sur l'Hémoglobine");
                     this.y++;
                 }
             } else {
@@ -211,7 +211,7 @@ public class Monstre extends Pion {
                             morts.add(persoMort);
                         }
                     }
-                    System.out.println("   Le Monstre pousse le Mur");
+                    this.partie.addDeplacement("Le Monstre pousse le Mur");
                 }
                 this.y++;
             }
@@ -235,7 +235,7 @@ public class Monstre extends Pion {
                                 morts.add(persoMort);
                             }
                         }
-                        System.out.println("   Le Monstre pousse le Mur");
+                        this.partie.addDeplacement("Le Monstre pousse le Mur");
                     }
                     persoMort = this.partie.getPersonnage(this.x, this.y);
                     if (persoMort != null) {
@@ -243,7 +243,7 @@ public class Monstre extends Pion {
                             morts.add(persoMort);
                         }
                     }
-                    System.out.println("   Le Monstre glisse sur l'Hémoglobine");
+                    this.partie.addDeplacement("Le Monstre glisse sur l'Hémoglobine");
                     this.x--;
                 }
             } else {
@@ -255,7 +255,7 @@ public class Monstre extends Pion {
                             morts.add(persoMort);
                         }
                     }
-                    System.out.println("   Le Monstre pousse le Mur");
+                    this.partie.addDeplacement("Le Monstre pousse le Mur");
                 }
                 this.x--;
             }
@@ -278,7 +278,7 @@ public class Monstre extends Pion {
                                 morts.add(persoMort);
                             }
                         }
-                        System.out.println("   Le Monstre pousse le Mur");
+                        this.partie.addDeplacement("Le Monstre pousse le Mur");
                     }
                     persoMort = this.partie.getPersonnage(this.x, this.y);
                     if (persoMort != null) {
@@ -286,7 +286,7 @@ public class Monstre extends Pion {
                             morts.add(persoMort);
                         }
                     }
-                    System.out.println("   Le Monstre glisse sur l'Hémoglobine");
+                    this.partie.addDeplacement("Le Monstre glisse sur l'Hémoglobine");
                     this.x++;
                 }
             } else {
@@ -298,13 +298,13 @@ public class Monstre extends Pion {
                             morts.add(persoMort);
                         }
                     }
-                    System.out.println("   Le Monstre pousse le Mur");
+                    this.partie.addDeplacement("Le Monstre pousse le Mur");
                 }
                 this.x++;
             }
         }
         this.partie.getLabyrinthe().setMonstre(this.x, this.y, true);
-        System.out.println("   Le Monstre se déplace en (" + this.x
+        this.partie.addDeplacement("Le Monstre se déplace en (" + this.x
                 + "," + this.y + ")");
 
         return morts;
@@ -342,16 +342,16 @@ public class Monstre extends Pion {
 
         if (this.direction != ancienneDirection) {
             if (this.direction == Finstere.HAUT) {
-                System.out.println("   Le Monstre se tourne vers le HAUT");
+                this.partie.addDeplacement("Le Monstre se tourne vers le HAUT");
             }
             if (this.direction == Finstere.BAS) {
-                System.out.println("   Le Monstre se tourne vers le BAS");
+                this.partie.addDeplacement("Le Monstre se tourne vers le BAS");
             }
             if (this.direction == Finstere.GAUCHE) {
-                System.out.println("   Le Monstre se tourne vers la GAUCHE");
+                this.partie.addDeplacement("Le Monstre se tourne vers la GAUCHE");
             }
             if (this.direction == Finstere.DROITE) {
-                System.out.println("   Le Monstre se tourne vers la DROITE");
+                this.partie.addDeplacement("Le Monstre se tourne vers la DROITE");
             }
         }
     }

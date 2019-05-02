@@ -5,6 +5,11 @@
  */
 package finstere;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  *
  * @author nKBlaZy
@@ -12,6 +17,10 @@ package finstere;
 public class Paquet {
     /* Paquet de Carte */
     private Carte[] paquet;
+    /* Liste des Carte de la Pioche */
+    private List<String> pioche;
+    /* Liste des Carte de la Défausse */
+    private List<String> defausse;
     
     /* Constructeur */
     public Paquet() {
@@ -24,6 +33,22 @@ public class Paquet {
         this.paquet[5] = new Carte(10);
         this.paquet[6] = new Carte(Finstere.X);
         this.paquet[7] = new Carte(Finstere.XX);
+        this.pioche = new ArrayList<>();
+        this.defausse = new ArrayList<>();
+    }
+    
+    /* Réinitialise la Pioche et la Defausse */
+    public void resetPioche() {
+        this.pioche.clear();
+        this.defausse.clear();
+        this.pioche.add("5");
+        this.pioche.add("7");
+        this.pioche.add("7");
+        this.pioche.add("8");
+        this.pioche.add("8");
+        this.pioche.add("10");
+        this.pioche.add("X");
+        this.pioche.add("XX");
     }
     
     /* Mélange le paquet */
@@ -62,6 +87,26 @@ public class Paquet {
         }
         this.paquet[7] = carte;
         
+        if (carte.getValeur() == Finstere.X) {
+            this.pioche.remove("X");
+            this.defausse.add("X");
+        } else if (carte.getValeur() == Finstere.XX) {
+            this.pioche.remove("XX");
+            this.defausse.add("XX");
+        } else {
+            this.pioche.remove("" + carte.getValeur());
+            this.defausse.add("" + carte.getValeur());
+        }
+        
         return carte;
+    }
+    
+    /* Getters */
+    public List<String> getPioche() {
+        return this.pioche;
+    }
+
+    public List<String> getDefausse() {
+        return this.defausse;
     }
 }

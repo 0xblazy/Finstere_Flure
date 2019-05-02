@@ -304,4 +304,13 @@ public class Labyrinthe {
         
         return libre;
     }
+    
+    public boolean isObstacle(int _x, int _y) {
+        if (_x > 15 || _x < 0 || _y > 10 || _y < 0) {
+            return false;
+        } else {
+            return this.isMur(_x, _y) || this.isHemoglobine(_x, _y) 
+                || this.isMonstre(_x, _y);
+        }
+    }
 }

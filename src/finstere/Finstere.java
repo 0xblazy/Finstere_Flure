@@ -145,18 +145,14 @@ public class Finstere extends javax.swing.JFrame {
         quitMenu = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
 
-        newGame.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         newGame.setTitle("Nouvelle Partie");
         newGame.setLocation(new java.awt.Point(850, 350));
-        newGame.setMinimumSize(new java.awt.Dimension(274, 249));
         newGame.setName("Nouvelle Partie"); // NOI18N
         newGame.setResizable(false);
-        newGame.setSize(new java.awt.Dimension(274, 249));
+        newGame.setSize(new java.awt.Dimension(222, 268));
 
         newGamePanel.setBackground(new java.awt.Color(37, 66, 20));
-        newGamePanel.setMaximumSize(new java.awt.Dimension(274, 249));
-        newGamePanel.setMinimumSize(new java.awt.Dimension(274, 249));
-        newGamePanel.setPreferredSize(new java.awt.Dimension(274, 249));
+        newGamePanel.setPreferredSize(new java.awt.Dimension(220, 268));
 
         newGameLogo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         newGameLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/logo_finstere.gif"))); // NOI18N
@@ -210,10 +206,11 @@ public class Finstere extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(newGameTerm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(newGamePanelLayout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(bienvenue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(newGamePanelLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(newGamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(bienvenue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(newGameInterface, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(newGameInterface, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         newGamePanelLayout.setVerticalGroup(
@@ -225,9 +222,9 @@ public class Finstere extends javax.swing.JFrame {
                 .addComponent(bienvenue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(16, 16, 16)
                 .addComponent(newGameTerm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(newGameInterface, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout newGameLayout = new javax.swing.GroupLayout(newGame.getContentPane());
@@ -851,7 +848,8 @@ public class Finstere extends javax.swing.JFrame {
     public void updateMonstre() {
         this.layeredPanel.remove(this.monstre);
         Monstre m = this.partie.getMonstre();
-        this.monstre.setBounds(this.DEBUT_X, this.DEBUT_Y, this.TAILLE, this.TAILLE);
+        this.monstre.setBounds(this.DEBUT_X + this.TAILLE * m.getX(),
+                this.DEBUT_Y + this.TAILLE * m.getY(), this.TAILLE, this.TAILLE);
         this.monstre.setVerticalAlignment(SwingConstants.CENTER);
         this.monstre.setHorizontalAlignment(SwingConstants.CENTER);
         this.monstre.setIcon(m.getImageIcon());

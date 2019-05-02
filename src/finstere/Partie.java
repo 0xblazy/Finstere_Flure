@@ -263,13 +263,13 @@ public class Partie extends Thread{
 
             /* Tour du Monstre uniquement si la Partie n'est pas encore gagnée */
             if (gagnant == null) {
-                System.out.println("Le Monstre se déplace...");
+                if (this.inTerm) System.out.println("Le Monstre se déplace...");
                 Carte carte = this.paquet.tirerCarte();
-                System.out.println("Carte tirée : " + carte);
+                if (this.inTerm) System.out.println("Carte tirée : " + carte);
                 List<Personnage> morts = this.monstre.tour(carte);
 
                 if (morts.size() > 0) {
-                    System.out.println("Morts :");
+                    if (this.inTerm) System.out.println("Morts :");
                     for (Personnage perso : morts) {
                         for (int indexJoueur = 0; indexJoueur < 2; indexJoueur++) {
                             for (int indexPerso = 0; indexPerso < 4; indexPerso++) {
@@ -281,15 +281,25 @@ public class Partie extends Thread{
                                 }
                             }
                         }
-                        System.out.println("   " + perso);
+                        if (this.inTerm) System.out.println("   " + perso);
                     }
                 } else {
-                    System.out.println("Aucun mort");
+                    if (this.inTerm )System.out.println("Aucun mort");
+                }
+                
+                if (!this.inTerm) {
+                    this.finstere.updateMonstre();
+                    this.finstere.updatePersos();
+                    this.finstere.updateListesPersos();
+                    this.finstere.updateMurs();
                 }
 
             }
-            System.out.println("");
-            System.out.println("");
+            
+            if (this.inTerm) {
+                System.out.println("");
+                System.out.println("");
+            }
 
             nbTour++;
             this.premierJoueur = (this.premierJoueur + 1) % 2;

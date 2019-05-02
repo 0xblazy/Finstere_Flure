@@ -415,13 +415,23 @@ public class Partie extends Thread{
                     } catch (InterruptedException ex) {
                         Logger.getLogger(Partie.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                    this.finstere.cleanChoixAction();
+                    choix = this.finstere.getChoix();
                 }
                 Action action = actions.get(choix);
                 try {
                     continuer = (boolean) action.getMethode()
-                            .invoke(this.personnages[_indexJoueur][indexPerso], action.getParam());
+                            .invoke(this.personnages[_indexJoueur][indexPerso],
+                                    action.getParam());
                 } catch (Exception ex) {
                     System.out.println(ex);
+                }
+                
+                if (!this.inTerm) {
+                    this.finstere.updatePersos();
+                    if (action.getMethodName().equals("pousserMur")) {
+                        this.finstere.updateMurs();
+                    }
                 }
                 
                 if (this.personnages[_indexJoueur][indexPerso].isExit()) {
@@ -432,11 +442,16 @@ public class Partie extends Thread{
                     }
                 }
 
-                if (continuer) {
+                if (continuer && this.inTerm) {
                     System.out.println("");
                     this.afficherLaby();
                 }
-                System.out.println("");
+                
+                if (!continuer && !this.inTerm) {
+                    this.finstere.updateListesPersos();
+                }
+                
+                if (this.inTerm) System.out.println("");
             }
         }
         return this.gagnant();

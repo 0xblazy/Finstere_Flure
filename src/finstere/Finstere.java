@@ -68,6 +68,8 @@ public class Finstere extends javax.swing.JFrame {
     private int choix;
     /* JLabel des flaques d'Hemoglobine */
     private JLabel hemoCarre, hemoLineH, hemoLineV;
+    /* JLabel des Persos sur le Labyrinthe */
+    private List<JLabel> persos;
     /* JLabel des Mur */
     private List<JLabel> murs;
     /* JLabel du Monstre */
@@ -135,8 +137,8 @@ public class Finstere extends javax.swing.JFrame {
         monstreLabel = new javax.swing.JLabel();
         listePioche = new javax.swing.JLabel();
         listeDefausse = new javax.swing.JLabel();
-        terminerButton = new javax.swing.JToggleButton();
-        sortirButton = new javax.swing.JToggleButton();
+        terminerButton = new javax.swing.JButton();
+        sortirButton = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         partieMenu = new javax.swing.JMenu();
         newGameMenu = new javax.swing.JMenuItem();
@@ -151,7 +153,7 @@ public class Finstere extends javax.swing.JFrame {
         newGame.setResizable(false);
         newGame.setSize(new java.awt.Dimension(274, 249));
 
-        newGamePanel.setBackground(new java.awt.Color(79, 99, 48));
+        newGamePanel.setBackground(new java.awt.Color(37, 66, 20));
         newGamePanel.setMaximumSize(new java.awt.Dimension(274, 249));
         newGamePanel.setMinimumSize(new java.awt.Dimension(274, 249));
         newGamePanel.setPreferredSize(new java.awt.Dimension(274, 249));
@@ -171,6 +173,7 @@ public class Finstere extends javax.swing.JFrame {
         newGameTerm.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         newGameTerm.setForeground(new java.awt.Color(254, 248, 120));
         newGameTerm.setText("Nouvelle Partie dans le terminal");
+        newGameTerm.setFocusPainted(false);
         newGameTerm.setMaximumSize(new java.awt.Dimension(256, 31));
         newGameTerm.setMinimumSize(new java.awt.Dimension(256, 31));
         newGameTerm.setPreferredSize(new java.awt.Dimension(256, 31));
@@ -184,6 +187,7 @@ public class Finstere extends javax.swing.JFrame {
         newGameInterface.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         newGameInterface.setForeground(new java.awt.Color(254, 248, 120));
         newGameInterface.setText("Nouvelle Partie avec l'Interface");
+        newGameInterface.setFocusPainted(false);
         newGameInterface.setMaximumSize(new java.awt.Dimension(256, 31));
         newGameInterface.setMinimumSize(new java.awt.Dimension(256, 31));
         newGameInterface.setPreferredSize(new java.awt.Dimension(256, 31));
@@ -240,7 +244,7 @@ public class Finstere extends javax.swing.JFrame {
         creationJoueurs.setTitle("Création des Joueurs");
         creationJoueurs.setLocation(new java.awt.Point(850, 350));
 
-        creationJoueursPanel.setBackground(new java.awt.Color(79, 99, 48));
+        creationJoueursPanel.setBackground(new java.awt.Color(37, 66, 20));
 
         newGameLogo1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         newGameLogo1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/logo_finstere.gif"))); // NOI18N
@@ -294,6 +298,7 @@ public class Finstere extends javax.swing.JFrame {
         commencerPartie.setForeground(new java.awt.Color(254, 248, 120));
         commencerPartie.setText("Commencer la Partie");
         commencerPartie.setEnabled(false);
+        commencerPartie.setFocusPainted(false);
         commencerPartie.setPreferredSize(new java.awt.Dimension(216, 31));
         commencerPartie.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -361,7 +366,7 @@ public class Finstere extends javax.swing.JFrame {
         setTitle("Finstere Flure");
         setResizable(false);
 
-        mainPanel.setBackground(new java.awt.Color(79, 99, 48));
+        mainPanel.setBackground(new java.awt.Color(37, 66, 20));
 
         layeredPanel.setBackground(new java.awt.Color(255, 255, 255));
         layeredPanel.setOpaque(true);
@@ -449,12 +454,14 @@ public class Finstere extends javax.swing.JFrame {
         terminerButton.setForeground(new java.awt.Color(254, 248, 120));
         terminerButton.setText("Terminer");
         terminerButton.setEnabled(false);
+        terminerButton.setFocusPainted(false);
 
         sortirButton.setBackground(java.awt.Color.darkGray);
         sortirButton.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         sortirButton.setForeground(new java.awt.Color(254, 248, 120));
         sortirButton.setText("Sortir");
         sortirButton.setEnabled(false);
+        sortirButton.setFocusPainted(false);
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
@@ -463,11 +470,11 @@ public class Finstere extends javax.swing.JFrame {
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(layeredPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addComponent(sortirButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(terminerButton))
-                    .addComponent(layeredPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(terminerButton)))
                 .addGap(16, 16, 16)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(finstereLogo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -520,8 +527,8 @@ public class Finstere extends javax.swing.JFrame {
                         .addComponent(listeDefausse)))
                 .addGap(12, 12, 12)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(sortirButton)
-                    .addComponent(terminerButton))
+                    .addComponent(terminerButton)
+                    .addComponent(sortirButton))
                 .addContainerGap(161, Short.MAX_VALUE))
         );
 
@@ -694,40 +701,10 @@ public class Finstere extends javax.swing.JFrame {
     /* Dispose les élements de la Partie sur l'Interface */
     private void initInterface() {
         
-        /* Mise en place des Personnage */
-        this.cleanListesPersos();
-        Personnage[][] persos = this.partie.getPersonnages();
+        /* Mise en place de la liste des Personnage */
         this.listePersosJ1 = new JLabel[4];
         this.listePersosJ2 = new JLabel[4];
-        for (int indexJ = 0 ; indexJ < persos.length ; indexJ++) {
-            for (int indexP = 0 ; indexP < persos[indexJ].length ; indexP++) {
-                if (indexJ == 0) {
-                    this.listePersosJ1[indexP] = new JLabel();
-                    this.listePersosJ1[indexP].setBounds(
-                            (this.TAILLE + 6) * indexP, 0,
-                            this.TAILLE, this.TAILLE );
-                    this.listePersosJ1[indexP]
-                            .setVerticalAlignment(SwingConstants.CENTER);
-                    this.listePersosJ1[indexP]
-                            .setHorizontalAlignment(SwingConstants.CENTER);
-                    this.listePersosJ1[indexP].setIcon(persos[indexJ][indexP]
-                            .getImageIcon());
-                    this.persosJ1.add(this.listePersosJ1[indexP], this.EN_DESSOUS);
-                } else if (indexJ == 1) {
-                    this.listePersosJ2[indexP] = new JLabel();
-                    this.listePersosJ2[indexP].setBounds(
-                            (this.TAILLE + 6) * indexP, 0,
-                            this.TAILLE, this.TAILLE );
-                    this.listePersosJ2[indexP]
-                            .setVerticalAlignment(SwingConstants.CENTER);
-                    this.listePersosJ2[indexP]
-                            .setHorizontalAlignment(SwingConstants.CENTER);
-                    this.listePersosJ2[indexP].setIcon(persos[indexJ][indexP]
-                            .getImageIcon());
-                    this.persosJ2.add(this.listePersosJ2[indexP], this.EN_DESSOUS);
-                }
-            }
-        }
+        this.updateListesPersos();
         
         /* Mise en place des flaques d'Hémoglobine */
         Hemoglobine carre = this.partie.getHemoCarree();
@@ -774,29 +751,88 @@ public class Finstere extends javax.swing.JFrame {
         this.monstre = new JLabel();
         this.updateMonstre();
         
+        this.persos = new ArrayList<>();
     }
     
-    private void cleanListesPersos() {
+    /* Met à jour les JLabel des Personnage dans les listes de chaque Joueur */
+    public void updateListesPersos() {
         for (int i = 0 ; i < 4 ; i++) {
-            if (this.listePersosJ1 != null) this.persosJ1.remove(this.listePersosJ1[i]);
-            if (this.listePersosJ2 != null) this.persosJ2.remove(this.listePersosJ2[i]);
+            if (this.listePersosJ1[i] != null) {
+                this.persosJ1.remove(this.listePersosJ1[i]);
+            }
+            if (this.listePersosJ2[i] != null) {
+                this.persosJ2.remove(this.listePersosJ2[i]);
+            }
+        }
+        
+        Personnage[][] persos = this.partie.getPersonnages();
+        for (int indexJ = 0 ; indexJ < persos.length ; indexJ++) {
+            for (int indexP = 0 ; indexP < persos[indexJ].length ; indexP++) {
+                if (indexJ == 0) {
+                    this.listePersosJ1[indexP] = new JLabel();
+                    this.listePersosJ1[indexP].setBounds(
+                            (this.TAILLE + 6) * indexP, 0,
+                            this.TAILLE, this.TAILLE );
+                    this.listePersosJ1[indexP]
+                            .setVerticalAlignment(SwingConstants.CENTER);
+                    this.listePersosJ1[indexP]
+                            .setHorizontalAlignment(SwingConstants.CENTER);
+                    this.listePersosJ1[indexP].setIcon(persos[indexJ][indexP]
+                            .getImageIcon());
+                    this.persosJ1.add(this.listePersosJ1[indexP], this.EN_DESSOUS);
+                } else if (indexJ == 1) {
+                    this.listePersosJ2[indexP] = new JLabel();
+                    this.listePersosJ2[indexP].setBounds(
+                            (this.TAILLE + 6) * indexP, 0,
+                            this.TAILLE, this.TAILLE );
+                    this.listePersosJ2[indexP]
+                            .setVerticalAlignment(SwingConstants.CENTER);
+                    this.listePersosJ2[indexP]
+                            .setHorizontalAlignment(SwingConstants.CENTER);
+                    this.listePersosJ2[indexP].setIcon(persos[indexJ][indexP]
+                            .getImageIcon());
+                    this.persosJ2.add(this.listePersosJ2[indexP], this.EN_DESSOUS);
+                }
+            }
         }
     }
     
-    /* Met à jour la position du Monstre */
-    public void updateMonstre() {
-        Monstre m = this.partie.getMonstre();
-        this.monstre.setBounds(this.DEBUT_X, this.DEBUT_Y, this.TAILLE, this.TAILLE);
-        this.monstre.setVerticalAlignment(SwingConstants.CENTER);
-        this.monstre.setHorizontalAlignment(SwingConstants.CENTER);
-        this.monstre.setIcon(m.getImageIcon());
-        this.layeredPanel.add(this.monstre, this.MONST);
+    /* Met à jour la position des Personnages */
+    public void updatePersos() {
+        for (JLabel perso : this.persos) {
+            this.layeredPanel.remove(perso);
+        }
+        this.persos.clear();
+        for (Personnage[] personnages : this.partie.getPersonnages()) {
+            for (Personnage p : personnages) {
+                if (p.isOnLaby()) {
+                    JLabel perso = new JLabel();
+                    perso.setBounds(this.DEBUT_X + this.TAILLE * p.getX(),
+                            this.DEBUT_Y + this.TAILLE * p.getY(),
+                            this.TAILLE, this.TAILLE);
+                    perso.setVerticalAlignment(SwingConstants.CENTER);
+                    perso.setHorizontalAlignment(SwingConstants.CENTER);
+                    perso.setIcon(p.getImageIcon());
+                    if (p.isAuDessus()) {
+                        this.layeredPanel.add(perso, this.AU_DESSUS);
+                    } else {
+                        this.layeredPanel.add(perso, this.EN_DESSOUS);
+                    }
+                    
+                    this.persos.add(perso);
+                }
+            }
+        } 
+        this.layeredPanel.repaint();
     }
     
     /* Met à jour la position des Mur */
     public void updateMurs() {
+        for (JLabel mur : this.murs) {
+            this.layeredPanel.remove(mur);
+        }
         this.murs.clear();
-        for(Mur m : this.partie.getMurs()) {
+        for (Mur m : this.partie.getMurs()) {
             JLabel mur = new JLabel();
             mur.setBounds(this.DEBUT_X + this.TAILLE * m.getX(),
                     this.DEBUT_Y + this.TAILLE * m.getY(),
@@ -807,6 +843,20 @@ public class Finstere extends javax.swing.JFrame {
             this.layeredPanel.add(mur, this.MUR);
             this.murs.add(mur);
         }
+        
+        this.layeredPanel.repaint();
+    }
+    
+    /* Met à jour la position du Monstre */
+    public void updateMonstre() {
+        this.layeredPanel.remove(this.monstre);
+        Monstre m = this.partie.getMonstre();
+        this.monstre.setBounds(this.DEBUT_X, this.DEBUT_Y, this.TAILLE, this.TAILLE);
+        this.monstre.setVerticalAlignment(SwingConstants.CENTER);
+        this.monstre.setHorizontalAlignment(SwingConstants.CENTER);
+        this.monstre.setIcon(m.getImageIcon());
+        this.layeredPanel.add(this.monstre, this.MONST);
+        this.layeredPanel.repaint();
     }
     
     /* Met à jour les informations de la Partie (nbTour et nbManche) */
@@ -885,20 +935,59 @@ public class Finstere extends javax.swing.JFrame {
                         this.DEBUT_X + this.TAILLE * (int) action.getParam()[0],
                         this.DEBUT_Y + this.TAILLE * (int) action.getParam()[1],
                         this.TAILLE, this.TAILLE);             
-            }
-            if (action.getMethodName().equals("pousserMur")) {
+            } else if (action.getMethodName().equals("pousserMur") ||
+                    action.getMethodName().equals("glisser")) {
                 int dir = (int) action.getParam()[1];
+                int x = _perso.getX();
+                int y = _perso.getY();
+                if (dir == Finstere.HAUT) y--;
+                if (dir == Finstere.BAS) y++;
+                if (dir == Finstere.GAUCHE) x--;
+                if (dir == Finstere.DROITE) x++;
+                this.choixAction[entry.getKey() - 1].setBounds(
+                        this.DEBUT_X + this.TAILLE * x,
+                        this.DEBUT_Y + this.TAILLE * y,
+                        this.TAILLE, this.TAILLE);
+            } else if (action.getMethodName().equals("sortir")) {
+                this.sortirButton.setEnabled(true);
+                this.sortirButton.setName("" + entry.getKey());
+                this.sortirButton.addMouseListener(this.choiceListener);
+            } else if (action.getMethodName().equals("finAction")) {
+                this.terminerButton.setEnabled(true);
+                this.terminerButton.setName("" + entry.getKey());
+                this.terminerButton.addMouseListener(this.choiceListener);
             }
             
-            this.choixAction[entry.getKey() - 1].setName("" + entry.getKey());
-            this.choixAction[entry.getKey() - 1].setIcon(action.getImageIcon());
-            this.choixAction[entry.getKey() - 1].setVerticalAlignment(SwingConstants.CENTER);
-            this.choixAction[entry.getKey() - 1].setHorizontalAlignment(SwingConstants.CENTER);
-            this.choixAction[entry.getKey() - 1].setCursor(new Cursor(Cursor.HAND_CURSOR));
-            this.choixAction[entry.getKey() - 1].addMouseListener(this.choiceListener);
-            this.layeredPanel.add(this.choixAction[entry.getKey() - 1], this.ACTION);
-            
+            if (action.getMethodName().equals("deplacer") ||
+                    action.getMethodName().equals("pousserMur") ||
+                    action.getMethodName().equals("glisser")) {
+                this.choixAction[entry.getKey() - 1].setName("" + entry.getKey());
+                this.choixAction[entry.getKey() - 1].setIcon(action
+                        .getImageIcon());
+                this.choixAction[entry.getKey() - 1]
+                        .setVerticalAlignment(SwingConstants.CENTER);
+                this.choixAction[entry.getKey() - 1]
+                        .setHorizontalAlignment(SwingConstants.CENTER);
+                this.choixAction[entry.getKey() - 1]
+                        .setCursor(new Cursor(Cursor.HAND_CURSOR));
+                this.choixAction[entry.getKey() - 1]
+                        .addMouseListener(this.choiceListener);
+                this.layeredPanel.add(this.choixAction[entry.getKey() - 1], 
+                        this.ACTION);
+            }            
         }
+    }
+    
+    /* Supprime les JLabel du choix de l'Action */
+    public void cleanChoixAction() {
+        for (int i = 0 ; i < this.choixAction.length ; i++) {
+            this.layeredPanel.remove(this.choixAction[i]);
+        }
+        
+        this.layeredPanel.repaint();
+        
+        this.sortirButton.setEnabled(false);
+        this.terminerButton.setEnabled(false);
     }
     
     /* Getters */
@@ -920,31 +1009,6 @@ public class Finstere extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Finstere.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Finstere.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Finstere.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Finstere.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-        
-        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -990,7 +1054,7 @@ public class Finstere extends javax.swing.JFrame {
     private javax.swing.JLayeredPane persosJ1;
     private javax.swing.JLayeredPane persosJ2;
     private javax.swing.JMenuItem quitMenu;
-    private javax.swing.JToggleButton sortirButton;
-    private javax.swing.JToggleButton terminerButton;
+    private javax.swing.JButton sortirButton;
+    private javax.swing.JButton terminerButton;
     // End of variables declaration//GEN-END:variables
 }

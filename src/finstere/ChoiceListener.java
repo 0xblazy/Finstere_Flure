@@ -7,6 +7,7 @@ package finstere;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 
 /**
@@ -24,11 +25,25 @@ public class ChoiceListener extends MouseAdapter {
     
     @Override
     public void mouseClicked(MouseEvent e) {
-        JLabel label = (JLabel) e.getSource();
-        this.finstere.setChoix(Integer.parseInt(label.getName()));
-        Partie partie = this.finstere.getPartie();
-        synchronized(partie) {
-            partie.notify();
+        if (e.getSource() instanceof JLabel) {
+            JLabel label = (JLabel) e.getSource();
+            this.finstere.setChoix(Integer.parseInt(label.getName()));
+            Partie partie = this.finstere.getPartie();
+            synchronized(partie) {
+                partie.notify();
+            }
+        } else if (e.getSource() instanceof JButton) {
+            JButton button = (JButton) e.getSource();
+            if (button.isEnabled()) {
+                this.finstere.setChoix(Integer.parseInt(button.getName()));
+                Partie partie = this.finstere.getPartie();
+                button.setEnabled(false);
+                synchronized(partie) {
+                    partie.notify();
+                }
+            }
         }
+        
+        
     }
 }

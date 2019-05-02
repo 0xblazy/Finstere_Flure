@@ -35,7 +35,7 @@
         <Container class="javax.swing.JPanel" name="newGamePanel">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="30" green="63" red="4f" type="rgb"/>
+              <Color blue="14" green="42" red="25" type="rgb"/>
             </Property>
             <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[274, 249]"/>
@@ -129,6 +129,7 @@
                   <Color blue="78" green="f8" red="fe" type="rgb"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Nouvelle Partie dans le terminal"/>
+                <Property name="focusPainted" type="boolean" value="false"/>
                 <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[256, 31]"/>
                 </Property>
@@ -155,6 +156,7 @@
                   <Color blue="78" green="f8" red="fe" type="rgb"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Nouvelle Partie avec l&apos;Interface"/>
+                <Property name="focusPainted" type="boolean" value="false"/>
                 <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[256, 31]"/>
                 </Property>
@@ -197,7 +199,7 @@
         <Container class="javax.swing.JPanel" name="creationJoueursPanel">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="30" green="63" red="4f" type="rgb"/>
+              <Color blue="14" green="42" red="25" type="rgb"/>
             </Property>
           </Properties>
 
@@ -378,6 +380,7 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Commencer la Partie"/>
                 <Property name="enabled" type="boolean" value="false"/>
+                <Property name="focusPainted" type="boolean" value="false"/>
                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[216, 31]"/>
                 </Property>
@@ -484,7 +487,7 @@
     <Container class="javax.swing.JPanel" name="mainPanel">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="30" green="63" red="4f" type="rgb"/>
+          <Color blue="14" green="42" red="25" type="rgb"/>
         </Property>
       </Properties>
 
@@ -494,12 +497,12 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="layeredPanel" min="-2" max="-2" attributes="0"/>
                       <Group type="102" attributes="0">
                           <Component id="sortirButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="terminerButton" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="layeredPanel" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="16" pref="16" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -562,8 +565,8 @@
                   </Group>
                   <EmptySpace min="12" pref="12" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="terminerButton" min="-2" max="-2" attributes="0"/>
                       <Component id="sortirButton" min="-2" max="-2" attributes="0"/>
-                      <Component id="terminerButton" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="161" max="32767" attributes="0"/>
               </Group>
@@ -745,7 +748,7 @@
             <Property name="text" type="java.lang.String" value="D&#xe9;fausse : 0 cartes ()"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JToggleButton" name="terminerButton">
+        <Component class="javax.swing.JButton" name="terminerButton">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="40" green="40" id="darkGray" palette="1" red="40" type="palette"/>
@@ -758,9 +761,10 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Terminer"/>
             <Property name="enabled" type="boolean" value="false"/>
+            <Property name="focusPainted" type="boolean" value="false"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JToggleButton" name="sortirButton">
+        <Component class="javax.swing.JButton" name="sortirButton">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="40" green="40" id="darkGray" palette="1" red="40" type="palette"/>
@@ -773,6 +777,7 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Sortir"/>
             <Property name="enabled" type="boolean" value="false"/>
+            <Property name="focusPainted" type="boolean" value="false"/>
           </Properties>
         </Component>
       </SubComponents>

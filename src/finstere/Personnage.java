@@ -1074,6 +1074,10 @@ public class Personnage extends Pion {
         return this.exit;
     }
 
+    public boolean isAuDessus() {
+        return this.auDessus;
+    }
+
     public boolean isEnDessous() {
         return this.enDessous;
     }
@@ -1102,5 +1106,10 @@ public class Personnage extends Pion {
     
     public boolean isJouable() {
         return !this.exit && !this.rip && !this.joue && !this.getActions().isEmpty();
+    }
+    
+    public boolean isOnLaby() {
+        return !this.exit && !this.rip && this.x < Finstere.EXTERIEUR[0] 
+                && this.y <= Finstere.EXTERIEUR[1];
     }
 }

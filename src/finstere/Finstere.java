@@ -159,7 +159,6 @@ public class Finstere extends javax.swing.JFrame {
         partieMenu = new javax.swing.JMenu();
         newGameMenu = new javax.swing.JMenuItem();
         quitMenu = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
 
         newGame.setTitle("Nouvelle Partie");
         newGame.setLocation(new java.awt.Point(850, 350));
@@ -706,10 +705,6 @@ public class Finstere extends javax.swing.JFrame {
         partieMenu.add(quitMenu);
 
         menuBar.add(partieMenu);
-
-        jMenu2.setText("Edit");
-        jMenu2.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        menuBar.add(jMenu2);
 
         setJMenuBar(menuBar);
 
@@ -1356,7 +1351,6 @@ public class Finstere extends javax.swing.JFrame {
     private javax.swing.JLabel j2Label;
     private javax.swing.JTextField j2Name;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JLayeredPane layeredPanel;
     private javax.swing.JLabel listeDefausse;
     private javax.swing.JLabel listePioche;

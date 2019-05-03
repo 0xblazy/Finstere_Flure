@@ -15,7 +15,7 @@ import javax.swing.ImageIcon;
  */
 public class Hemoglobine extends Pion {
 
-    /* Type de flaque d'hémoglobine (nom de l'image sans l'extension) */
+    /* Type de flaque d'Hemoglobine (nom de l'image sans l'extension) */
     private final String type;
 
     /* Constructeur */
@@ -47,14 +47,6 @@ public class Hemoglobine extends Pion {
                 zone.add(new int[]{this.x + i, this.y + 1});
             }
             zone.add(new int[]{this.x + 4, this.y});
-        } else if (this.type.equals(Finstere.LINEVERT)) {
-            zone.add(new int[]{this.x, this.y - 1});
-            for (int j = 0; j < 4; j++) {
-                zone.add(new int[]{this.x - 1, this.y + j});
-                zone.add(new int[]{this.x, this.y + j});
-                zone.add(new int[]{this.x + 1, this.y + j});
-            }
-            zone.add(new int[]{this.x, this.y + 4});
         }
 
         return zone;
@@ -225,10 +217,8 @@ public class Hemoglobine extends Pion {
                     && (_y == this.y || _y == this.y + 1);
         } else if (this.type.equals(Finstere.LINEHORI)) {
             return _y == this.y && _x >= this.x && _x <= this.x + 3;
-        } else if (this.type.equals(Finstere.LINEVERT)) {
-            return _y >= this.y && _y <= this.y + 3 && _x == this.x;
         }
-
+        
         return false;
     }
     
@@ -246,9 +236,6 @@ public class Hemoglobine extends Pion {
             } else if (this.type.equals(Finstere.LINEHORI)) {
                 arrivee[0] = _p.getX();
                 arrivee[1] = this.y + 1;
-            } else if (this.type.equals(Finstere.LINEVERT)) {
-                arrivee[0] = _p.getX();
-                arrivee[1] = this.y + 4;
             }
         } else if (_dir == Finstere.GAUCHE) {
             arrivee[0] = this.x - 1;
@@ -259,9 +246,6 @@ public class Hemoglobine extends Pion {
                 arrivee[1] = _p.getY();
             } else if (this.type.equals(Finstere.LINEHORI)) {
                 arrivee[0] = this.x + 4;
-                arrivee[1] = _p.getY();
-            } else if (this.type.equals(Finstere.LINEVERT)) {
-                arrivee[0] = this.x + 1;
                 arrivee[1] = _p.getY();
             }
         }

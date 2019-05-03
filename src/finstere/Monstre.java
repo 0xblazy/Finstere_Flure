@@ -35,7 +35,7 @@ public class Monstre extends Pion {
         }
     }
 
-    /* Appelée lorsque la Carte piochée est une "une proie" */
+    /* Appelée lorsque la Carte piochée est une "une proie" ou une "deux proies" */
     private List<Personnage> proies(int _nbProie) {
         ArrayList<Personnage> morts = new ArrayList<>();
         int nbDeplacement = 0;
@@ -75,6 +75,7 @@ public class Monstre extends Pion {
     private List<Personnage> deplacer() {
         List<Personnage> morts = new ArrayList<>();
 
+        /* Regarde si le Monstre doit être téléporté */
         if (this.partie.getLabyrinthe().isBordure(this.x, this.y)) {
             Map<Integer, int[]> tp = this.partie.getLabyrinthe().getTp(this.x, this.y);
             if (tp.containsKey(this.direction)) {
@@ -401,7 +402,7 @@ public class Monstre extends Pion {
         }
     }
 
-    /* Retourne les Personnage visibles avec leur direction par rapport au Monstre */
+    /* Retourne les Personnages visibles avec leur direction par rapport au Monstre */
     private Map<Integer, Personnage> persoVisibles(List<Personnage> _morts) {
         HashMap<Integer, Personnage> persoV = new HashMap<>();
 
@@ -431,7 +432,7 @@ public class Monstre extends Pion {
                         }
                     }
 
-                    /* Si le Personnage est a DROITE */
+                /* Si le Personnage est a DROITE */
                 } else if (perso.getX() > this.x) {
                     int dir = Finstere.DROITE;
                     boolean visible = (dir != -this.direction);
@@ -452,7 +453,7 @@ public class Monstre extends Pion {
                         }
                     }
 
-                    /* Si le Personnage est en HAUT */
+                /* Si le Personnage est en HAUT */
                 } else if (perso.getY() < this.y) {
                     int dir = Finstere.HAUT;
                     boolean visible = (dir != -this.direction);
@@ -473,7 +474,7 @@ public class Monstre extends Pion {
                         }
                     }
 
-                    /* Si le Personnage est en BAS */
+                /* Si le Personnage est en BAS */
                 } else if (perso.getY() > this.y) {
                     int dir = Finstere.BAS;
                     boolean visible = (dir != -this.direction);

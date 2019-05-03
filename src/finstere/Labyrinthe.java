@@ -13,7 +13,7 @@ import java.util.Map;
  * @author nKBlaZy
  */
 public class Labyrinthe {
-    /* Tableau à 2 dimensions représentant le labyrinthe */
+    /* Tableau à 2 dimensions représentant le Labyrinthe */
     private Case[][] labyrinthe;
     /* Partie du Labyrinthe */
     private Partie partie;
@@ -23,11 +23,11 @@ public class Labyrinthe {
         this.partie = _partie;
     }
     
-    /* Génère le labyrinthe */
+    /* Génère le Labyrinthe */
     public void initLaby() {
         this.labyrinthe = new Case[11][16];
         
-        /* Définition des Case de téléportation pour le Monstre */
+        /* Définition des Cases de téléportation pour le Monstre */
         for (int j = 0 ; j < this.labyrinthe.length ; j++) {
             for (int i = 0 ; i < this.labyrinthe[0].length ; i++) {
                 Map<Integer, int[]> tp = new HashMap<>();

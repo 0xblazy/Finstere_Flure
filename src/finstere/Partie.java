@@ -22,31 +22,29 @@ public class Partie extends Thread{
     private Finstere finstere;
     /* true si la Partie se déroule dans le terminal */
     private boolean inTerm;
-    /* Labyrinthe de la partie */
+    /* Labyrinthe de la Partie */
     private Labyrinthe labyrinthe;
-    /* Flaques d'hémoglobine (hemoLineV présente en prévention d'une disposition
-     * aléatoire des flaques)
-     */
-    private Hemoglobine hemoCarree, hemoLineH, hemoLineV;
+    /* Flaques d'hémoglobine */
+    private Hemoglobine hemoCarree, hemoLineH;
     /* Monstre (placé en (0,0))*/
     private Monstre monstre;
-    /* Liste des murs */
+    /* Liste des Murs */
     private List<Mur> murs;
-    /* Joueurs de la partie */
+    /* Joueurs de la Partie */
     private Joueur[] joueurs;
-    /* Personnages de tous les Joueur */
+    /* Personnages de tous les Joueurs */
     private Personnage[][] personnages;
-    /* Nombre de vrais Joueur */
+    /* Nombre de vrais Joueurs */
     private int nbJoueurs;
     /* Index du Joueur commencant le tour */
     private int premierJoueur;
     /* Scanner pour la saisie dans la console */
     private final Scanner sc;
-    /* Compteur pour le classement des Personnage */
+    /* Compteur pour le classement des Personnages */
     private int classement;
     /* Paquet de Carte */
     private Paquet paquet;
-    /* Compteur pour le nombre de Personnage de chaque Joueur sortis durant un tour */
+    /* Compteur pour le nombre de Personnages de chaque Joueur sortis durant un tour */
     private int sortisJ1, sortisJ2;
     /* Numéro de Tour et de Manche */
     private int nbTour, nbManche;
@@ -70,10 +68,11 @@ public class Partie extends Thread{
         this.sortisJ2 = 0;
     }
 
-    /* Initialisation de la Partie (création des Joueur) */
+    /* Initialisation de la Partie (création des Joueurs) */
     public void initPartie(int _nbJoueurs, String[] _noms, int[] _couleurs) {
         this.nbJoueurs = _nbJoueurs;
         
+        /* Création des Joueurs */
         for (int i = 0 ; i < this.nbJoueurs ; i++) {
             this.personnages[i][0] = new Personnage(1, 6, 
                     Finstere.COULEURS[_couleurs[i]], this);
@@ -85,10 +84,11 @@ public class Partie extends Thread{
                     Finstere.COULEURS[_couleurs[i]], this);
 
             this.joueurs[i] = new Joueur(_noms[i], this, 
-                    Finstere.COULEURS[_couleurs[i]], this.personnages[i]);
+                    this.personnages[i]);
             
         }
         
+        /* Création du Bot */
         if (_nbJoueurs == 1) {
             int couleur = 0;
             while (couleur == _couleurs[0]) {
@@ -105,7 +105,7 @@ public class Partie extends Thread{
                     Finstere.COULEURS[couleur], this);
 
             this.joueurs[1] = new Joueur("Bot", this, 
-                    Finstere.COULEURS[couleur], this.personnages[1]);
+                    this.personnages[1]);
         }
         
         this.genLaby();
@@ -124,7 +124,7 @@ public class Partie extends Thread{
             nbJoueurs = this.scannerInt();
         }
 
-        /* Création des Joueur */
+        /* Choix des couleurs */
         int couleurPremier = 0;
         String[] noms = new String[nbJoueurs];
         int[] couleurs = new int[nbJoueurs];
@@ -153,7 +153,7 @@ public class Partie extends Thread{
         this.initPartie(nbJoueurs, noms, couleurs);
     }
 
-    /* Génère le Labyrinthe et dispose les Pion dessus */
+    /* Génère le Labyrinthe et dispose les Pions dessus */
     private void genLaby() {
         if (this.inTerm) {
             System.out.println("\n...Génération du plateau de Jeu...\n");
@@ -176,10 +176,7 @@ public class Partie extends Thread{
         this.labyrinthe.setHemoglobine(6, 8, true);
         this.labyrinthe.setHemoglobine(7, 8, true);
 
-        /* Flaque linéaire verticale mise à null */
-        this.hemoLineV = null;
-
-        /* Ajout des murs */
+        /* Ajout des Murs */
         this.murs.add(new Mur(2, 2, this));
         this.labyrinthe.setMur(2, 2, true);
         this.murs.add(new Mur(12, 3, this));
@@ -203,12 +200,13 @@ public class Partie extends Thread{
         this.murs.add(new Mur(8, 9, this));
         this.labyrinthe.setMur(8, 9, true);
 
-        /* Ajout du monstre */
+        /* Ajout du Monstre */
         this.monstre = new Monstre(this);
         this.labyrinthe.setMonstre(0, 0, true);
     }
 
     /* Boucle de jeu */
+    @Override
     public void run() {
         if (this.inTerm) {
             System.out.println("La partie commence !!!\nBonne chance à vous !!!\n");
@@ -242,7 +240,7 @@ public class Partie extends Thread{
                 }
             }
 
-            /* Boucle pour un tour */
+            /* Boucle pour un Tour */
             int nbJouer = 0;
             while (nbJouer < maxJouer && gagnant == null) {
                 /* Condition en fonction du premier Joueur qui joue */
@@ -254,7 +252,7 @@ public class Partie extends Thread{
                 nbJouer++;
             }
             
-            /* Décrémentation du nombre de Personnage jouables en fonction de
+            /* Décrémentation du nombre de Personnages jouables en fonction de
              * sortisJ1 et sortisJ2 
              */
             while (this.sortisJ1 > 0) {
@@ -266,7 +264,7 @@ public class Partie extends Thread{
                 this.sortisJ2--;
             }
 
-            /* Fin de tour pour tous les Personnage */
+            /* Fin de tour pour tous les Personnages */
             for (Personnage[] persos : this.personnages) {
                 for (Personnage perso : persos) {
                     perso.finTour();
@@ -342,15 +340,40 @@ public class Partie extends Thread{
             }
         } else {
             gagnant = this.gagnant();
-            if (this.inTerm) {
-                System.out.println("VICTOIREEEEEEEEE !!!!");
-                System.out.println(gagnant.getName() + " a réussi à faire sortir "
-                    + gagnant.nbSortis() + " de ses Personnages en premier"
-                    + " et remporte donc la Partie");
+            if (gagnant != null) {
+                if (this.inTerm) {
+                    System.out.println("VICTOIREEEEEEEEE !!!!");
+                    System.out.println(gagnant.getName() + " a réussi à faire sortir "
+                        + gagnant.nbSortis() + " de ses Personnages en premier"
+                        + " et remporte donc la Partie");
+                } else {
+                    this.finstere.victoire(gagnant.getName() + " a réussi à faire sortir "
+                        + gagnant.nbSortis() + " de ses Personnages en premier"
+                        + " et remporte donc la Partie", gagnant);
+                }
             } else {
-                this.finstere.victoire(gagnant.getName() + " a réussi à faire sortir "
-                    + gagnant.nbSortis() + " de ses Personnages en premier"
-                    + " et remporte donc la Partie", gagnant);
+                if (this.inTerm) {
+                    System.out.println("ÉGALITÉ...");
+                    System.out.println("Personne n'a réussi à faire sortir de Personnage...");
+                } else {
+                    this.finstere.victoire("Personne n'a réussi à faire sortir de Personnage...",
+                            gagnant);
+                }
+            }
+        }
+        
+        /* Demande de nouvelle Partie si la Partie se déroule dans le Terminal */
+        if (this.inTerm) {
+            System.out.print("Voulez-vous refaire une Partie ? (1) Oui (2) Non : ");
+            int choix = this.scannerInt();
+            while (choix < 1 || choix > 2) {
+                System.out.print("Choix indisponible, veuillez en saisir un autre : ");
+                choix = this.scannerInt();
+            }
+            if (choix == 1) {
+                this.finstere.nouvellePartie();
+            } else {
+                System.exit(0);
             }
         }
     }
@@ -381,7 +404,7 @@ public class Partie extends Thread{
 
     /* Coup pour un Joueur */
     private synchronized Joueur coupJoueur(int _nbJouer, int _indexJoueur) {
-        /* Si le Joueur a encore des Personnage jouables */
+        /* Si le Joueur a encore des Personnages jouables */
         if (_nbJouer < this.joueurs[_indexJoueur].getNbRestant()) {
 
             /* Affichage des informations */
@@ -508,7 +531,7 @@ public class Partie extends Thread{
         return this.gagnant();
     }
 
-    /* Retourne le nombre de Personnage restants */
+    /* Retourne le nombre de Personnages restants */
     private int persoRestants() {
         return this.joueurs[0].getNbRestant() + this.joueurs[1].getNbRestant();
     }
@@ -518,15 +541,17 @@ public class Partie extends Thread{
         int nbJ1 = this.joueurs[0].nbSortis();
         int nbJ2 = this.joueurs[1].nbSortis();
 
-        /* Si tous les Personnage sont sortis ou morts ou si la Partie est finie */
+        /* Si tous les Personnages sont sortis ou morts ou si la Partie est finie */
         if (this.persoRestants() == 0 || this.nbTour == 15) {
 
-            /* Si les 2 Joueur ont sortis autant de Personnage */
+            /* Si les 2 Joueurs ont sortis autant de Personnage */
             if (nbJ1 == nbJ2) {
                 if (this.joueurs[0].classementDernier() < this.joueurs[1].classementDernier()) {
                     return this.joueurs[0];
-                } else {
+                } else if (this.joueurs[0].classementDernier() > this.joueurs[1].classementDernier()){
                     return this.joueurs[1];
+                } else {
+                    return null;
                 }
             } else if (nbJ1 > nbJ2) {
                 return this.joueurs[0];
@@ -534,11 +559,11 @@ public class Partie extends Thread{
                 return this.joueurs[1];
             }
 
-            /* Si le Joueur 1 a sorti 3 Personnage */
+        /* Si le Joueur 1 a sorti 3 Personnages */
         } else if (nbJ1 == 3) {
             return this.joueurs[0];
 
-            /* Si le Joueur 2 a sorti 3 Personnage */
+        /* Si le Joueur 2 a sorti 3 Personnages */
         } else if (nbJ2 == 3) {
             return this.joueurs[1];
         }
@@ -546,7 +571,7 @@ public class Partie extends Thread{
         return null;
     }
 
-    /* Retourne la liste des Personnage alignés avec les coordonnées (_x,_y) */
+    /* Retourne la liste des Personnages alignés avec les coordonnées (_x,_y) */
     public List<Personnage> persoAlignes(int _x, int _y) {
         ArrayList<Personnage> persos = new ArrayList<>();
 
@@ -587,16 +612,11 @@ public class Partie extends Thread{
                 hemo.add(this.hemoLineH);
             }
         }
-        if (this.hemoLineV != null) {
-            if (Finstere.isInList(this.hemoLineV.zoneInteraction(), new int[]{_x, _y})) {
-                hemo.add(this.hemoLineV);
-            }
-        }
-
+        
         return hemo;
     }
 
-    /* Ajoute la chaine _dep aux déplacement du Monstre */
+    /* Ajoute la chaine _dep aux déplacements du Monstre */
     public void addDeplacement(String _dep) {
         if (this.deplacementMonstre.equals("")) {
             this.deplacementMonstre += "   " + _dep;
@@ -610,7 +630,7 @@ public class Partie extends Thread{
         System.out.println(this.labyrinthe);
     }
 
-    /* Affiche la liste des Joueur avec leurs Personnage */
+    /* Affiche la liste des Joueurs avec leurs Personnages */
     public void afficherJoueurs() {
         for (Joueur joueur : this.joueurs) {
             System.out.println(joueur);
@@ -695,11 +715,6 @@ public class Partie extends Thread{
                 return this.hemoLineH;
             }
         }
-        if (this.hemoLineV != null) {
-            if (this.hemoLineV.isHere(_x, _y)) {
-                return this.hemoLineV;
-            }
-        }
         return null;
     }
 
@@ -709,10 +724,6 @@ public class Partie extends Thread{
 
     public Hemoglobine getHemoLineH() {
         return this.hemoLineH;
-    }
-
-    public Hemoglobine getHemoLineV() {
-        return this.hemoLineV;
     }
     
     public Personnage[][] getPersonnages() {

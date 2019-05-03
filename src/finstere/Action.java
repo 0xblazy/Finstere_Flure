@@ -14,11 +14,11 @@ import javax.swing.ImageIcon;
  * @author nKBlaZy
  */
 public class Action {
-    /* Chaine décrivant l'action */
+    /* Chaine décrivant l'Action */
     private String action;
     /* Nom de la méthode */
     private String methodName;
-    /* Méthode associée à l'action */
+    /* Méthode associée à l'Action */
     private Method methode;
     /* Paramètres à passer à la méthode */
     private Object[] param;

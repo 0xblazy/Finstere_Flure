@@ -54,7 +54,7 @@ public class Case {
         this(_x, _y, false, new HashMap<>(), false, _partie);
     }
     
-    /* Constructeur d'une case qui ne fait pas partie du labyrinthe */
+    /* Constructeur d'une case qui ne fait pas partie du Labyrinthe */
     public Case(int _x, int _y, boolean _blocked, Partie _partie) {
         this(_x, _y, false, new HashMap<>(), _blocked, _partie);
     }

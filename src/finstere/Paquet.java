@@ -5,9 +5,7 @@
  */
 package finstere;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -15,11 +13,11 @@ import java.util.List;
  * @author nKBlaZy
  */
 public class Paquet {
-    /* Paquet de Carte */
+    /* Paquet de Cartes */
     private Carte[] paquet;
-    /* Liste des Carte de la Pioche */
+    /* Liste des Cartes de la Pioche */
     private List<String> pioche;
-    /* Liste des Carte de la Défausse */
+    /* Liste des Cartes de la Défausse */
     private List<String> defausse;
     
     /* Constructeur */
@@ -51,9 +49,9 @@ public class Paquet {
         this.pioche.add("XX");
     }
     
-    /* Mélange le paquet */
+    /* Mélange le Paquet */
     public void melanger() {
-        /* Échange deux Carte 500 fois */
+        /* Échange deux Cartes 500 fois */
         for (int i = 0 ; i < 500 ; i++) {
             this.echangerDeuxCartes();
         }
@@ -67,7 +65,7 @@ public class Paquet {
         }
     }
     
-    /* Échange deux Carte du paquet */
+    /* Échange deux Cartes du Paquet */
     private void echangerDeuxCartes() {
         int a = (int) (Math.random() * 8);
         int b = (int) (Math.random() * 8);
@@ -81,7 +79,7 @@ public class Paquet {
     public Carte tirerCarte() {
         Carte carte = this.paquet[0];
         
-        /* Décale les Carte dans le paquet */
+        /* Décale les Cartes dans le Paquet */
         for (int i = 0 ; i < 7 ; i++) {
             this.paquet[i] = this.paquet[i + 1];
         }

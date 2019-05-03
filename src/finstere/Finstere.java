@@ -22,17 +22,16 @@ import javax.swing.SwingConstants;
 public class Finstere extends javax.swing.JFrame {
     /* Constantes pour les directions */
     public final static int HAUT = 1, BAS = -1, GAUCHE = 2, DROITE = -2;
-    /* Constantes pour les types de flaques d'hemoglobine (nom de l'image sans
+    /* Constantes pour les types de flaques d'Hemoglobine (nom de l'image sans
      * l'extension)
      */
     public final static String CARRE = "tachesang_carree",
-            LINEVERT = "tachesang_lineaireV",
             LINEHORI = "tachesang_lineaireH";
-    /* Constantes pour les couleurs des personnages */
+    /* Constantes pour les couleurs des Personnages */
     public final static String[] COULEURS = {"blue", "green", "red", "yellow"};
-    /* Constantes pour les valeurs des Carte "une proie" et "deux proies */
+    /* Constantes pour les valeurs des Cartes "une proie" et "deux proies */
     public final static int X = 11, XX = 12;
-    /* Constantes pour les coordonnées des Personnage à l'extérieur, sortis, morts */
+    /* Constantes pour les coordonnées des Personnages à l'extérieur, sortis, morts */
     public final static int[] EXTERIEUR = {16,10}, SORTI = {-1,0}, MORT = {15, -1};
     
     /* Constante pour les dimensions d'une Case */
@@ -53,7 +52,7 @@ public class Finstere extends javax.swing.JFrame {
     private Partie partie;
     /* JLabel du plateau */
     private JLabel plateau;
-    /* JLabel des Personnage de chaque Joueur */
+    /* JLabel des Personnages de chaque Joueur */
     private JLabel[] listePersosJ1, listePersosJ2;
     /* JLabel du choix du Personnage */
     private JLabel[] choixPersoJ1, choixPersoJ2;
@@ -64,19 +63,17 @@ public class Finstere extends javax.swing.JFrame {
     /* Choix du Personnage ou de l'Action */
     private int choix;
     /* JLabel des flaques d'Hemoglobine */
-    private JLabel hemoCarre, hemoLineH, hemoLineV;
-    /* JLabel des Personnage sur le Labyrinthe, des Personnage morts et des 
+    private JLabel hemoCarre, hemoLineH;
+    /* JLabel des Personnages sur le Labyrinthe, des Personnages morts et des 
      * Personnages sortis du gagnant
      */
     private List<JLabel> persos, morts, sortis;
-    /* JLabel des Mur */
+    /* JLabel des Murs */
     private List<JLabel> murs;
     /* JLabel du Monstre */
     private JLabel monstre;
 
-    /**
-     * Creates new form FinstereFenetre
-     */
+    /* Constructeur */
     public Finstere() {
         initComponents();
         this.plateau = new JLabel();
@@ -379,6 +376,7 @@ public class Finstere extends javax.swing.JFrame {
         );
 
         victoire.setTitle("Victoire");
+        victoire.setLocation(new java.awt.Point(850, 350));
 
         victoirePanel.setBackground(new java.awt.Color(37, 66, 20));
 
@@ -410,6 +408,7 @@ public class Finstere extends javax.swing.JFrame {
         victoireNewGame.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         victoireNewGame.setForeground(new java.awt.Color(254, 248, 120));
         victoireNewGame.setText("Nouvelle Partie");
+        victoireNewGame.setFocusPainted(false);
         victoireNewGame.setPreferredSize(new java.awt.Dimension(256, 31));
         victoireNewGame.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -422,18 +421,14 @@ public class Finstere extends javax.swing.JFrame {
         victoirePanelLayout.setHorizontalGroup(
             victoirePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(victoirePanelLayout.createSequentialGroup()
+                .addGap(16, 16, 16)
                 .addGroup(victoirePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(victoireLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(victoirePanelLayout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addGroup(victoirePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(victoireLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(victoirePanelLayout.createSequentialGroup()
-                                .addGap(60, 60, 60)
-                                .addComponent(victoireListe, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(victoirePanelLayout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addComponent(victoireNewGame, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(60, 60, 60)
+                        .addComponent(victoireListe, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(victoireNewGame, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(16, 16, 16))
         );
         victoirePanelLayout.setVerticalGroup(
@@ -742,7 +737,9 @@ public class Finstere extends javax.swing.JFrame {
         this.partie.start();
     }//GEN-LAST:event_newGameTermMouseClicked
 
-    /* Démarre une Partie avec l'Interface graphique */
+    /* Démarre une Partie avec l'Interface graphique et demande le nom et la 
+     * couleur des Joueurs 
+     */
     private void newGameInterfaceMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newGameInterfaceMouseClicked
         this.newGame.setVisible(false);
         this.partie = new Partie(this, false);
@@ -764,7 +761,7 @@ public class Finstere extends javax.swing.JFrame {
     }//GEN-LAST:event_quitMenuActionPerformed
     
     /* Active le bouton Commencer la Partie si les couleurs choisies par les 
-     * Joueur ne sont pas identiques
+     * Joueurs ne sont pas identiques
      */
     private void j1ColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_j1ColorActionPerformed
         if (this.j2Color.isEnabled()) {
@@ -778,6 +775,9 @@ public class Finstere extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_j1ColorActionPerformed
 
+    /* Active le bouton Commencer la Partie si les couleurs choisies par les 
+     * Joueurs ne sont pas identiques
+     */
     private void j2ColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_j2ColorActionPerformed
         if (this.j1Color.getSelectedIndex() == this.j2Color.getSelectedIndex()) {
             this.commencerPartie.setEnabled(false);
@@ -852,6 +852,7 @@ public class Finstere extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_commencerPartieMouseClicked
 
+    /* Demande de nouvelle Partie depuis la fenêtre de victoire */
     private void victoireNewGameMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_victoireNewGameMouseClicked
         this.victoire.setVisible(false);
         this.newGame.requestFocusInWindow();
@@ -861,8 +862,7 @@ public class Finstere extends javax.swing.JFrame {
 
     /* Dispose les élements de la Partie sur l'Interface */
     private void initInterface() {
-        
-        /* Mise en place de la liste des Personnage */
+        /* Mise en place de la liste des Personnages */
         this.updateListesPersos();
         
         /* Mise en place des flaques d'Hémoglobine */
@@ -890,18 +890,6 @@ public class Finstere extends javax.swing.JFrame {
             this.layeredPanel.add(this.hemoLineH, this.HEMO);
         }
         
-        Hemoglobine lineV = this.partie.getHemoLineV();
-        if (lineV != null) {
-            this.hemoLineV = new JLabel();
-            this.hemoLineV.setBounds(this.DEBUT_X + this.TAILLE * lineV.getX(),
-                    this.DEBUT_Y + this.TAILLE * lineV.getY(), 
-                    this.TAILLE, this.TAILLE * 4);
-            this.hemoLineV.setVerticalAlignment(SwingConstants.CENTER);
-            this.hemoLineV.setHorizontalAlignment(SwingConstants.CENTER);
-            this.hemoLineV.setIcon(lineV.getImageIcon());
-            this.layeredPanel.add(this.hemoLineV, this.HEMO);
-        }
-        
         /* Mise en place des Murs */
         this.updateMurs();
         
@@ -915,14 +903,15 @@ public class Finstere extends javax.swing.JFrame {
         this.cleanChoixPerso();
         this.nomJ1.setText("Joueur 1");
         this.nomJ2.setText("Joueur 2");
+        this.deplacementLabel.setText("");
         
-        /* Retire les Personnage du Labyrinthe */
+        /* Retire les Personnages du Labyrinthe */
         for (JLabel perso : this.persos) {
             this.layeredPanel.remove(perso);
         }
         this.persos.clear();
         
-        /* Retire les Mur du Labyrinthe */
+        /* Retire les Murs du Labyrinthe */
         for (JLabel mur : this.murs) {
             this.layeredPanel.remove(mur);
         }
@@ -932,7 +921,7 @@ public class Finstere extends javax.swing.JFrame {
         this.layeredPanel.remove(this.monstre);
     }
     
-    /* Met à jour les JLabel des Personnage dans les listes de chaque Joueur */
+    /* Met à jour les JLabel des Personnages dans les listes de chaque Joueur */
     public void updateListesPersos() {
         for (int i = 0 ; i < 4 ; i++) {
             if (this.listePersosJ1[i] != null) {
@@ -1004,7 +993,7 @@ public class Finstere extends javax.swing.JFrame {
         this.layeredPanel.repaint();
     }
     
-    /* Met à jour la position des Mur */
+    /* Met à jour la position des Murs */
     public void updateMurs() {
         for (JLabel mur : this.murs) {
             this.layeredPanel.remove(mur);
@@ -1044,7 +1033,7 @@ public class Finstere extends javax.swing.JFrame {
         this.nbTour.setText("Tour n°" + this.partie.getNbTour());
     }
     
-    /* Affiche les Personnage disponibles */
+    /* Affiche les Personnages disponibles */
     public void afficherChoixPerso(int _indexJoueur) {
         Personnage[] persos = this.partie.getPersonnages()[_indexJoueur];
         
@@ -1100,7 +1089,7 @@ public class Finstere extends javax.swing.JFrame {
         this.persosJ2.repaint();
     }
     
-    /* Affiche les Action possibles */
+    /* Affiche les Actions possibles */
     public void afficherChoixAction( Personnage _perso) {       
         Map<Integer, Action> actions = _perso.getActions();
         
@@ -1200,7 +1189,7 @@ public class Finstere extends javax.swing.JFrame {
         this.nomJ1.setForeground(new Color(254,248,120));
     }
     
-    /* Met à jour la liste des Carte dans la Pioche et la Défausse */
+    /* Met à jour la liste des Cartes dans la Pioche et la Défausse */
     public void updatePiocheDefausse(Paquet _paquet) {
         
         /* Pioche */
@@ -1278,18 +1267,24 @@ public class Finstere extends javax.swing.JFrame {
     public void victoire(String _msg, Joueur _gagnant) {
         this.cleanVictoireListe();        
         
-        this.victoireLabel.setText("<html>Victoireee !!!!<br/>" + _msg + "</html>");
-        List<ImageIcon> persos = _gagnant.getSortis();
+        if (_gagnant != null) {
+            this.victoireLabel.setText("<html><div style='text-align: center;'>"
+                    + "Victoireee !!!!<br/>" + _msg + "</div></html>");
+            List<ImageIcon> persos = _gagnant.getSortis();
                 
-        for(ImageIcon p : persos) {
-            JLabel perso = new JLabel();
-            perso.setBounds((this.TAILLE + 6) * persos.indexOf(p), 0,
-                    this.TAILLE, this.TAILLE);
-            perso.setVerticalAlignment(SwingConstants.CENTER);
-            perso.setHorizontalAlignment(SwingConstants.CENTER);
-            perso.setIcon(p);
-            this.sortis.add(perso);
-            this.victoireListe.add(perso, this.EN_DESSOUS);
+            for(ImageIcon p : persos) {
+                JLabel perso = new JLabel();
+                perso.setBounds((this.TAILLE + 6) * persos.indexOf(p), 0,
+                        this.TAILLE, this.TAILLE);
+                perso.setVerticalAlignment(SwingConstants.CENTER);
+                perso.setHorizontalAlignment(SwingConstants.CENTER);
+                perso.setIcon(p);
+                this.sortis.add(perso);
+                this.victoireListe.add(perso, this.EN_DESSOUS);
+            }
+        } else {
+            this.victoireLabel.setText("<html><div style='text-align: center;'>"
+                    + "Égalité...<br/>" + _msg + "</div></html>");
         }
         
         this.victoire.requestFocusInWindow();
@@ -1304,6 +1299,18 @@ public class Finstere extends javax.swing.JFrame {
         }
         
         this.sortis.clear();
+    }
+    
+    /* Réaffiche l'interface si l'utilisateur veux refaire une Partie (si il 
+     * jouait dans le terminal)
+     */
+    public void nouvellePartie() {
+        this.requestFocusInWindow();
+        this.pack();
+        this.setVisible(true);
+        this.newGame.requestFocusInWindow();
+        this.newGame.pack();
+        this.newGame.setVisible(true);
     }
     
     /* Getters */

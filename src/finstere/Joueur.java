@@ -18,20 +18,17 @@ import javax.swing.ImageIcon;
 public class Joueur {
     /* Nom du Joueur */
     private final String name;
-    /* Personnage du Joueur */
+    /* Personnages du Joueur */
     private Personnage[] personnages;
     /* Nombre de Personnage restant */
     private int nbRestant;
     /* Partie dans laquelle joue le Joueur */
     private Partie partie;
-    /* Couleur des Personnage du Joueur */
-    private final String couleur;
     
     /* Constructeur */
-    public Joueur(String _name, Partie _partie, String _couleur, Personnage[] _personnages) {
+    public Joueur(String _name, Partie _partie, Personnage[] _personnages) {
         this.name = _name;
         this.partie = _partie;
-        this.couleur = _couleur;
         this.personnages = _personnages;
         this.nbRestant = 4;
     }
@@ -80,7 +77,7 @@ public class Joueur {
         /* Ajout du nom à la chaîne */
         String s = this.name + " :\n";
         
-        /* Ajout des Personnage du Joueur à la chaîne */
+        /* Ajout des Personnages du Joueur à la chaîne */
         for (int i = 0 ; i < this.personnages.length ; i++) {
             s += "   " + personnages[i];
             if (i < this.personnages.length - 1) s += "\n";

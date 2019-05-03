@@ -5,8 +5,11 @@
  */
 package finstere;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -99,5 +102,15 @@ public class Joueur {
 
     public String getName() {
         return name;
+    }
+    
+    public List<ImageIcon> getSortis() {
+        ArrayList<ImageIcon> sortis = new ArrayList<>();
+        
+        for (Personnage perso : this.personnages)  {
+            if (perso.isExit()) sortis.add(perso.getImageIconClair());
+        }
+        
+        return sortis;
     }
 }

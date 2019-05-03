@@ -331,15 +331,27 @@ public class Partie extends Thread{
         
         /* Affichage ou récupération du gagnant en fonction de la situation */
         if (gagnant != null) {
-            System.out.println("VICTOIREEEEEEEEE !!!!");
-            System.out.println(gagnant.getName() + " a réussi à faire sortir 3 "
-                    + "de ses Personnages et remporte donc la Partie");
+            if (this.inTerm) {
+                System.out.println("VICTOIREEEEEEEEE !!!!");
+                System.out.println(gagnant.getName() + " a réussi à faire "
+                        + "sortir 3 de ses Personnages et remporte donc la Partie");
+            } else {
+                this.finstere.victoire(gagnant.getName() + " a réussi à faire "
+                        + "sortir 3 de ses Personnages et remporte donc la Partie",
+                        gagnant);
+            }
         } else {
             gagnant = this.gagnant();
-            System.out.println("PARTIE TERMINÉE");
-            System.out.println(gagnant.getName() + " a réussi à faire sortir "
+            if (this.inTerm) {
+                System.out.println("VICTOIREEEEEEEEE !!!!");
+                System.out.println(gagnant.getName() + " a réussi à faire sortir "
                     + gagnant.nbSortis() + " de ses Personnages en premier"
                     + " et remporte donc la Partie");
+            } else {
+                this.finstere.victoire(gagnant.getName() + " a réussi à faire sortir "
+                    + gagnant.nbSortis() + " de ses Personnages en premier"
+                    + " et remporte donc la Partie", gagnant);
+            }
         }
     }
 

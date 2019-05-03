@@ -74,6 +74,23 @@ public class Personnage extends Pion {
 
         return s;
     }
+    
+    /* Retourne le Personnage sous forme d'une chaine de caractères avec sa 
+     * couleur et les pm de chaque face
+     */
+    public String infosPerso() {
+        if (this.couleur.equals(Finstere.COULEURS[0])) {
+            return "Bleu " + this.pmC + " " + this.pmF;
+        } else if (this.couleur.equals(Finstere.COULEURS[1])) {
+            return "Vert " + this.pmC + " " + this.pmF;
+        } else if (this.couleur.equals(Finstere.COULEURS[2])) {
+            return "Rouge " + this.pmC + " " + this.pmF;
+        } else if (this.couleur.equals(Finstere.COULEURS[3])) {
+            return "Jaune " + this.pmC + " " + this.pmF;
+        } else {
+            return "";
+        }
+    }
 
     /* Déplace le Personnage aux coordonnées _x, _y */
     public boolean deplacer(int _x, int _y, int _pm) {
@@ -1101,6 +1118,12 @@ public class Personnage extends Pion {
                     + "_fonce.gif"));
         }
         return null;
+    }
+    
+    public ImageIcon getImageIconClair() {
+        return new ImageIcon(getClass().getResource("/img/pion" 
+                + this.couleur + "_" + this.pmC + "_" + this.pmF 
+                + "_clair.gif"));
     }
     
     public boolean isJouable() {

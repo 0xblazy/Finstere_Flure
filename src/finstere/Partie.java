@@ -111,7 +111,7 @@ public class Partie extends Thread{
         this.genLaby();
     }
     
-    /* Polymorphisme de initPartie lorsque la Partie se déroule dans le terminal */
+    /* Surcharge de initPartie lorsque la Partie se déroule dans le terminal */
     public void initPartie() {
         System.out.println("=== NOUVELLE PARTIE ===");
 

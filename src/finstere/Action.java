@@ -6,7 +6,6 @@
 package finstere;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import javax.swing.ImageIcon;
 
 /**

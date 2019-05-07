@@ -737,7 +737,6 @@ public class Finstere extends javax.swing.JFrame {
      */
     private void newGameInterfaceMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newGameInterfaceMouseClicked
         this.newGame.setVisible(false);
-        this.partie = new Partie(this, false);
         this.creationJoueurs.requestFocusInWindow();
         this.creationJoueurs.pack();
         this.creationJoueurs.setVisible(true);
@@ -817,6 +816,7 @@ public class Finstere extends javax.swing.JFrame {
     private void commencerPartieMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_commencerPartieMouseClicked
         if (this.commencerPartie.isEnabled()) {
             this.resetGame();
+            this.partie = new Partie(this, false);
             String[] noms;
             int[] couleurs;
             int nbJoueurs = 1;

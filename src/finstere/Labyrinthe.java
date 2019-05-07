@@ -147,8 +147,8 @@ public class Labyrinthe {
                     if (i < 3) {
                         this.labyrinthe[j][i] = new Case(i,j,true, this.partie);
                     } else if (i == 3) {
-                        tp.put(Finstere.GAUCHE, new int[]{13,1});
-                        tp.put(Finstere.BAS, new int[]{13,1});
+                        tp.put(Finstere.GAUCHE, new int[]{12,1});
+                        tp.put(Finstere.BAS, new int[]{12,1});
                         this.labyrinthe[j][i] = new Case(i, j, tp, this.partie);
                     } else if (i == 15) {
                         tp.put(Finstere.DROITE, new int[]{0,1});
@@ -160,8 +160,8 @@ public class Labyrinthe {
                     if (i < 4) {
                         this.labyrinthe[j][i] = new Case(i,j,true, this.partie);
                     } else if (i == 4) {
-                        tp.put(Finstere.GAUCHE, new int[]{12,0});
-                        tp.put(Finstere.BAS, new int[]{12,0});
+                        tp.put(Finstere.GAUCHE, new int[]{11,0});
+                        tp.put(Finstere.BAS, new int[]{11,0});
                         this.labyrinthe[j][i] = new Case(i, j, tp, this.partie);
                     } else if (i == 15) {
                         tp.put(Finstere.DROITE, new int[]{0,0});

@@ -116,7 +116,7 @@ public class Partie extends Thread{
         System.out.println("=== NOUVELLE PARTIE ===");
 
         /* Choix du nombre de Joueur humain */
-        System.out.print("Nombre de joueurs humain (1 ou 2) : ");
+        System.out.print("Nombre de joueurs humains (1 ou 2) : ");
         int nbJoueurs = this.scannerInt();
         while (nbJoueurs > 2 || nbJoueurs < 1) {
             System.out.print("Le nombre de joueurs humain doit être 1 ou 2\n"
@@ -503,7 +503,8 @@ public class Partie extends Thread{
                 
                 if (!this.inTerm) {
                     this.finstere.updatePersos();
-                    if (action.getMethodName().equals("pousserMur")) {
+                    if (action.getMethodName().equals("pousserMur") ||
+                            action.getMethodName().equals("glisser")) {
                         this.finstere.updateMurs();
                     }
                 }

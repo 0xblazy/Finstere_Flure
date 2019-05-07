@@ -914,6 +914,13 @@ public class Finstere extends javax.swing.JFrame {
         
         /* Retire le Monstre du Labyrinthe */
         this.layeredPanel.remove(this.monstre);
+        
+        /* Remet les JLabel des Cartes correctement */
+        this.listePioche.setText("Pioche : 8 cartes (5 7 7 8 8 10 X XX)");
+        this.listeDefausse.setText("Défausse : 0 cartes ()");
+        
+        /* Supprime les Personnages de la liste des morts */
+        this.cleanDeplacementMonstre();
     }
     
     /* Met à jour les JLabel des Personnages dans les listes de chaque Joueur */
